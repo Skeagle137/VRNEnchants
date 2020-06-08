@@ -1,2 +1,2 @@
 # VRNEnchants
-Adds unique enchants to a server.
+An extension of VRNcore, a plugin that I made for my server.
