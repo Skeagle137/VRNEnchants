@@ -38,30 +38,42 @@ public enum Rarity {
     }
 
     public static String getRarityFromIndividualPoints(final int points) {
+        String rarity = COMMON.getRarity();
         for (final Rarity r : Rarity.values()) {
-            if (r.getIndividualPoints() > points) return r.getRarity();
+            if (points >= r.getIndividualPoints()) {
+                rarity = r.getRarity();
+            }
         }
-        return ANCIENT.getRarity();
+        return rarity;
     }
 
     public static String getRarityFromCombinedPoints(final int points) {
+        String rarity = COMMON.getRarity();
         for (final Rarity r : Rarity.values()) {
-            if (r.getCombinedPoints() > points) return r.getRarity();
+            if (points >= r.getCombinedPoints()) {
+                rarity = r.getRarity();
+            }
         }
-        return ANCIENT.getRarity();
+        return rarity;
     }
 
     public static String getPrefixFromIndividualPoints(final int points) {
+        String prefix = COMMON.getPrefix();
         for (final Rarity r : Rarity.values()) {
-            if (r.getIndividualPoints() > points) return r.getPrefix();
+            if (points >= r.getIndividualPoints()) {
+                prefix = r.getPrefix();
+            }
         }
-        return ANCIENT.getPrefix();
+        return prefix;
     }
 
     public static String getPrefixFromCombinedPoints(final int points) {
+        String prefix = COMMON.getPrefix();
         for (final Rarity r : Rarity.values()) {
-            if (r.getCombinedPoints() > points) return r.getPrefix();
+            if (points >= r.getCombinedPoints()) {
+                prefix = r.getPrefix();
+            }
         }
-        return ANCIENT.getPrefix();
+        return prefix;
     }
 }

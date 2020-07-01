@@ -1,7 +1,6 @@
 package net.skeagle.vrnenchants.enchant;
 
 import net.skeagle.vrnenchants.VRNMain;
-import net.skeagle.vrnenchants.enchant.enchantments.EnchSpeedy;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.enchantments.EnchantmentTarget;
@@ -177,7 +176,7 @@ public class BaseEnchant extends Enchantment {
 
     public static String applyEnchantName(Enchantment ench, int level) {
         BaseEnchant enchant = (BaseEnchant) ench;
-        String prefix = Rarity.getPrefixFromIndividualPoints(enchant.getRarity());
+        String prefix = Rarity.getPrefixFromIndividualPoints(enchant.getRarity() + (enchant.getRarityFactor() * (level - 1)));
         if(level == 1 && enchant.getMaxLevel() == 1) {
             return color(prefix + enchant.getName() + "&r");
         }

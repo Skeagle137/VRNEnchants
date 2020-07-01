@@ -12,8 +12,6 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.mineacademy.fo.remain.Remain;
 
-import static net.skeagle.vrnenchants.util.VRNUtil.say;
-
 public class EnchStun extends BaseEnchant {
 
     @Getter
