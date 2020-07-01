@@ -1,5 +1,6 @@
 package net.skeagle.vrnenchants.enchant;
 
+import net.skeagle.vrnenchants.listener.ProjectileTracker;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
@@ -16,8 +17,6 @@ import org.bukkit.projectiles.ProjectileSource;
 import org.mineacademy.fo.EntityUtil;
 import java.util.Map;
 import java.util.function.BiConsumer;
-
-import static net.skeagle.vrnenchants.util.VRNUtil.say;
 
 public class EnchantListener implements Listener {
 
@@ -47,7 +46,7 @@ public class EnchantListener implements Listener {
         if (projectileSource instanceof LivingEntity) {
             final LivingEntity shooter = (LivingEntity) projectileSource;
             run(shooter, (enchant, level) -> enchant.onShoot(level, shooter, e));
-            EntityUtil.trackHit(e.getEntity(), hitEvent -> run(shooter, (enchant, level) -> enchant.onHit(level, shooter, hitEvent)));
+            ProjectileTracker.track(e.getEntity(), inground -> run(shooter, (enchant, level) -> enchant.onHit(level, shooter, inground)));
         }
     }
 
