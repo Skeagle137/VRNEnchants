@@ -9,12 +9,12 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-public class VenomEnchant extends BaseEnchant {
+public class EnchVenom extends BaseEnchant {
 
     @Getter
-    private static final Enchantment instance = new VenomEnchant();
+    private static final Enchantment instance = new EnchVenom();
 
-    private VenomEnchant() {
+    private EnchVenom() {
         super("Venom", 5);
         setRarity(20);
         setRarityFactor(10);

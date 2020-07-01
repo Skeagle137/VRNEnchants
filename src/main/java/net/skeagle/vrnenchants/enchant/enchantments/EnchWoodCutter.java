@@ -1,4 +1,4 @@
 package net.skeagle.vrnenchants.enchant.enchantments;
 
-public class Woodcutter {
+public class EnchWoodCutter {
 }

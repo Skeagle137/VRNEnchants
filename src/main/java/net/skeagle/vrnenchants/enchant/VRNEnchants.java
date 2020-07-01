@@ -92,7 +92,7 @@ public class VRNEnchants {
     protected enum VRN {
         EXECUTE(EnchExecute.getInstance()),
         EXPLOSIVE(EnchExplosive.getInstance()),
-        VENOM(VenomEnchant.getInstance()),
+        VENOM(EnchVenom.getInstance()),
         GILLS(EnchGills.getInstance()),
         AUTOSMELT(EnchAutoSmelt.getInstance()),
         GEMSTONE(EnchGemstone.getInstance()),
@@ -117,6 +117,10 @@ public class VRNEnchants {
         if (isregistered) return;
         ReflectionUtils.setAccessable(Enchantment.class, "acceptingNew");
         Enchantment.registerEnchantment(ench);
+    }
+
+    public static void registerOnStart() {
+        Arrays.stream(VRN.values()).forEach(vrn -> registerEnchant(vrn.getEnch()));
     }
 
     @SuppressWarnings({"unchecked", "deprecation"})

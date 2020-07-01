@@ -13,7 +13,6 @@ import org.mineacademy.fo.Common;
 import org.mineacademy.fo.model.SimpleEnchantment;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 import static net.skeagle.vrnenchants.util.VRNUtil.sayActionBar;
 
@@ -34,15 +33,14 @@ public class EnchGills extends BaseEnchant implements Listener {
         if (e.getEntity() instanceof Player) {
             final Player p = (Player) e.getEntity();
             final ItemStack item = p.getEquipment().getBoots();
-            final Map enchants = SimpleEnchantment.findEnchantments(item);
-            if (item != null && enchants.containsKey(this)) {
+            if (item != null && hasEnchant(item, this)) {
                 if (e.getCause() == EntityDamageEvent.DamageCause.DROWNING) {
                     if (p.getRemainingAir() == 0) {
                         if (!its_just_a_one_time_thing.contains(p)) {
                             e.setCancelled(true);
                             p.setRemainingAir(p.getMaximumAir());
                             its_just_a_one_time_thing.add(p);
-                            Common.runLater(20 * (60 / (int) enchants.get(this)), () -> {
+                            Common.runLater(20 * (60 * getEnchants(item).get(this)), () -> {
                                 its_just_a_one_time_thing.remove(p);
                                 sayActionBar(p, "&aGills Replenished!");
                             });

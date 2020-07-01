@@ -31,7 +31,6 @@ public class Enchant extends SimpleCommand {
             say(getPlayer(), "&cYou must provide an enchant name.");
             return;
         }
-        //final ItemStack i = getPlayer().getInventory().getItemInMainHand();
         if (args[0].equalsIgnoreCase("all")) {
             for (final Enchantment ench : Enchantment.values()) {
                 i.addUnsafeEnchantment(ench, (args.length < 2 ? 1 : findNumber(1, "&cPlease specify a valid enchant level.")));
@@ -43,22 +42,19 @@ public class Enchant extends SimpleCommand {
             say(getPlayer(), "That is not an available enchant.");
             return;
         }
-        int level = 0;
-        i.addUnsafeEnchantment(enchant, (args.length < 2 ? 1 : findNumber(1, "&cPlease specify a valid enchant level.")));
+        int level = findNumber(1, "&cPlease specify a valid enchant level.");
+        i.addUnsafeEnchantment(enchant, (args.length < 2 ? 1 : level));
         if (enchant instanceof BaseEnchant) {
             ArrayList<String> lore = new ArrayList<>();
-            lore.add(BaseEnchant.applyEnchantName(enchant, 1));
+            lore.add(BaseEnchant.applyEnchantName(enchant, level));
             ItemMeta meta = i.getItemMeta();
             if (meta instanceof EnchantmentStorageMeta) {
-                ((EnchantmentStorageMeta)meta).addStoredEnchant(enchant, 1, true);
+                ((EnchantmentStorageMeta)meta).addStoredEnchant(enchant, level, true);
             } else {
-                meta.addEnchant(enchant, 1, true);
+                meta.addEnchant(enchant, level, true);
             }
             meta.setLore(lore);
             i.setItemMeta(meta);
-        }
-        if (args.length < 2) {
-            level = findNumber(1, "&cPlease specify a valid enchant level.");
         }
 
 
@@ -66,7 +62,7 @@ public class Enchant extends SimpleCommand {
 
     private Enchantment checkArgs() {
         for (final Enchantment enchants : Enchantment.values()) {
-            if (args[0].equalsIgnoreCase(enchants.getKey().toString())) {
+            if (args[0].equalsIgnoreCase(enchants.getKey().toString().replaceAll("minecraft:", "").replaceAll("vrnenchants:",""))) {
                 return enchants;
             }
         }
@@ -79,7 +75,7 @@ public class Enchant extends SimpleCommand {
             case 1:
                 final ArrayList<String> names = new ArrayList<>();
                 for (final Enchantment enchants : Enchantment.values()) {
-                    names.add(enchants.getKey().toString());
+                    names.add(enchants.getKey().toString().replaceAll("minecraft:", "").replaceAll("vrnenchants:",""));
                 }
                 return completeLastWord(names);
             case 2:

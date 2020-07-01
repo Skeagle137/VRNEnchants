@@ -13,7 +13,7 @@
     <properties>
         <main.class>net.skeagle.vrnenchants.VRNMain</main.class>
         <!-- https://github.com/kangarko/Foundation/releases -->
-        <foundation.version>5.3.8</foundation.version>
+        <foundation.version>5.4.4-SNAPSHOT</foundation.version>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
@@ -32,8 +32,8 @@
             <url>https://oss.sonatype.org/content/groups/public/</url>
         </repository>
         <repository>
-            <id>inventive-repo</id>
-            <url>https://repo.inventivetalent.org/content/groups/public/</url>
+            <id>mineacademy-repo</id>
+            <url>https://repo.mineacademy.org/repository/maven-public/</url>
         </repository>
     </repositories>
 
@@ -41,19 +41,25 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.15.2-R0.1-SNAPSHOT</version>
+            <version>1.16.1-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.kangarko</groupId>
-            <artifactId>Foundation</artifactId>
+            <groupId>org.spigotmc</groupId>
+            <artifactId>spigot</artifactId>
+            <version>1.16.1-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mineacademy.libraries</groupId>
+            <artifactId>foundation</artifactId>
             <version>${foundation.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>org.inventivetalent</groupId>
-            <artifactId>glowapi</artifactId>
-            <version>1.4.10-SNAPSHOT</version>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.12</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
@@ -80,30 +86,16 @@
                         <goals>
                             <goal>shade</goal>
                         </goals>
-
-
                         <configuration>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
                             <finalName>${project.name} v${project.version}</finalName>
-                            <artifactSet>
-                                <includes>
-                                    <include>org.mineacademy:Game*</include>
-                                    <include>com.github.kangarko:Foundation*</include>
-                                </includes>
-                                <excludes>
-                                    <exclude>org.mineacademy:GameAPI*</exclude>
-                                </excludes>
-                            </artifactSet>
                             <relocations>
                                 <relocation>
                                     <pattern>org.mineacademy</pattern>
                                     <shadedPattern>${project.groupId}.${project.artifactId}.lib</shadedPattern>
-                                    <excludes>
-                                        <exclude>org.mineacademy.${project.artifactId}.*</exclude>
-                                        <exclude>org.mineacademy.gameapi.*</exclude>
-                                        <exclude>org.mineacademy.boss.*</exclude>
-                                        <exclude>org.mineacademy.worldeditbridge.*</exclude>
-                                    </excludes>
+                                    <includes>
+                                        <include>org.mineacademy.libraries:foundation</include>
+                                    </includes>
                                 </relocation>
                             </relocations>
                         </configuration>

@@ -23,7 +23,7 @@ public class EnchAutoSmelt extends BaseEnchant {
     protected void onBreakBlock(final int level, final BlockBreakEvent e) {
         CompMaterial mat;
         final ItemStack item = e.getPlayer().getEquipment().getItemInMainHand();
-        int fortune = 0;
+        int fortune = 1;
         if (item.getEnchantments().containsKey(Enchantment.LOOT_BONUS_BLOCKS)) {
             fortune = calcFortune(item.getEnchantmentLevel(Enchantment.LOOT_BONUS_BLOCKS));
 
