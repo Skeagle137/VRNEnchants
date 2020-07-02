@@ -1,6 +1,6 @@
 name: VRNEnchants
 version: ${project.version}
-main: ${main.class}
+main: net.skeagle.vrnenchants.VRNMain
 author: Skeagle
 description: ${project.description}
 api-version: 1.14

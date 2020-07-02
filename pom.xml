@@ -54,6 +54,12 @@
             <groupId>org.mineacademy.libraries</groupId>
             <artifactId>foundation</artifactId>
             <version>${foundation.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.mineacademy.server</groupId>
+                    <artifactId>paper</artifactId>
+                </exclusion>
+            </exclusions>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -89,21 +95,10 @@
                         <configuration>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
                             <finalName>${project.name} v${project.version}</finalName>
-                            <artifactSet>
-                                <excludes>
-                                    <exclude>org.mineacademy.server:paper</exclude>
-                                </excludes>
-                            </artifactSet>
                             <relocations>
                                 <relocation>
                                     <pattern>org.mineacademy</pattern>
                                     <shadedPattern>${project.groupId}.${project.artifactId}.lib</shadedPattern>
-                                    <includes>
-                                        <include>org.mineacademy.libraries:foundation</include>
-                                    </includes>
-                                    <excludes>
-                                        <exclude>org.mineacademy.server:paper</exclude>
-                                    </excludes>
                                 </relocation>
                             </relocations>
                         </configuration>

@@ -44,18 +44,7 @@ public class Enchant extends SimpleCommand {
         }
         int level = findNumber(1, "&cPlease specify a valid enchant level.");
         i.addUnsafeEnchantment(enchant, (args.length < 2 ? 1 : level));
-        if (enchant instanceof BaseEnchant) {
-            ArrayList<String> lore = new ArrayList<>();
-            lore.add(BaseEnchant.applyEnchantName(enchant, level));
-            ItemMeta meta = i.getItemMeta();
-            if (meta instanceof EnchantmentStorageMeta) {
-                ((EnchantmentStorageMeta)meta).addStoredEnchant(enchant, level, true);
-            } else {
-                meta.addEnchant(enchant, level, true);
-            }
-            meta.setLore(lore);
-            i.setItemMeta(meta);
-        }
+        BaseEnchant.applyLore(enchant, level, i);
 
 
     }

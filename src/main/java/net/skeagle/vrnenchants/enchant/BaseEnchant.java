@@ -11,6 +11,8 @@ import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.EnchantmentStorageMeta;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
 
@@ -184,6 +186,27 @@ public class BaseEnchant extends Enchantment {
             return color(prefix + enchant.getName() + " enchantment.level." + level + "&r");
         }
         return color(prefix + enchant.getName() + " " + NUMERALS[level - 1] + "&r");
+    }
+
+    public static void applyLore(Enchantment enchant, int level, ItemStack i) {
+        if (enchant instanceof BaseEnchant) {
+            ItemMeta meta = i.getItemMeta();
+            List<String> lore;
+            if (!meta.hasLore()) {
+                lore = new ArrayList<>();
+            }
+            else {
+                lore = meta.getLore();
+            }
+            lore.add(BaseEnchant.applyEnchantName(enchant, level));
+            if (meta instanceof EnchantmentStorageMeta) {
+                ((EnchantmentStorageMeta)meta).addStoredEnchant(enchant, level, true);
+            } else {
+                meta.addEnchant(enchant, level, true);
+            }
+            meta.setLore(lore);
+            i.setItemMeta(meta);
+        }
     }
 
 
