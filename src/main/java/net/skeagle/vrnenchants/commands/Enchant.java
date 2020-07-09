@@ -44,7 +44,8 @@ public class Enchant extends SimpleCommand {
         }
         int level = findNumber(1, "&cPlease specify a valid enchant level.");
         i.addUnsafeEnchantment(enchant, (args.length < 2 ? 1 : level));
-        BaseEnchant.applyLore(enchant, level, i);
+        BaseEnchant.applyEnchant(i, (BaseEnchant) enchant, level);
+        BaseEnchant.updateLore(i);
 
 
     }

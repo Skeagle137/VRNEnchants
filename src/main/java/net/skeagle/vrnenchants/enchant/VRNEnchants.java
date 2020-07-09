@@ -89,7 +89,7 @@ public class VRNEnchants {
         }
     }
 
-    protected enum VRN {
+    public enum VRN {
         EXECUTE(EnchExecute.getInstance()),
         EXPLOSIVE(EnchExplosive.getInstance()),
         VENOM(EnchVenom.getInstance()),

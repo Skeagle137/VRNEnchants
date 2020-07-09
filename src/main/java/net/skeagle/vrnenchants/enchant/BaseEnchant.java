@@ -1,18 +1,24 @@
 package net.skeagle.vrnenchants.enchant;
 
 import net.skeagle.vrnenchants.VRNMain;
+import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.enchantments.EnchantmentTarget;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
+import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.mineacademy.fo.remain.CompMaterial;
 
 import java.util.*;
 
@@ -179,34 +185,103 @@ public class BaseEnchant extends Enchantment {
     public static String applyEnchantName(Enchantment ench, int level) {
         BaseEnchant enchant = (BaseEnchant) ench;
         String prefix = Rarity.getPrefixFromIndividualPoints(enchant.getRarity() + (enchant.getRarityFactor() * (level - 1)));
-        if(level == 1 && enchant.getMaxLevel() == 1) {
+        if (level == 1 && enchant.getMaxLevel() == 1) {
             return color(prefix + enchant.getName() + "&r");
         }
-        if(level > 10 || level <= 0) {
+        if (level > 10 || level <= 0) {
             return color(prefix + enchant.getName() + " enchantment.level." + level + "&r");
         }
         return color(prefix + enchant.getName() + " " + NUMERALS[level - 1] + "&r");
     }
 
-    public static void applyLore(Enchantment enchant, int level, ItemStack i) {
-        if (enchant instanceof BaseEnchant) {
-            ItemMeta meta = i.getItemMeta();
-            List<String> lore;
-            if (!meta.hasLore()) {
-                lore = new ArrayList<>();
+    public static void updateLore(ItemStack i) {
+        final ItemMeta meta = i.getItemMeta();
+        if (meta == null) {
+            return;
+        }
+        Map<Enchantment, Integer> enchants;
+        if (meta instanceof EnchantmentStorageMeta) {
+            final EnchantmentStorageMeta meta2 = (EnchantmentStorageMeta)meta;
+            enchants = meta2.getStoredEnchants();
+        }
+        else {
+            enchants = meta.getEnchants();
+        }
+        List<String> lore = meta.getLore();
+        if (lore == null) {
+            lore = new ArrayList<>();
+        }
+        else {
+            lore.removeIf(line -> !line.startsWith(color("&7")));
+        }
+        for (final Map.Entry<Enchantment, Integer> e : enchants.entrySet()) {
+            if (!(e.getKey() instanceof BaseEnchant)) {
+                continue;
+            }
+            final BaseEnchant ench = (BaseEnchant) e.getKey();
+            String enchlore;
+            String prefix = Rarity.getPrefixFromIndividualPoints(ench.getRarity() + (ench.getRarityFactor() * (e.getValue() - 1)));
+            if (e.getValue() == 1 && ench.getMaxLevel() == 1) {
+                enchlore = color(prefix + ench.getName() + "&r");
+            }
+            else if (e.getValue() > 10 || e.getValue() <= 0) {
+                enchlore = color(prefix + ench.getName() + " enchantment.level." + e.getValue() + "&r");
             }
             else {
-                lore = meta.getLore();
+                enchlore = color(prefix + ench.getName() + " " + NUMERALS[e.getValue() - 1] + "&r");
             }
-            lore.add(BaseEnchant.applyEnchantName(enchant, level));
-            if (meta instanceof EnchantmentStorageMeta) {
-                ((EnchantmentStorageMeta)meta).addStoredEnchant(enchant, level, true);
-            } else {
-                meta.addEnchant(enchant, level, true);
-            }
-            meta.setLore(lore);
-            i.setItemMeta(meta);
+            lore.add(0, enchlore);
         }
+        meta.setLore(lore);
+        i.setItemMeta(meta);
+    }
+
+    public static boolean applyEnchant(final ItemStack item, final BaseEnchant ench, final int level) {
+        removeEnchant(item, ench, level);
+        final ItemMeta meta = item.getItemMeta();
+        if (meta == null) {
+            return false;
+        }
+        final String name = applyEnchantName(ench, level);
+        List<String> lore = meta.getLore();
+        if (lore == null) {
+            lore = new ArrayList<>();
+        }
+        lore.add(0, name);
+        if (meta instanceof EnchantmentStorageMeta) {
+            ((EnchantmentStorageMeta)meta).addStoredEnchant(ench, level, true);
+        }
+        else {
+            meta.addEnchant(ench, level, true);
+        }
+        meta.setLore(lore);
+        item.setItemMeta(meta);
+        return true;
+    }
+
+    private static void removeEnchant(final ItemStack item, final BaseEnchant ench, final int level) {
+        final ItemMeta meta = item.getItemMeta();
+        if (meta == null || !meta.hasEnchant(ench)) {
+            return;
+        }
+        final List<String> lore = meta.getLore();
+        if (lore != null) {
+            String oldlore;
+            String prefix = Rarity.getPrefixFromIndividualPoints(ench.getRarity() + (ench.getRarityFactor() * (level - 1)));
+            if (level == 1 && ench.getMaxLevel() == 1) {
+                oldlore = color(prefix + ench.getName() + "&r");
+            }
+            else if (level > 10 || level <= 0) {
+                oldlore = color(prefix + ench.getName() + " enchantment.level." + level + "&r");
+            }
+            else {
+                oldlore = color(prefix + ench.getName() + " " + NUMERALS[level - 1] + "&r");
+            }
+            lore.remove(oldlore);
+            meta.setLore(lore);
+        }
+        meta.removeEnchant(ench);
+        item.setItemMeta(meta);
     }
 
 
