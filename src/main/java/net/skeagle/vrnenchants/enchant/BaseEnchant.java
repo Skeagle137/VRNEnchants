@@ -2,6 +2,7 @@ package net.skeagle.vrnenchants.enchant;
 
 import net.skeagle.vrnenchants.VRNMain;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.enchantments.EnchantmentTarget;
@@ -257,6 +258,15 @@ public class BaseEnchant extends Enchantment {
         meta.setLore(lore);
         item.setItemMeta(meta);
         return true;
+    }
+
+    public static ItemStack generateEnchantBook (final BaseEnchant ench, final int level) {
+        final ItemStack i = new ItemStack(Material.ENCHANTED_BOOK);
+        final EnchantmentStorageMeta meta = (EnchantmentStorageMeta) i.getItemMeta();
+        meta.addStoredEnchant(ench, level, true);
+        i.setItemMeta(meta);
+        updateLore(i);
+        return i;
     }
 
     private static void removeEnchant(final ItemStack item, final BaseEnchant ench, final int level) {
