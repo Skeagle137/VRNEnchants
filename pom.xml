@@ -4,15 +4,14 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>net.skeagle.vrnenchants</groupId>
-    <artifactId>vrnenchants</artifactId>
+    <artifactId>vrncore</artifactId>
     <name>VRNEnchants</name>
     <version>1.6-alpha</version>
 
-    <description>Adds unique enchants to the server. Can be used in conjunction with VRNCore.</description>
+    <description>Adds new enchants to the server. Can be used with VRNcore.</description>
 
     <properties>
-        <main.class>net.skeagle.vrnenchants.VRNMain</main.class>
-        <!-- https://github.com/kangarko/Foundation/releases -->
+        <main.class>net.skeagle.vrncore.VRNcore</main.class>
         <foundation.version>5.4.4-SNAPSHOT</foundation.version>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -106,7 +105,6 @@
                 </executions>
             </plugin>
         </plugins>
-
 
         <resources>
             <resource>

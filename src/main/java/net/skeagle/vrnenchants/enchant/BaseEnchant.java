@@ -184,6 +184,7 @@ public class BaseEnchant extends Enchantment {
     }
 
     public static String applyEnchantName(Enchantment ench, int level) {
+        if (!(ench instanceof BaseEnchant)) return null;
         BaseEnchant enchant = (BaseEnchant) ench;
         String prefix = Rarity.getPrefixFromIndividualPoints(enchant.getRarity() + (enchant.getRarityFactor() * (level - 1)));
         if (level == 1 && enchant.getMaxLevel() == 1) {
@@ -237,18 +238,20 @@ public class BaseEnchant extends Enchantment {
         i.setItemMeta(meta);
     }
 
-    public static boolean applyEnchant(final ItemStack item, final BaseEnchant ench, final int level) {
+    public static boolean applyEnchant(final ItemStack item, final Enchantment ench, final int level) {
         removeEnchant(item, ench, level);
         final ItemMeta meta = item.getItemMeta();
         if (meta == null) {
             return false;
         }
-        final String name = applyEnchantName(ench, level);
         List<String> lore = meta.getLore();
         if (lore == null) {
             lore = new ArrayList<>();
         }
-        lore.add(0, name);
+        if (ench instanceof BaseEnchant) {
+            final String name = applyEnchantName(ench, level);
+            lore.add(0, name);
+        }
         if (meta instanceof EnchantmentStorageMeta) {
             ((EnchantmentStorageMeta)meta).addStoredEnchant(ench, level, true);
         }
@@ -260,7 +263,7 @@ public class BaseEnchant extends Enchantment {
         return true;
     }
 
-    public static ItemStack generateEnchantBook (final BaseEnchant ench, final int level) {
+    public static ItemStack generateEnchantBook (final Enchantment ench, final int level) {
         final ItemStack i = new ItemStack(Material.ENCHANTED_BOOK);
         final EnchantmentStorageMeta meta = (EnchantmentStorageMeta) i.getItemMeta();
         meta.addStoredEnchant(ench, level, true);
@@ -269,26 +272,27 @@ public class BaseEnchant extends Enchantment {
         return i;
     }
 
-    private static void removeEnchant(final ItemStack item, final BaseEnchant ench, final int level) {
+    private static void removeEnchant(final ItemStack item, final Enchantment ench, final int level) {
         final ItemMeta meta = item.getItemMeta();
         if (meta == null || !meta.hasEnchant(ench)) {
             return;
         }
         final List<String> lore = meta.getLore();
-        if (lore != null) {
-            String oldlore;
-            String prefix = Rarity.getPrefixFromIndividualPoints(ench.getRarity() + (ench.getRarityFactor() * (level - 1)));
-            if (level == 1 && ench.getMaxLevel() == 1) {
-                oldlore = color(prefix + ench.getName() + "&r");
+        if (ench instanceof BaseEnchant) {
+            BaseEnchant e = (BaseEnchant) ench;
+            if (lore != null) {
+                String oldlore;
+                String prefix = Rarity.getPrefixFromIndividualPoints(e.getRarity() + (e.getRarityFactor() * (level - 1)));
+                if (level == 1 && ench.getMaxLevel() == 1) {
+                    oldlore = color(prefix + ench.getName() + "&r");
+                } else if (level > 10 || level <= 0) {
+                    oldlore = color(prefix + ench.getName() + " enchantment.level." + level + "&r");
+                } else {
+                    oldlore = color(prefix + ench.getName() + " " + NUMERALS[level - 1] + "&r");
+                }
+                lore.remove(oldlore);
+                meta.setLore(lore);
             }
-            else if (level > 10 || level <= 0) {
-                oldlore = color(prefix + ench.getName() + " enchantment.level." + level + "&r");
-            }
-            else {
-                oldlore = color(prefix + ench.getName() + " " + NUMERALS[level - 1] + "&r");
-            }
-            lore.remove(oldlore);
-            meta.setLore(lore);
         }
         meta.removeEnchant(ench);
         item.setItemMeta(meta);

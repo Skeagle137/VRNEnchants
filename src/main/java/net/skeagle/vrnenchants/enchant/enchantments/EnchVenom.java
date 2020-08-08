@@ -26,7 +26,7 @@ public class EnchVenom extends BaseEnchant {
 
         final RNG rng = new RNG();
         if (rng.calcChance(15)) {
-            ((LivingEntity) e.getEntity()).addPotionEffect(new PotionEffect(PotionEffectType.POISON, level, 1, false, true, true));
+            ((LivingEntity) e.getEntity()).addPotionEffect(new PotionEffect(PotionEffectType.POISON, level * 20, 1, false, true, true));
         }
     }
 

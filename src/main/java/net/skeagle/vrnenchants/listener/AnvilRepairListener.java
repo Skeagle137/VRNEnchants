@@ -10,7 +10,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.ItemStack;
-import org.mineacademy.fo.remain.CompMaterial;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,11 +24,11 @@ public class AnvilRepairListener implements Listener {
         final AnvilInventory inv = e.getInventory();
         final ItemStack source = inv.getItem(0);
         final ItemStack i = inv.getItem(1);
-        if (source == null || source.getType() == CompMaterial.AIR.getMaterial()) {
+        if (source == null || source.getType() == Material.AIR) {
             return;
         }
         ItemStack result = e.getResult();
-        if (result == null || result.getType() == CompMaterial.AIR.getMaterial()) {
+        if (result == null || result.getType() == Material.AIR) {
             result = new ItemStack(source);
         }
         int cost = inv.getRepairCost();

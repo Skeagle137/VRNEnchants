@@ -42,10 +42,8 @@ public class Enchant extends SimpleCommand {
             say(getPlayer(), "That is not an available enchant.");
             return;
         }
-        BaseEnchant ench = (BaseEnchant) enchant;
         int level = findNumber(1, "&cPlease specify a valid enchant level.");
-        i.addUnsafeEnchantment(ench, (args.length < 2 ? 1 : level));
-        BaseEnchant.applyEnchant(i, ench, level);
+        BaseEnchant.applyEnchant(i, enchant, level);
         BaseEnchant.updateLore(i);
 
 

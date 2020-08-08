@@ -1,6 +1,7 @@
 package net.skeagle.vrnenchants.util;
 
 import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -29,11 +30,6 @@ public class VRNUtil {
         }
     }
 
-    public static void sayAndLog(final CommandSender cs, final String... message) {
-        sayNoPrefix(cs, message);
-        Common.logNoPrefix(color(message));
-    }
-
     public static String color(final String i) {
         return translateAlternateColorCodes('&', i);
     }
@@ -48,23 +44,5 @@ public class VRNUtil {
     public static void sayActionBar(final Player p, final String msg) {
         p.spigot().sendMessage(ChatMessageType.ACTION_BAR,
                 TextComponent.fromLegacyText(color(msg)));
-    }
-
-    public static class LocationSerialization {
-        public static String serialize(final Location loc) {
-            if (loc == null || loc.getWorld() == null) {
-                return null;
-            }
-            return loc.getWorld().getName() + " " + loc.getX() + " " + loc.getY() + " " + loc.getZ() + " " + loc.getYaw() + " " + loc.getPitch();
-        }
-
-        public static Location deserialize(final String s) {
-            final String[] split = s.split(" ");
-            if (split.length != 6) {
-                return null;
-            }
-            return new Location(Bukkit.getWorld(split[0]), Double.parseDouble(split[1]), Double.parseDouble(split[2]), Double.parseDouble(split[3]),
-                    Float.parseFloat(split[4]), Float.parseFloat(split[5]));
-        }
     }
 }

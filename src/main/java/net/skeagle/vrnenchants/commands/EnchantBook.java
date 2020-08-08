@@ -43,9 +43,8 @@ public class EnchantBook extends SimpleCommand {
             say(getPlayer(), "That is not an available enchant.");
             return;
         }
-        BaseEnchant ench = (BaseEnchant) enchant;
         int level = findNumber(1, "&cPlease specify a valid enchant level.");
-        ItemStack newbook = BaseEnchant.generateEnchantBook(ench, (args.length < 2 ? 1 : level));
+        ItemStack newbook = BaseEnchant.generateEnchantBook(enchant, (args.length < 2 ? 1 : level));
         getPlayer().getInventory().setItemInMainHand(newbook);
     }
 
