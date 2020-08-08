@@ -9,6 +9,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
@@ -23,6 +24,7 @@ public class EnchantListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onEntityDamage(EntityDamageByEntityEvent e) {
         if (!(e.getDamager() instanceof LivingEntity)) return;
+        if (e.getCause() == EntityDamageEvent.DamageCause.THORNS) return;
         run((LivingEntity) e.getDamager(), (enchant, level) ->
                 enchant.onDamage(level, (LivingEntity) e.getDamager(), e));
     }
@@ -31,6 +33,7 @@ public class EnchantListener implements Listener {
     public void onInteract(PlayerInteractEvent e) {
             run(e.getPlayer(), (enchant, level) -> {
                 if (e.getHand() == EquipmentSlot.OFF_HAND) return;
+                if (e.getClickedBlock() != null && e.getClickedBlock().getType().isInteractable()) return;
                 enchant.onInteract(level, e);
             });
     }
@@ -50,9 +53,8 @@ public class EnchantListener implements Listener {
         }
     }
 
-    private void run(LivingEntity source, BiConsumer<BaseEnchant, Integer> ench) {
-        final ItemStack i = source.getEquipment().getItemInMainHand();
-        if (i == null) return;
+    private void run(LivingEntity entity, BiConsumer<BaseEnchant, Integer> ench) {
+        final ItemStack i = entity.getEquipment().getItemInMainHand();
         for (final Map.Entry<BaseEnchant, Integer> e : BaseEnchant.getEnchants(i).entrySet())
             ench.accept(e.getKey(), e.getValue());
     }
