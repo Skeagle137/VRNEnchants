@@ -3,8 +3,10 @@ package net.skeagle.vrnenchants.listener;
 import net.skeagle.vrnenchants.enchant.BaseEnchant;
 import net.skeagle.vrnenchants.enchant.Rarity;
 import net.skeagle.vrnenchants.enchant.VRNEnchants;
+import net.skeagle.vrnenchants.util.VRNUtil;
 import org.bukkit.Material;
 import org.bukkit.entity.Item;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -12,6 +14,8 @@ import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Random;
+
+import static net.skeagle.vrnenchants.util.VRNUtil.say;
 
 public class FishingListener implements Listener {
 
@@ -30,28 +34,29 @@ public class FishingListener implements Listener {
 
     private ItemStack randomizeEnchant() {
         int random;
-        int randEnch = new Random().nextInt(VRNEnchants.VRN.values().length);
+        int randEnch = VRNUtil.rng(1, VRNEnchants.VRN.values().length);
         BaseEnchant ench = ((BaseEnchant) VRNEnchants.VRN.values()[randEnch].getEnch());
-        int randLevel = new Random().nextInt(ench.getMaxLevel() > 1 ? (ench.getMaxLevel() - 1 > 1 ? ench.getMaxLevel() - 1 : 2) : 1);
-        if ((ench.getRarity() + (ench.getRarityFactor() * randLevel)) >= Rarity.RARE.getIndividualPoints()) {
-            random = new Random().nextInt(5); //1 in 6
-            if (random != 5) return null;
+        int randLevel = VRNUtil.rng(1, ench.getMaxLevel());
+        int points = ench.getRarity() + (ench.getRarityFactor() * randLevel);
+        int upperbound;
+        if (points >= Rarity.RARE.getIndividualPoints()) {
+            upperbound = 6;
         }
-        else if ((ench.getRarity() + (ench.getRarityFactor() * randLevel)) >= Rarity.EPIC.getIndividualPoints()) {
-            random = new Random().nextInt(31); //1 in 32
-            if (random != 31) return null;
+        else if (points >= Rarity.EPIC.getIndividualPoints()) {
+            upperbound = 24;
         }
-        else if ((ench.getRarity() + (ench.getRarityFactor() * randLevel)) >= Rarity.LEGENDARY.getIndividualPoints()) {
-            random = new Random().nextInt(63); // 1 in 64
-            if (random != 31) return null;
+        else if (points >= Rarity.LEGENDARY.getIndividualPoints()) {
+            upperbound = 48;
         }
-        else if ((ench.getRarity() + (ench.getRarityFactor() * randLevel)) >= Rarity.MYTHICAL.getIndividualPoints()) {
+        else if (points >= Rarity.MYTHICAL.getIndividualPoints()) {
             return null;
         }
         else {
-            random = new Random().nextInt(2); //1 in 3
-            if (random != 2) return null;
+            upperbound = 3;
         }
+        upperbound = upperbound + (randLevel == ench.getMaxLevel() ? (ench.getMaxLevel() > 1 ? 12 : 0) : 0);
+        random = VRNUtil.rng(1, upperbound);
+        if (random != 1) return null;
         return BaseEnchant.generateEnchantBook(ench, randLevel);
 
     }

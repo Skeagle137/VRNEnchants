@@ -1,19 +1,17 @@
 package net.skeagle.vrnenchants.enchant;
 
-import java.util.Random;
+import net.skeagle.vrnenchants.util.VRNUtil;
 
 public class RNG {
     private double chanceFactor = 0;
 
     public boolean calcChance(final double chanceFactor, final int level) {
         this.chanceFactor = chanceFactor;
-        final Random random = new Random();
-        return random.nextInt(101) <= calcFactor(level);
+        return VRNUtil.rng(1, 100) <= calcFactor(level);
     }
 
     public boolean calcChance(final double chanceFactor) {
-        final Random random = new Random();
-        return random.nextInt(101) <= chanceFactor;
+        return VRNUtil.rng(1, 100) <= chanceFactor;
     }
 
     private double calcFactor(final int level) {

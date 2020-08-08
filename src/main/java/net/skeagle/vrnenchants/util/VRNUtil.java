@@ -9,6 +9,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.mineacademy.fo.Common;
 
+import java.util.Random;
+
 import static org.bukkit.ChatColor.translateAlternateColorCodes;
 
 public class VRNUtil {
@@ -44,5 +46,10 @@ public class VRNUtil {
     public static void sayActionBar(final Player p, final String msg) {
         p.spigot().sendMessage(ChatMessageType.ACTION_BAR,
                 TextComponent.fromLegacyText(color(msg)));
+    }
+
+    public static int rng(int min, int max){
+        Random random = new Random();
+        return random.ints(min, max + 1).findFirst().getAsInt();
     }
 }
