@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>net.skeagle.vrnenchants</groupId>
-    <artifactId>vrncore</artifactId>
+    <artifactId>vrnenchants</artifactId>
     <name>VRNEnchants</name>
     <version>1.7-alpha</version>
 
@@ -12,7 +12,7 @@
 
     <properties>
         <main.class>net.skeagle.vrncore.VRNcore</main.class>
-        <foundation.version>5.4.4-SNAPSHOT</foundation.version>
+        <foundation.version>5.5.5</foundation.version>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
@@ -40,23 +40,27 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.16.1-R0.1-SNAPSHOT</version>
+            <version>1.16.2-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot</artifactId>
-            <version>1.16.1-R0.1-SNAPSHOT</version>
+            <version>1.16.2-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.mineacademy.libraries</groupId>
-            <artifactId>foundation</artifactId>
+            <groupId>com.github.kangarko</groupId>
+            <artifactId>Foundation</artifactId>
             <version>${foundation.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.mineacademy.server</groupId>
                     <artifactId>paper</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.mineacademy.plugin</groupId>
+                    <artifactId>*</artifactId>
                 </exclusion>
             </exclusions>
             <scope>compile</scope>

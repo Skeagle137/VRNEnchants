@@ -22,22 +22,22 @@ public class AnvilRepairListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onAnvil(final PrepareAnvilEvent e) {
         final AnvilInventory inv = e.getInventory();
-        final ItemStack source = inv.getItem(0);
-        final ItemStack i = inv.getItem(1);
-        if (source == null || source.getType() == Material.AIR) {
+        final ItemStack the_item = inv.getItem(0);
+        final ItemStack the_book = inv.getItem(1);
+        if (the_item == null || the_item.getType() == Material.AIR) {
             return;
         }
         ItemStack result = e.getResult();
         if (result == null || result.getType() == Material.AIR) {
-            result = new ItemStack(source);
+            result = new ItemStack(the_item);
         }
         int cost = inv.getRepairCost();
         Map<BaseEnchant, Integer> enchAdd = new HashMap<>();
-        for (final Map.Entry<BaseEnchant, Integer> en : BaseEnchant.getEnchants(source).entrySet()) {
+        for (final Map.Entry<BaseEnchant, Integer> en : BaseEnchant.getEnchants(the_item).entrySet()) {
             enchAdd.merge(en.getKey(), en.getValue(), Integer::sum);
         }
-        if (i != null && (i.getType() == Material.ENCHANTED_BOOK || i.getType() == source.getType())) {
-            for (final Map.Entry<BaseEnchant, Integer> ench : BaseEnchant.getEnchants(i).entrySet()) {
+        if (the_book != null && (the_book.getType() == Material.ENCHANTED_BOOK || the_book.getType() == the_item.getType())) {
+            for (final Map.Entry<BaseEnchant, Integer> ench : BaseEnchant.getEnchants(the_book).entrySet()) {
                 enchAdd.merge(ench.getKey(), ench.getValue(), (oldLvl, newLvl) -> (oldLvl.equals(newLvl)) ? (oldLvl + 1) : Math.max(oldLvl, newLvl));
             }
         }
@@ -47,7 +47,7 @@ public class AnvilRepairListener implements Listener {
                 cost += lvl;
             }
         }
-        if (!source.equals(result)) {
+        if (!the_item.equals(result)) {
             updateLore(result);
             e.setResult(result);
             final int finalCost = cost;
