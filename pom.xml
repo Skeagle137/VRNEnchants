@@ -12,7 +12,7 @@
 
     <properties>
         <main.class>net.skeagle.vrncore.VRNcore</main.class>
-        <foundation.version>5.5.5</foundation.version>
+        <foundation.version>5.6.3</foundation.version>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
@@ -29,10 +29,6 @@
         <repository>
             <id>sonatype</id>
             <url>https://oss.sonatype.org/content/groups/public/</url>
-        </repository>
-        <repository>
-            <id>mineacademy-repo</id>
-            <url>https://repo.mineacademy.org/repository/maven-public/</url>
         </repository>
     </repositories>
 
@@ -54,10 +50,6 @@
             <artifactId>Foundation</artifactId>
             <version>${foundation.version}</version>
             <exclusions>
-                <exclusion>
-                    <groupId>org.mineacademy.server</groupId>
-                    <artifactId>paper</artifactId>
-                </exclusion>
                 <exclusion>
                     <groupId>org.mineacademy.plugin</groupId>
                     <artifactId>*</artifactId>
@@ -98,10 +90,21 @@
                         <configuration>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
                             <finalName>${project.name} v${project.version}</finalName>
+                            <artifactSet>
+                                <includes>
+                                    <include>com.github.kangarko:Game*</include>
+                                    <include>com.github.kangarko:Foundation*</include>
+                                </includes>
+                            </artifactSet>
                             <relocations>
                                 <relocation>
                                     <pattern>org.mineacademy</pattern>
                                     <shadedPattern>${project.groupId}.${project.artifactId}.lib</shadedPattern>
+                                    <excludes>
+                                        <exclude>org.mineacademy.${project.artifactId}.*</exclude>
+                                        <exclude>org.mineacademy.boss.*</exclude>
+                                        <exclude>org.mineacademy.worldeditbridge.*</exclude>
+                                    </excludes>
                                 </relocation>
                             </relocations>
                         </configuration>
@@ -109,6 +112,7 @@
                 </executions>
             </plugin>
         </plugins>
+
 
         <resources>
             <resource>

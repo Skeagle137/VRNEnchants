@@ -159,14 +159,14 @@ public class BaseEnchant extends Enchantment {
 
     public static Map<BaseEnchant, Integer> getEnchants(ItemStack i) {
         final Map<BaseEnchant, Integer> map = new HashMap<>();
-        if (i == null)
-            return map;
-        final Map<Enchantment, Integer> vanilla;
-        try {
-            vanilla = i.hasItemMeta() ? i.getItemMeta().getEnchants() : new HashMap<>();
-        } catch (final NullPointerException ex) {
-            return map;
-        }
+        Map<Enchantment, Integer> vanilla;
+        if (i == null) return map;
+        ItemMeta meta = i.getItemMeta();
+        if (meta == null) return map;
+        if (meta instanceof EnchantmentStorageMeta)
+            vanilla = ((EnchantmentStorageMeta)meta).getStoredEnchants();
+        else
+            vanilla = meta.getEnchants();
         for (final Map.Entry<Enchantment, Integer> e : vanilla.entrySet()) {
             final Enchantment ench = e.getKey();
             final int level = e.getValue();
