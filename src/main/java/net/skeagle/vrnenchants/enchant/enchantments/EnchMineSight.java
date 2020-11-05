@@ -3,6 +3,7 @@ package net.skeagle.vrnenchants.enchant.enchantments;
 import lombok.Getter;
 import net.minecraft.server.v1_16_R2.*;
 import net.skeagle.vrnenchants.enchant.BaseEnchant;
+import net.skeagle.vrnenchants.enchant.Rarity;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -26,8 +27,7 @@ public class EnchMineSight extends BaseEnchant {
 
     private EnchMineSight() {
         super("Mine Sight", 3);
-        setRarity(100);
-        setRarityFactor(40);
+        setRarity(Rarity.LEGENDARY);
     }
 
     private final HashMap<Block, EntityShulker> blockCorrespondingEntity = new HashMap<>();

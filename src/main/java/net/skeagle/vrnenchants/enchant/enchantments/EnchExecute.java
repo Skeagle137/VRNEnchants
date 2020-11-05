@@ -3,6 +3,7 @@ package net.skeagle.vrnenchants.enchant.enchantments;
 import lombok.Getter;
 import net.skeagle.vrnenchants.enchant.BaseEnchant;
 import net.skeagle.vrnenchants.enchant.RNG;
+import net.skeagle.vrnenchants.enchant.Rarity;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -18,24 +19,19 @@ public class EnchExecute extends BaseEnchant {
     private static final Enchantment instance = new EnchExecute();
 
     private EnchExecute() {
-        super("Execute", 5);
-        setRarity(60);
-        setRarityFactor(25);
+        super("Execute", 2);
+        setRarity(Rarity.MYTHICAL);
     }
 
     @Override
     protected void onDamage(final int level, final LivingEntity damager, final EntityDamageByEntityEvent e) {
         if (!(e.getEntity() instanceof LivingEntity)) return;
-        final RNG rng = new RNG();
-        if (rng.calcChance(8, level)) {
-            if (((LivingEntity) e.getEntity()).getHealth() < 1 + level) {
-                ((LivingEntity) e.getEntity()).setHealth(0);
-                CompParticle.FLAME.spawn(e.getEntity().getLocation().add(0, 1, 0));
-                CompSound.WITHER_HURT.play(e.getEntity().getLocation(), 1, 0.8F);
-                if (e.getEntity() instanceof Player) {
-                    sayNoPrefix(e.getEntity(), "&c&lEXECUTED &7by " + damager.getName() + "'s insta-kill below &c" + (1 + level) + "❤");
-                }
-            }
+        if (((LivingEntity) e.getEntity()).getHealth() < level) {
+            ((LivingEntity) e.getEntity()).setHealth(0);
+            CompParticle.FLAME.spawn(e.getEntity().getLocation().add(0, 1, 0));
+            CompSound.WITHER_HURT.play(e.getEntity().getLocation(), 1, 0.8F);
+            if (e.getEntity() instanceof Player)
+                sayNoPrefix(e.getEntity(), "&c&lExecuted &7by " + damager.getName() + "'s insta-kill below &c" + level + "❤");
         }
     }
 

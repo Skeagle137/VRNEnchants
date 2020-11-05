@@ -2,6 +2,7 @@ package net.skeagle.vrnenchants.enchant.enchantments;
 
 import lombok.Getter;
 import net.skeagle.vrnenchants.enchant.BaseEnchant;
+import net.skeagle.vrnenchants.enchant.Rarity;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.enchantments.EnchantmentTarget;
 import org.bukkit.entity.LivingEntity;
@@ -14,9 +15,8 @@ public class EnchSpeedy extends BaseEnchant {
     private static final Enchantment instance = new EnchSpeedy();
 
     private EnchSpeedy() {
-        super("Speedy", 3, EnchantmentTarget.WEAPON);
-        setRarity(20);
-        setRarityFactor(20);
+        super("Speedy", 2, EnchantmentTarget.WEAPON);
+        setRarity(Rarity.UNCOMMON);
     }
 
     @Override

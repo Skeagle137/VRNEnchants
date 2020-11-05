@@ -2,6 +2,7 @@ package net.skeagle.vrnenchants.enchant.enchantments;
 
 import lombok.Getter;
 import net.skeagle.vrnenchants.enchant.BaseEnchant;
+import net.skeagle.vrnenchants.enchant.Rarity;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.enchantments.EnchantmentTarget;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -16,7 +17,7 @@ public class EnchAutoSmelt extends BaseEnchant {
 
     private EnchAutoSmelt() {
         super("Auto Smelt", 1, EnchantmentTarget.TOOL);
-        setRarity(100);
+        setRarity(Rarity.EPIC);
     }
 
     @Override

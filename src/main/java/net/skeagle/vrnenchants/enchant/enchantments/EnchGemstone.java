@@ -3,6 +3,7 @@ package net.skeagle.vrnenchants.enchant.enchantments;
 import lombok.Getter;
 import net.skeagle.vrnenchants.enchant.BaseEnchant;
 import net.skeagle.vrnenchants.enchant.RNG;
+import net.skeagle.vrnenchants.enchant.Rarity;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.enchantments.EnchantmentTarget;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -14,14 +15,13 @@ public class EnchGemstone extends BaseEnchant {
 
     private EnchGemstone() {
         super("Gemstone", 3, EnchantmentTarget.TOOL);
-        setRarity(60);
-        setRarityFactor(20);
+        setRarity(Rarity.RARE);
     }
 
     @Override
     protected void onBreakBlock(final int level, final BlockBreakEvent e) {
-        final RNG ge = new RNG();
-        if (ge.calcChance(5, level)) {
+        final RNG r = new RNG();
+        if (r.calcChance(5, level)) {
             e.setExpToDrop(e.getExpToDrop() * 3);
         }
     }

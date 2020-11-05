@@ -29,8 +29,7 @@ public class BaseEnchant extends Enchantment {
     private Enchantment[] conflicting;
     private boolean treasure = false;
     private boolean cursed = false;
-    private int rarity;
-    private int rarityfactor;
+    private Rarity rarity;
 
     public BaseEnchant(String name) {
         super(new NamespacedKey(VRNMain.getInstance(), name.toLowerCase().replaceAll(" ", "_")));
@@ -93,20 +92,12 @@ public class BaseEnchant extends Enchantment {
         return cursed;
     }
 
-    public final int getRarity() {
+    public final Rarity getRarity() {
         return rarity;
     }
 
-    public final int setRarity(int rarity) {
+    public final Rarity setRarity(Rarity rarity) {
         return this.rarity = rarity;
-    }
-
-    public final int getRarityFactor() {
-        return rarityfactor;
-    }
-
-    public final int setRarityFactor(int rarityfactor) {
-        return this.rarityfactor = rarityfactor;
     }
 
     @Override
@@ -180,7 +171,7 @@ public class BaseEnchant extends Enchantment {
     public static String applyEnchantName(Enchantment ench, int level) {
         if (!(ench instanceof BaseEnchant)) return null;
         BaseEnchant enchant = (BaseEnchant) ench;
-        String prefix = Rarity.getPrefixFromIndividualPoints(enchant.getRarity() + (enchant.getRarityFactor() * (level - 1)));
+        String prefix = enchant.getRarity().getPrefix();
         if (level == 1 && enchant.getMaxLevel() == 1) {
             return color(prefix + enchant.getName() + "&r");
         }
@@ -216,7 +207,7 @@ public class BaseEnchant extends Enchantment {
             }
             final BaseEnchant ench = (BaseEnchant) e.getKey();
             String enchlore;
-            String prefix = Rarity.getPrefixFromIndividualPoints(ench.getRarity() + (ench.getRarityFactor() * (e.getValue() - 1)));
+            String prefix = ench.getRarity().getPrefix();
             if (e.getValue() == 1 && ench.getMaxLevel() == 1) {
                 enchlore = color(prefix + ench.getName() + "&r");
             }
@@ -276,7 +267,7 @@ public class BaseEnchant extends Enchantment {
             BaseEnchant e = (BaseEnchant) ench;
             if (lore != null) {
                 String oldlore;
-                String prefix = Rarity.getPrefixFromIndividualPoints(e.getRarity() + (e.getRarityFactor() * (level - 1)));
+                String prefix = e.getRarity().getPrefix();
                 if (level == 1 && ench.getMaxLevel() == 1) {
                     oldlore = color(prefix + ench.getName() + "&r");
                 } else if (level > 10 || level <= 0) {

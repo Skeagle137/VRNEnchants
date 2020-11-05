@@ -3,6 +3,7 @@ package net.skeagle.vrnenchants.enchant.enchantments;
 import lombok.Getter;
 import net.skeagle.vrnenchants.enchant.BaseEnchant;
 import net.skeagle.vrnenchants.enchant.RNG;
+import net.skeagle.vrnenchants.enchant.Rarity;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -15,9 +16,8 @@ public class EnchVenom extends BaseEnchant {
     private static final Enchantment instance = new EnchVenom();
 
     private EnchVenom() {
-        super("Venom", 5);
-        setRarity(20);
-        setRarityFactor(10);
+        super("Venom", 3);
+        setRarity(Rarity.COMMON);
     }
 
     @Override

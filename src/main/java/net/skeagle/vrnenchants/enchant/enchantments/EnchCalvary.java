@@ -2,6 +2,7 @@ package net.skeagle.vrnenchants.enchant.enchantments;
 
 import lombok.Getter;
 import net.skeagle.vrnenchants.enchant.BaseEnchant;
+import net.skeagle.vrnenchants.enchant.Rarity;
 import org.bukkit.enchantments.Enchantment;
 
 public class EnchCalvary extends BaseEnchant {
@@ -11,8 +12,7 @@ public class EnchCalvary extends BaseEnchant {
 
     private EnchCalvary() {
         super("Calvary", 4);
-        setRarity(60);
-        setRarityFactor(20);
+        setRarity(Rarity.RARE);
     }
 
     public String setDescription() {

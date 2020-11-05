@@ -2,6 +2,7 @@ package net.skeagle.vrnenchants.enchant.enchantments;
 
 import lombok.Getter;
 import net.skeagle.vrnenchants.enchant.BaseEnchant;
+import net.skeagle.vrnenchants.enchant.Rarity;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.enchantments.EnchantmentTarget;
 import org.bukkit.entity.Player;
@@ -22,8 +23,7 @@ public class EnchGills extends BaseEnchant implements Listener {
 
     public EnchGills() {
         super("Gills", 2, EnchantmentTarget.ARMOR_FEET);
-        setRarity(60);
-        setRarityFactor(40);
+        setRarity(Rarity.EPIC);
     }
 
     private final ArrayList<Player> its_just_a_one_time_thing = new ArrayList<>();
