@@ -1,7 +1,7 @@
 package net.skeagle.vrnenchants.enchant;
 
 public enum Rarity {
-    COMMON("&7Common (1✫)", 2, 0, "&r&7"),
+    COMMON("&7Common (1✫)", 2, 0, "&r&f"),
     UNCOMMON("&aUncommon (2✫)", 4, 15, "&r&a"),
     RARE("&9Rare (3✫)", 6, 30, "&r&9"),
     EPIC("&5&oEpic &r&5(4✫)", 10, 60, "&r&5"),
