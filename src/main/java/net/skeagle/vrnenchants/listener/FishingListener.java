@@ -21,7 +21,6 @@ public class FishingListener implements Listener {
     public void onFish(PlayerFishEvent e) {
         if (e.getState() == PlayerFishEvent.State.CAUGHT_FISH) {
             Item caught = ((Item) e.getCaught());
-            caught.setItemStack(new ItemStack(Material.ENCHANTED_BOOK));
             ItemStack i = new ItemStack(Material.ENCHANTED_BOOK);
             if (caught.getItemStack().equals(i)) {
                 int rand = VRNUtil.rng(1, 100);
