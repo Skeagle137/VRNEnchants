@@ -5,37 +5,35 @@ import net.skeagle.vrnenchants.enchant.RNG;
 import net.skeagle.vrnenchants.enchant.Rarity;
 import net.skeagle.vrnenchants.enchant.VRNEnchants;
 import net.skeagle.vrnenchants.util.VRNUtil;
-import org.bukkit.Material;
-import org.bukkit.entity.Item;
+import org.bukkit.entity.Monster;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerFishEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class FishingListener implements Listener {
+public class MobKillListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onFish(PlayerFishEvent e) {
-        if (e.getState() == PlayerFishEvent.State.CAUGHT_FISH) {
-            int rand = VRNUtil.rng(1, 200);
-            if (rand != 50) return;
-            ItemStack i = randomizeEnchant();
-            ((Item) e.getCaught()).setItemStack(i);
-        }
+    public void onFish(EntityDeathEvent e) {
+        if (!(e.getEntity() instanceof Monster)) return;
+        int rand = VRNUtil.rng(1, 1000);
+        if (rand != 200) return;
+        ItemStack i = randomizeEnchant();
+        e.getDrops().add(i);
     }
 
     private ItemStack randomizeEnchant() {
         Rarity randRarity = new RNG.Randomizer<Rarity>()
-                .addEntry(Rarity.COMMON, 2200)
-                .addEntry(Rarity.UNCOMMON, 1200)
-                .addEntry(Rarity.RARE, 500)
-                .addEntry(Rarity.EPIC, 200)
-                .addEntry(Rarity.LEGENDARY, 60)
-                .addEntry(Rarity.MYTHICAL, 18)
-                .addEntry(Rarity.COSMIC, 2).build();
+                .addEntry(Rarity.COMMON, 1400)
+                .addEntry(Rarity.UNCOMMON, 800)
+                .addEntry(Rarity.RARE, 400)
+                .addEntry(Rarity.EPIC, 120)
+                .addEntry(Rarity.LEGENDARY, 30)
+                .addEntry(Rarity.MYTHICAL, 4).build(); //cant get cosmic enchants from mobs
         ArrayList<BaseEnchant> sameRarity = new ArrayList<>();
         for (VRNEnchants.VRN vrn : VRNEnchants.VRN.values()) {
             if (((BaseEnchant) vrn.getEnch()).getRarity() == randRarity)
@@ -46,16 +44,15 @@ public class FishingListener implements Listener {
         int randLevel;
         if (ench.getRarity().getIndividualPoints() < 15) { //not legendary or higher
             randLevel = new RNG.Randomizer<Integer>()
-                    .addEntry(1, 100)
+                    .addEntry(1, 110)
                     .addEntry(2, 70)
-                    .addEntry(3, 25)
-                    .addEntry(4, 5).build();
+                    .addEntry(3, 20).build();
         }
         else {
             randLevel = new RNG.Randomizer<Integer>()
-                    .addEntry(1, 80)
-                    .addEntry(2, 30)
-                    .addEntry(3, 2).build();
+                    .addEntry(1, 140)
+                    .addEntry(2, 50)
+                    .addEntry(3, 10).build();
         }
         return BaseEnchant.generateEnchantBook(ench, randLevel);
     }
