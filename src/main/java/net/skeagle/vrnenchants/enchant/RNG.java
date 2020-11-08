@@ -41,22 +41,28 @@ public class RNG {
 
         public T build() {
             int rand = VRNUtil.rng(1, bounds);
-            int distance = Math.abs(map.entrySet().iterator().next().getValue() - rand);
-            int closest = 0;
+            System.out.println(rand);
+            int closest = Integer.MAX_VALUE;
             T key = null;
             for (Map.Entry<T, Integer> entry : map.entrySet()) {
+                System.out.println(entry);
                 int chance = entry.getValue();
-                int entry_distance = Math.abs(chance - rand);
-                if (entry_distance == 0)
-                    return entry.getKey();
-                if (entry_distance <= distance) {
-                    distance = entry_distance;
-                    closest = entry.getValue();
+                if (chance >= rand && chance < closest) {
+                    System.out.println("this is " + entry.getKey());
+                    closest = chance;
+                    key = entry.getKey();
                 }
             }
-            for (Map.Entry<T, Integer> entry : map.entrySet()) {
-                if (entry.getValue() == closest) {
-                    key = entry.getKey();
+            System.out.println(key);
+            if (key == null) {
+                int higher = 0;
+                for (Map.Entry<T, Integer> entry : map.entrySet()) {
+                    if (entry.getValue() > higher)
+                        higher = entry.getValue();
+                }
+                for (Map.Entry<T, Integer> entry : map.entrySet()) {
+                    if (entry.getValue() == higher)
+                        key = entry.getKey();
                 }
             }
             return key;

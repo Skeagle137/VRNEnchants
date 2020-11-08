@@ -36,13 +36,12 @@ public class FishingListener implements Listener {
                 .addEntry(Rarity.LEGENDARY, 60)
                 .addEntry(Rarity.MYTHICAL, 18)
                 .addEntry(Rarity.COSMIC, 2).build();
-        ArrayList<BaseEnchant> sameRarity = new ArrayList<>();
-        for (VRNEnchants.VRN vrn : VRNEnchants.VRN.values()) {
+        ArrayList<VRNEnchants.VRN> sameRarity = new ArrayList<>();
+        for (VRNEnchants.VRN vrn : VRNEnchants.VRN.values())
             if (((BaseEnchant) vrn.getEnch()).getRarity() == randRarity)
-                sameRarity.add((BaseEnchant) vrn.getEnch());
-        }
-        int randEnch = VRNUtil.rng(0, sameRarity.size());
-        BaseEnchant ench = ((BaseEnchant) VRNEnchants.VRN.values()[randEnch].getEnch());
+                sameRarity.add(vrn);
+        int randEnch = VRNUtil.rng(0, sameRarity.size() - 1);
+        BaseEnchant ench = (BaseEnchant) VRNEnchants.VRN.valueOf(sameRarity.get(randEnch).toString()).getEnch();
         int randLevel;
         if (ench.getRarity().getIndividualPoints() < 15) { //not legendary or higher
             randLevel = new RNG.Randomizer<Integer>()
@@ -57,6 +56,7 @@ public class FishingListener implements Listener {
                     .addEntry(2, 30)
                     .addEntry(3, 2).build();
         }
+        if (randLevel > ench.getMaxLevel()) randLevel = ench.getMaxLevel();
         return BaseEnchant.generateEnchantBook(ench, randLevel);
     }
 }

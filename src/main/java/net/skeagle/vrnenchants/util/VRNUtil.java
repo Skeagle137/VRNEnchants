@@ -49,7 +49,7 @@ public class VRNUtil {
     }
 
     public static int rng(int min, int max){
-        Random random = new Random();
-        return random.ints(min, max + 1).findFirst().getAsInt();
+        Random r = new Random();
+        return r.ints(min, max + 1).findFirst().getAsInt();
     }
 }

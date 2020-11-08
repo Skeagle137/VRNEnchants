@@ -5,9 +5,7 @@ import net.skeagle.vrnenchants.commands.EnchantBook;
 import net.skeagle.vrnenchants.enchant.VRNEnchants;
 import net.skeagle.vrnenchants.enchant.EnchantListener;
 import net.skeagle.vrnenchants.enchant.enchantments.EnchGills;
-import net.skeagle.vrnenchants.listener.AnvilRepairListener;
-import net.skeagle.vrnenchants.listener.FishingListener;
-import net.skeagle.vrnenchants.listener.ProjectileTracker;
+import net.skeagle.vrnenchants.listener.*;
 import org.mineacademy.fo.plugin.SimplePlugin;
 
 public class VRNMain extends SimplePlugin {
@@ -27,6 +25,8 @@ public class VRNMain extends SimplePlugin {
         registerEvents(new ProjectileTracker());
         registerEvents(new AnvilRepairListener());
         registerEvents(new FishingListener());
+        registerEvents(new MobKillListener());
+        //registerEvents(new EnchantmentTableListener());
         //enchants extended listeners
         registerEvents(new EnchGills());
     }

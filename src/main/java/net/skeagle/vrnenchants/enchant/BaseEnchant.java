@@ -138,13 +138,10 @@ public class BaseEnchant extends Enchantment {
     }
 
     public static boolean hasEnchant(ItemStack i, Enchantment enchant) {
-        if(i.getItemMeta() != null && i.getItemMeta().getEnchants() != null && i.getItemMeta().getEnchants().size() > 0){
-            for (Map.Entry<Enchantment, Integer> enchants : i.getItemMeta().getEnchants().entrySet()) {
-                if (enchants.getKey().equals(enchant)) {
-                    return true;
-                }
-            }
-        }
+        if(i.getItemMeta() != null && i.getItemMeta().getEnchants() != null && i.getItemMeta().getEnchants().size() > 0)
+            for (Map.Entry<Enchantment, Integer> enchants : i.getItemMeta().getEnchants().entrySet())
+                if (enchants.getKey().equals(enchant)) return true;
+
         return false;
     }
 
@@ -223,26 +220,36 @@ public class BaseEnchant extends Enchantment {
         i.setItemMeta(meta);
     }
 
+    public static boolean canEnchant(final ItemStack item, final BaseEnchant ench, int lvl) {
+        if (lvl < ench.getStartLevel())
+            lvl = ench.getStartLevel();
+        if (lvl > ench.getMaxLevel())
+            lvl = ench.getMaxLevel();
+        final ItemMeta meta = item.getItemMeta();
+        if (meta == null)
+            return false;
+        if (meta.getEnchants().keySet().stream().anyMatch(ench::conflictsWith))
+            return false;
+        final int lvlHas = meta.getEnchantLevel(ench);
+        return lvlHas < lvl;
+    }
+
     public static boolean applyEnchant(final ItemStack item, final Enchantment ench, final int level) {
         removeEnchant(item, ench, level);
         final ItemMeta meta = item.getItemMeta();
-        if (meta == null) {
+        if (meta == null)
             return false;
-        }
         List<String> lore = meta.getLore();
-        if (lore == null) {
+        if (lore == null)
             lore = new ArrayList<>();
-        }
         if (ench instanceof BaseEnchant) {
             final String name = applyEnchantName(ench, level);
             lore.add(0, name);
         }
-        if (meta instanceof EnchantmentStorageMeta) {
+        if (meta instanceof EnchantmentStorageMeta)
             ((EnchantmentStorageMeta)meta).addStoredEnchant(ench, level, true);
-        }
-        else {
+        else
             meta.addEnchant(ench, level, true);
-        }
         meta.setLore(lore);
         item.setItemMeta(meta);
         return true;
@@ -259,22 +266,19 @@ public class BaseEnchant extends Enchantment {
 
     private static void removeEnchant(final ItemStack item, final Enchantment ench, final int level) {
         final ItemMeta meta = item.getItemMeta();
-        if (meta == null || !meta.hasEnchant(ench)) {
-            return;
-        }
+        if (meta == null || !meta.hasEnchant(ench)) return;
         final List<String> lore = meta.getLore();
         if (ench instanceof BaseEnchant) {
             BaseEnchant e = (BaseEnchant) ench;
             if (lore != null) {
                 String oldlore;
                 String prefix = e.getRarity().getPrefix();
-                if (level == 1 && ench.getMaxLevel() == 1) {
+                if (level == 1 && ench.getMaxLevel() == 1)
                     oldlore = color(prefix + ench.getName() + "&r");
-                } else if (level > 10 || level <= 0) {
+                else if (level > 10 || level <= 0)
                     oldlore = color(prefix + ench.getName() + " enchantment.level." + level + "&r");
-                } else {
+                else
                     oldlore = color(prefix + ench.getName() + " " + NUMERALS[level - 1] + "&r");
-                }
                 lore.remove(oldlore);
                 meta.setLore(lore);
             }
