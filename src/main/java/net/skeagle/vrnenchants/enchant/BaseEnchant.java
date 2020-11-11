@@ -8,6 +8,7 @@ import org.bukkit.enchantments.EnchantmentTarget;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -27,7 +28,6 @@ public class BaseEnchant extends Enchantment {
     private int maxlevel;
     private EnchantmentTarget target;
     private Enchantment[] conflicting;
-    private boolean treasure = false;
     private boolean cursed = false;
     private Rarity rarity;
 
@@ -84,7 +84,7 @@ public class BaseEnchant extends Enchantment {
 
     @Override
     public final boolean isTreasure() {
-        return treasure;
+        return false;
     }
 
     @Override
@@ -115,7 +115,7 @@ public class BaseEnchant extends Enchantment {
     }
 
     protected final boolean setTreasure() {
-        return treasure = true;
+        return false;
     }
 
     protected final boolean setCursed() {
@@ -135,6 +135,9 @@ public class BaseEnchant extends Enchantment {
     }
 
     protected void onHit(int level, LivingEntity shooter, ProjectileHitEvent e) {
+    }
+
+    protected void onDamaged(int level, LivingEntity player, EntityDamageEvent e) {
     }
 
     public static boolean hasEnchant(ItemStack i, Enchantment enchant) {
@@ -221,6 +224,7 @@ public class BaseEnchant extends Enchantment {
     }
 
     public static boolean canEnchant(final ItemStack item, final BaseEnchant ench, int lvl) {
+        if (!ench.canEnchantItem(item)) return false;
         if (lvl < ench.getStartLevel())
             lvl = ench.getStartLevel();
         if (lvl > ench.getMaxLevel())
@@ -274,11 +278,11 @@ public class BaseEnchant extends Enchantment {
                 String oldlore;
                 String prefix = e.getRarity().getPrefix();
                 if (level == 1 && ench.getMaxLevel() == 1)
-                    oldlore = color(prefix + ench.getName() + "&r");
+                    oldlore = color(prefix + ench.getKey().getKey() + "&r");
                 else if (level > 10 || level <= 0)
-                    oldlore = color(prefix + ench.getName() + " enchantment.level." + level + "&r");
+                    oldlore = color(prefix + ench.getKey().getKey() + " enchantment.level." + level + "&r");
                 else
-                    oldlore = color(prefix + ench.getName() + " " + NUMERALS[level - 1] + "&r");
+                    oldlore = color(prefix + ench.getKey().getKey() + " " + NUMERALS[level - 1] + "&r");
                 lore.remove(oldlore);
                 meta.setLore(lore);
             }

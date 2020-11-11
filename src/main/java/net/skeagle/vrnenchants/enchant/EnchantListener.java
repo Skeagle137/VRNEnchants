@@ -3,6 +3,7 @@ package net.skeagle.vrnenchants.enchant;
 import net.skeagle.vrnenchants.listener.ProjectileTracker;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -31,11 +32,11 @@ public class EnchantListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onInteract(PlayerInteractEvent e) {
-            run(e.getPlayer(), (enchant, level) -> {
-                if (e.getHand() == EquipmentSlot.OFF_HAND) return;
-                if (e.getClickedBlock() != null && e.getClickedBlock().getType().isInteractable()) return;
-                enchant.onInteract(level, e);
-            });
+        run(e.getPlayer(), (enchant, level) -> {
+            if (e.getHand() == EquipmentSlot.OFF_HAND) return;
+            if (e.getClickedBlock() != null && e.getClickedBlock().getType().isInteractable()) return;
+            enchant.onInteract(level, e);
+        });
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -46,11 +47,16 @@ public class EnchantListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onShoot(ProjectileLaunchEvent e) {
         final ProjectileSource projectileSource = e.getEntity().getShooter();
-        if (projectileSource instanceof LivingEntity) {
-            final LivingEntity shooter = (LivingEntity) projectileSource;
-            run(shooter, (enchant, level) -> enchant.onShoot(level, shooter, e));
-            ProjectileTracker.track(e.getEntity(), inground -> run(shooter, (enchant, level) -> enchant.onHit(level, shooter, inground)));
-        }
+        if (!(projectileSource instanceof LivingEntity)) return;
+        final LivingEntity shooter = (LivingEntity) projectileSource;
+        run(shooter, (enchant, level) -> enchant.onShoot(level, shooter, e));
+        ProjectileTracker.track(e.getEntity(), inground -> run(shooter, (enchant, level) -> enchant.onHit(level, shooter, inground)));
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onDamaged(EntityDamageEvent e) {
+        if (!(e.getEntity() instanceof Player)) return;
+        run((Player) e.getEntity(), (enchant, level) -> enchant.onDamaged(level, (Player) e.getEntity(), e));
     }
 
     private void run(LivingEntity entity, BiConsumer<BaseEnchant, Integer> ench) {
