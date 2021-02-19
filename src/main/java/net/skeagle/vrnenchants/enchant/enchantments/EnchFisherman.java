@@ -12,7 +12,7 @@ public class EnchFisherman extends BaseEnchant {
     private static final Enchantment instance = new EnchFisherman();
 
     private EnchFisherman() {
-        super("Bookworm", 2, EnchantmentTarget.FISHING_ROD);
+        super("Fisherman", 2, EnchantmentTarget.FISHING_ROD);
         setRarity(Rarity.EPIC);
     }
 

@@ -22,10 +22,11 @@ public class MobKillListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onKill(EntityDeathEvent e) {
-        if (!(e.getEntity() instanceof Monster) || e.getEntity().getKiller() != null) return;
+        if (!(e.getEntity() instanceof Monster) || e.getEntity().getKiller() == null) return;
         int rand = VRNUtil.rng(1, 800);
-        if (BaseEnchant.hasEnchant(e.getEntity().getKiller().getEquipment().getItemInMainHand(), Enchantment.LOOT_BONUS_MOBS)) return;
-        int level = BaseEnchant.getEnchants(e.getEntity().getKiller().getEquipment().getItemInMainHand()).get(Enchantment.LOOT_BONUS_MOBS);
+        ItemStack hand = e.getEntity().getKiller().getEquipment().getItemInMainHand();
+        if (!BaseEnchant.hasEnchant(hand, Enchantment.LOOT_BONUS_MOBS)) return;
+        int level = hand.getEnchantments().get(Enchantment.LOOT_BONUS_MOBS);
         if (rand > (int) (1 + (level * 0.5))) return;
         ItemStack i = randomizeEnchant(e.getEntity().getKiller());
         e.getDrops().add(i);
@@ -36,7 +37,7 @@ public class MobKillListener implements Listener {
         if (BaseEnchant.hasEnchant(e.getEquipment().getItemInMainHand(), EnchBookworm.getInstance()))
             level = BaseEnchant.getEnchants(e.getEquipment().getItemInMainHand()).get(EnchBookworm.getInstance());
         Rarity randRarity = new RNG.Randomizer<Rarity>()
-                .addEntry(Rarity.COMMON, 800 - (level * 20))
+                .addEntry(Rarity.COMMON, 750 - (level * 20))
                 .addEntry(Rarity.UNCOMMON, 650 + (level * 20))
                 .addEntry(Rarity.RARE, 500 + (level > 1 ? 40 : 0))
                 .addEntry(Rarity.EPIC, 300 + (level > 1 ? 20 : 0))

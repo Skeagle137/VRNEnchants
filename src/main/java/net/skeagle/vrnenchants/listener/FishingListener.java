@@ -25,9 +25,10 @@ public class FishingListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onFish(PlayerFishEvent e) {
         if (e.getState() == PlayerFishEvent.State.CAUGHT_FISH) {
-            int rand = VRNUtil.rng(1, 142);
-            if (BaseEnchant.hasEnchant(e.getPlayer().getEquipment().getItemInMainHand(), Enchantment.LUCK)) return;
-            int level = BaseEnchant.getEnchants(e.getPlayer().getEquipment().getItemInMainHand()).get(Enchantment.LUCK);
+            int rand = VRNUtil.rng(1, 180);
+            ItemStack hand = e.getPlayer().getEquipment().getItemInMainHand();
+            if (!BaseEnchant.hasEnchant(hand, Enchantment.LUCK)) return;
+            int level = hand.getEnchantments().get(Enchantment.LUCK);
             if (rand > (int) (1 + (level * 0.5))) return;
             ItemStack i = randomizeEnchant(e.getPlayer());
             ((Item) e.getCaught()).setItemStack(i);
@@ -39,8 +40,8 @@ public class FishingListener implements Listener {
         if (BaseEnchant.hasEnchant(p.getEquipment().getItemInMainHand(), EnchFisherman.getInstance()))
             level = BaseEnchant.getEnchants(p.getEquipment().getItemInMainHand()).get(EnchFisherman.getInstance());
         Rarity randRarity = new RNG.Randomizer<Rarity>()
-                .addEntry(Rarity.COMMON, 1200 - (level * 50))
-                .addEntry(Rarity.UNCOMMON, 1000 + (level * 50))
+                .addEntry(Rarity.COMMON, 1050 - (level * 40))
+                .addEntry(Rarity.UNCOMMON, 900 + (level * 45))
                 .addEntry(Rarity.RARE, 750 + (level * 25))
                 .addEntry(Rarity.EPIC, 500 + (level * 15))
                 .addEntry(Rarity.LEGENDARY, 250 + (level > 1 ? 20 : 0))

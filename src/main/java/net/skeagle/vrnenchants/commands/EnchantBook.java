@@ -1,6 +1,7 @@
 package net.skeagle.vrnenchants.commands;
 
 import net.skeagle.vrnenchants.enchant.BaseEnchant;
+import net.skeagle.vrnenchants.enchant.VRNEnchants;
 import net.skeagle.vrnenchants.util.VRNUtil;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -24,8 +25,8 @@ public class EnchantBook extends SimpleCommand {
     @Override
     protected void onCommand() {
         ItemStack i = getPlayer().getInventory().getItemInMainHand();
-        if (i.getType() != Material.BOOK && i.getType() != Material.ENCHANTED_BOOK) {
-            say(getPlayer(), "&cYou must be holding a book in your hand.");
+        if (i.getType() != Material.BOOK && i.getType() != Material.ENCHANTED_BOOK && i.getType() != Material.AIR) {
+            say(getPlayer(), "&cYou must have nothing or a book in your hand.");
             return;
         }
         if (args.length < 1) {
@@ -33,8 +34,11 @@ public class EnchantBook extends SimpleCommand {
             return;
         }
         if (args[0].equalsIgnoreCase("all")) {
-            for (final Enchantment ench : Enchantment.values()) {
+            for (final Enchantment ench : Enchantment.values())
                 i.addUnsafeEnchantment(ench, (args.length < 2 ? 1 : findNumber(1, "&cPlease specify a valid enchant level.")));
+            for (final VRNEnchants.VRN entry : VRNEnchants.VRN.values()) {
+                BaseEnchant.applyEnchant(i, entry.getEnch(), (args.length < 2 ? 1 : findNumber(1, "&cPlease specify a valid enchant level.")));
+                BaseEnchant.updateLore(i);
             }
             return;
         }
@@ -43,31 +47,27 @@ public class EnchantBook extends SimpleCommand {
             say(getPlayer(), "That is not an available enchant.");
             return;
         }
-        int level = findNumber(1, "&cPlease specify a valid enchant level.");
-        ItemStack newbook = BaseEnchant.generateEnchantBook(enchant, (args.length < 2 ? 1 : level));
+        int level = (args.length < 2 ? 1 : findNumber(1, "&cPlease specify a valid enchant level."));
+        ItemStack newbook = BaseEnchant.generateEnchantBook(enchant, level);
         getPlayer().getInventory().setItemInMainHand(newbook);
     }
 
     private Enchantment checkArgs() {
-        for (final Enchantment enchants : Enchantment.values()) {
-            if (args[0].equalsIgnoreCase(enchants.getKey().toString().replaceAll("minecraft:", "").replaceAll("vrnenchants:", ""))) {
+        for (final Enchantment enchants : Enchantment.values())
+            if (args[0].equalsIgnoreCase(enchants.getKey().toString().replaceAll("minecraft:", "").replaceAll("vrnenchants:", "")))
                 return enchants;
-            }
-        }
         return null;
     }
 
     @Override
     protected List<String> tabComplete() {
-        switch (args.length) {
-            case 1:
-                final ArrayList<String> names = new ArrayList<>();
-                for (final Enchantment enchants : Enchantment.values()) {
-                    names.add(enchants.getKey().toString().replaceAll("minecraft:", "").replaceAll("vrnenchants:", ""));
-                }
-                return completeLastWord(names);
-            case 2:
-                return completeLastWord(new ArrayList<>());
+        if (args.length == 1) {
+            final ArrayList<String> names = new ArrayList<>();
+            for (final Enchantment enchants : Enchantment.values()) {
+                names.add(enchants.getKey().toString().replaceAll("minecraft:", "").replaceAll("vrnenchants:", ""));
+                names.add("all");
+            }
+            return completeLastWord(names);
         }
         return new ArrayList<>();
     }
