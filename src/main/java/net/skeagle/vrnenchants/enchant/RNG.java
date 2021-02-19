@@ -8,6 +8,11 @@ import java.util.Map;
 public class RNG {
     private double chanceFactor = 0;
 
+    public boolean calcChance(final int baseValue, final double chanceFactor, final int level) {
+        this.chanceFactor = chanceFactor;
+        return VRNUtil.rng(1, 100) <= calcFactor(level) + baseValue;
+    }
+
     public boolean calcChance(final double chanceFactor, final int level) {
         this.chanceFactor = chanceFactor;
         return VRNUtil.rng(1, 100) <= calcFactor(level);
@@ -18,9 +23,8 @@ public class RNG {
     }
 
     private double calcFactor(final int level) {
-        if (level < 2) {
+        if (level < 2)
             return 1;
-        }
         return chanceFactor * level;
     }
 
@@ -52,14 +56,12 @@ public class RNG {
             }
             if (key == null) {
                 int higher = 0;
-                for (Map.Entry<T, Integer> entry : map.entrySet()) {
+                for (Map.Entry<T, Integer> entry : map.entrySet())
                     if (entry.getValue() > higher)
                         higher = entry.getValue();
-                }
-                for (Map.Entry<T, Integer> entry : map.entrySet()) {
+                for (Map.Entry<T, Integer> entry : map.entrySet())
                     if (entry.getValue() == higher)
                         key = entry.getKey();
-                }
             }
             return key;
         }

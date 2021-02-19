@@ -49,6 +49,6 @@ public class EnchAutoSmelt extends BaseEnchant {
     }
 
     public String setDescription() {
-        return "Automatically smelts ores.";
+        return "Automatically smelts ores when you mine them.";
     }
 }

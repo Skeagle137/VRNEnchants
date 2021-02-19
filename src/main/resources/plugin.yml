@@ -3,4 +3,4 @@ version: ${project.version}
 main: net.skeagle.vrnenchants.VRNMain
 author: Skeagle
 description: ${project.description}
-api-version: 1.13
+api-version: 1.16

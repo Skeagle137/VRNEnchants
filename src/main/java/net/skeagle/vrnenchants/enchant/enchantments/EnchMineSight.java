@@ -10,6 +10,7 @@ import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.v1_16_R3.CraftWorld;
 import org.bukkit.craftbukkit.v1_16_R3.entity.CraftPlayer;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.enchantments.EnchantmentTarget;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -26,7 +27,7 @@ public class EnchMineSight extends BaseEnchant {
     private static final Enchantment instance = new EnchMineSight();
 
     private EnchMineSight() {
-        super("Mine Sight", 3);
+        super("Mine Sight", 3, EnchantmentTarget.TOOL);
         setRarity(Rarity.LEGENDARY);
     }
 

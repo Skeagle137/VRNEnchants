@@ -6,6 +6,7 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.enchantments.EnchantmentTarget;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -24,25 +25,12 @@ import static net.skeagle.vrnenchants.util.VRNUtil.color;
 public class BaseEnchant extends Enchantment {
 
     private static final String[] NUMERALS = { "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X" };
-    private String name;
-    private int maxlevel;
-    private EnchantmentTarget target;
+    private final String name;
+    private final int maxlevel;
+    private final EnchantmentTarget target;
     private Enchantment[] conflicting;
     private boolean cursed = false;
     private Rarity rarity;
-
-    public BaseEnchant(String name) {
-        super(new NamespacedKey(VRNMain.getInstance(), name.toLowerCase().replaceAll(" ", "_")));
-        this.name = name;
-        registerEnchant(this);
-    }
-
-    public BaseEnchant(String name, int maxlevel) {
-        super(new NamespacedKey(VRNMain.getInstance(), name.toLowerCase().replaceAll(" ", "_")));
-        this.name = name;
-        this.maxlevel = maxlevel;
-        registerEnchant(this);
-    }
 
     public BaseEnchant(String name, int maxlevel, EnchantmentTarget target) {
         super(new NamespacedKey(VRNMain.getInstance(), name.toLowerCase().replaceAll(" ", "_")));
@@ -114,10 +102,6 @@ public class BaseEnchant extends Enchantment {
         return new ArrayList<>(Arrays.asList(conflicting));
     }
 
-    protected final boolean setTreasure() {
-        return false;
-    }
-
     protected final boolean setCursed() {
         return cursed = true;
     }
@@ -137,11 +121,11 @@ public class BaseEnchant extends Enchantment {
     protected void onHit(int level, LivingEntity shooter, ProjectileHitEvent e) {
     }
 
-    protected void onDamaged(int level, LivingEntity player, EntityDamageEvent e) {
+    protected void onDamaged(int level, Player player, EntityDamageEvent e) {
     }
 
     public static boolean hasEnchant(ItemStack i, Enchantment enchant) {
-        if(i.getItemMeta() != null && i.getItemMeta().getEnchants() != null && i.getItemMeta().getEnchants().size() > 0)
+        if(i.getItemMeta() != null && i.getItemMeta().getEnchants() != null && !i.getItemMeta().getEnchants().isEmpty())
             for (Map.Entry<Enchantment, Integer> enchants : i.getItemMeta().getEnchants().entrySet())
                 if (enchants.getKey().equals(enchant)) return true;
 
@@ -161,7 +145,6 @@ public class BaseEnchant extends Enchantment {
         for (final Map.Entry<Enchantment, Integer> e : vanilla.entrySet()) {
             final Enchantment ench = e.getKey();
             final int level = e.getValue();
-
             if (ench instanceof BaseEnchant)
                 map.put((BaseEnchant) ench, level);
         }

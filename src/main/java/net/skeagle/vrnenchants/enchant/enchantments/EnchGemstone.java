@@ -14,8 +14,8 @@ public class EnchGemstone extends BaseEnchant {
     private static final Enchantment instance = new EnchGemstone();
 
     private EnchGemstone() {
-        super("Gemstone", 3, EnchantmentTarget.TOOL);
-        setRarity(Rarity.RARE);
+        super("Gemstone", 4, EnchantmentTarget.TOOL);
+        setRarity(Rarity.UNCOMMON);
     }
 
     @Override

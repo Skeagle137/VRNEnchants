@@ -4,6 +4,7 @@ import lombok.Getter;
 import net.skeagle.vrnenchants.enchant.BaseEnchant;
 import net.skeagle.vrnenchants.enchant.Rarity;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.enchantments.EnchantmentTarget;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.ProjectileHitEvent;
 
@@ -13,7 +14,7 @@ public class EnchExplosive extends BaseEnchant {
     private static final Enchantment instance = new EnchExplosive();
 
     private EnchExplosive() {
-        super("Explosive", 1);
+        super("Explosive", 1, EnchantmentTarget.BOW);
         setRarity(Rarity.RARE);
     }
 

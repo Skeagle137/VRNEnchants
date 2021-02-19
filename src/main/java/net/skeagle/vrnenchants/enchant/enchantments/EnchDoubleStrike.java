@@ -4,32 +4,31 @@ import lombok.Getter;
 import net.skeagle.vrnenchants.enchant.BaseEnchant;
 import net.skeagle.vrnenchants.enchant.RNG;
 import net.skeagle.vrnenchants.enchant.Rarity;
-import net.skeagle.vrnenchants.enchant.VRNEnchants;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.enchantments.EnchantmentTarget;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 
-public class EnchVenom extends BaseEnchant {
+public class EnchDoubleStrike extends BaseEnchant {
 
     @Getter
-    private static final Enchantment instance = new EnchVenom();
+    private static final Enchantment instance = new EnchDoubleStrike();
 
-    private EnchVenom() {
-        super("Venom", 3, EnchantmentTarget.WEAPON);
-        setRarity(Rarity.COMMON);
+    private EnchDoubleStrike() {
+        super("Double Strike", 3, EnchantmentTarget.WEAPON);
+        setRarity(Rarity.COSMIC);
     }
 
     @Override
     protected void onDamage(final int level, final LivingEntity damager, final EntityDamageByEntityEvent e) {
         if (!(e.getEntity() instanceof LivingEntity)) return;
-        if (new RNG().calcChance(1 + level))
-            ((LivingEntity) e.getEntity()).addPotionEffect(new PotionEffect(PotionEffectType.POISON, level * 20, 1, false, true, true));
+
+        final RNG rng = new RNG();
+        if (rng.calcChance(1.5, level))
+            e.setDamage(e.getDamage() * 2);
     }
 
     public String setDescription() {
-        return "chance to inflict the target with poison. The higher the level, the longer the effect lasts.";
+        return "chance to do double damage to the target.";
     }
 }

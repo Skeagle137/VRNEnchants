@@ -1,12 +1,11 @@
 package net.skeagle.vrnenchants.enchant.enchantments;
 
-import lombok.Getter;
-import net.skeagle.vrnenchants.enchant.BaseEnchant;
-import net.skeagle.vrnenchants.enchant.Rarity;
-import org.bukkit.enchantments.Enchantment;
 
-public class EnchCalvary extends BaseEnchant {
+//might be added eventually?
 
+public class EnchCalvary/* extends BaseEnchant*/ {
+
+    /*
     @Getter
     private static final Enchantment instance = new EnchCalvary();
 
@@ -18,4 +17,6 @@ public class EnchCalvary extends BaseEnchant {
     public String setDescription() {
         return "Provides extra levels of defense for horses.";
     }
+
+     */
 }

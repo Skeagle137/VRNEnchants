@@ -1,6 +1,7 @@
 package net.skeagle.vrnenchants.enchant;
 
 import net.skeagle.vrnenchants.listener.ProjectileTracker;
+import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -19,6 +20,8 @@ import org.bukkit.projectiles.ProjectileSource;
 import org.mineacademy.fo.EntityUtil;
 import java.util.Map;
 import java.util.function.BiConsumer;
+
+import static net.skeagle.vrnenchants.util.VRNUtil.say;
 
 public class EnchantListener implements Listener {
 
@@ -56,12 +59,23 @@ public class EnchantListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onDamaged(EntityDamageEvent e) {
         if (!(e.getEntity() instanceof Player)) return;
-        run((Player) e.getEntity(), (enchant, level) -> enchant.onDamaged(level, (Player) e.getEntity(), e));
+        runArmor((Player) e.getEntity(), (enchant, level) -> enchant.onDamaged(level, (Player) e.getEntity(), e));
     }
 
+    @SuppressWarnings("all")
     private void run(LivingEntity entity, BiConsumer<BaseEnchant, Integer> ench) {
-        final ItemStack i = entity.getEquipment().getItemInMainHand();
+        final ItemStack i = entity.getEquipment().getItemInHand();
+        if (i == null) return;
         for (final Map.Entry<BaseEnchant, Integer> e : BaseEnchant.getEnchants(i).entrySet())
             ench.accept(e.getKey(), e.getValue());
+    }
+
+    private void runArmor(LivingEntity entity, BiConsumer<BaseEnchant, Integer> ench) {
+        for (ItemStack i : entity.getEquipment().getArmorContents()) {
+            if (i == null || i.getType() == Material.AIR) return;
+            for (final Map.Entry<BaseEnchant, Integer> e : BaseEnchant.getEnchants(i).entrySet())
+                if (e.getKey().getItemTarget().includes(i.getType()))
+                    ench.accept(e.getKey(), e.getValue());
+        }
     }
 }

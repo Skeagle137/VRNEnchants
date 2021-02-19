@@ -12,24 +12,25 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-public class EnchVenom extends BaseEnchant {
+public class EnchWithering extends BaseEnchant {
 
     @Getter
-    private static final Enchantment instance = new EnchVenom();
+    private static final Enchantment instance = new EnchWithering();
 
-    private EnchVenom() {
-        super("Venom", 3, EnchantmentTarget.WEAPON);
+    private EnchWithering() {
+        super("Venom", 3, EnchantmentTarget.WEAPON, VRNEnchants.VRN.VENOM.getEnch());
         setRarity(Rarity.COMMON);
     }
 
     @Override
     protected void onDamage(final int level, final LivingEntity damager, final EntityDamageByEntityEvent e) {
         if (!(e.getEntity() instanceof LivingEntity)) return;
+
         if (new RNG().calcChance(1 + level))
-            ((LivingEntity) e.getEntity()).addPotionEffect(new PotionEffect(PotionEffectType.POISON, level * 20, 1, false, true, true));
+            ((LivingEntity) e.getEntity()).addPotionEffect(new PotionEffect(PotionEffectType.WITHER, level * 25, 2, false, true, true));
     }
 
     public String setDescription() {
-        return "chance to inflict the target with poison. The higher the level, the longer the effect lasts.";
+        return "chance to inflict the target with wither. The higher the level, the longer the effect lasts.";
     }
 }

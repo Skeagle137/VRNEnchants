@@ -13,7 +13,7 @@ import java.util.UUID;
 
 public class ProjectileTracker implements Listener {
 
-    private static Map<UUID, IDetectGround> projectiles = new HashMap<>();
+    private static final Map<UUID, IDetectGround> projectiles = new HashMap<>();
 
     public static void track(Projectile projectile, IDetectGround inground) {
         projectiles.put(projectile.getUniqueId(), inground);
