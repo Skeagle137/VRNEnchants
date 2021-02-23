@@ -1,7 +1,7 @@
 package net.skeagle.vrnenchants.enchant.extended;
 
 import lombok.Getter;
-import net.skeagle.vrnenchants.enchant.EnchantTarget;
+import net.skeagle.vrnenchants.enchant.Target;
 import org.bukkit.enchantments.Enchantment;
 
 public class ArmorEnchantSingle extends ArmorEnchant {
@@ -15,15 +15,15 @@ public class ArmorEnchantSingle extends ArmorEnchant {
     }
 
     protected enum ArmorTarget {
-        HELMET(EnchantTarget.HELMETS),
-        CHEST(EnchantTarget.CHESTPLATES),
-        LEGS(EnchantTarget.LEGGINGS),
-        BOOTS(EnchantTarget.BOOTS);
+        HELMET(Target.HELMETS),
+        CHEST(Target.CHESTPLATES),
+        LEGS(Target.LEGGINGS),
+        BOOTS(Target.BOOTS);
 
         @Getter
-        private final EnchantTarget target;
+        private final Target target;
 
-        ArmorTarget(EnchantTarget target) {
+        ArmorTarget(Target target) {
             this.target = target;
         }
     }

@@ -30,7 +30,7 @@ public class EnchExecute extends BaseEnchant {
         if (((LivingEntity) e.getEntity()).getHealth() < level) {
             e.setDamage(50);
             CompParticle.FLAME.spawn(e.getEntity().getLocation().add(0, 1, 0));
-            CompSound.WITHER_HURT.play(e.getEntity().getLocation(), 1, 0.8F);
+            CompSound.WITHER_HURT.play(e.getEntity().getLocation(), 0.75f, 0.8F);
             if (e.getEntity() instanceof Player)
                 sayNoPrefix(e.getEntity(), "&c&lExecuted &7by " + damager.getName() + "'s insta-kill below &c" + level + "❤");
         }

@@ -2,7 +2,7 @@ package net.skeagle.vrnenchants.enchant;
 
 import org.bukkit.inventory.ItemStack;
 
-public enum EnchantTarget {
+public enum Target {
     SWORDS("_SWORD"),
     PICKAXES("_PICKAXE"),
     AXES("_AXE"),
@@ -15,21 +15,21 @@ public enum EnchantTarget {
     LEGGINGS("_LEGGINGS"),
     BOOTS("_BOOTS");
 
-    private String keyword;
+    private final String keyword;
 
-    EnchantTarget(String keyword) {
+    Target(String keyword) {
         this.keyword = keyword;
     }
 
     public static boolean parse(ItemStack i) {
-        for (EnchantTarget et : EnchantTarget.values())
+        for (Target et : Target.values())
             if (i.getType().toString().endsWith(et.keyword))
                 return true;
         return false;
     }
 
-    public static boolean parse(ItemStack i, EnchantTarget... targets) {
-        for (EnchantTarget et : targets)
+    public static boolean parse(ItemStack i, Target... targets) {
+        for (Target et : targets)
             if (i.getType().toString().endsWith(et.keyword))
                 return true;
         return false;

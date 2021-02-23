@@ -3,7 +3,6 @@ package net.skeagle.vrnenchants.enchant.enchantments;
 import lombok.Getter;
 import net.skeagle.vrnenchants.enchant.Rarity;
 import net.skeagle.vrnenchants.enchant.extended.ArmorEnchantSingle;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.potion.PotionEffect;
@@ -26,7 +25,7 @@ public class EnchNightVision extends ArmorEnchantSingle {
     @Override
     public void onTick(LivingEntity e, int parts, int level) {
         if (parts != 0)
-            e.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 215, level - 1, false, false, false));
+            e.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 240, level - 1, false, false, false));
     }
 
     @Override
