@@ -4,6 +4,7 @@ import lombok.Getter;
 import net.skeagle.vrnenchants.enchant.BaseEnchant;
 import net.skeagle.vrnenchants.enchant.RNG;
 import net.skeagle.vrnenchants.enchant.Rarity;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.enchantments.EnchantmentTarget;
 import org.bukkit.entity.LivingEntity;
@@ -23,8 +24,13 @@ public class EnchVampirism extends BaseEnchant {
     protected void onDamage(final int level, final LivingEntity damager, final EntityDamageByEntityEvent e) {
         if (!(e.getEntity() instanceof LivingEntity)) return;
 
-        if (new RNG().calcChance(6 + (level * 2)))
-            damager.setHealth(damager.getHealth() + e.getDamage() * (level * 0.5));
+        if (new RNG().calcChance(2 + (level * 2))) {
+            double health = damager.getHealth() + e.getDamage() * (0.75 - (level > 1 ? 0.15 : 0));
+            if ((damager.getHealth() + health) < damager.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue())
+                damager.setHealth(health);
+            else
+                damager.setHealth(damager.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+        }
     }
 
     public String setDescription() {
