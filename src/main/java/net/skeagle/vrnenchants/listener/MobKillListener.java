@@ -24,8 +24,9 @@ public class MobKillListener implements Listener {
         if (!(e.getEntity() instanceof Monster) || e.getEntity().getKiller() == null) return;
         int rand = VRNUtil.rng(1, 700);
         ItemStack hand = e.getEntity().getKiller().getEquipment().getItemInMainHand();
-        if (!BaseEnchant.hasEnchant(hand, Enchantment.LOOT_BONUS_MOBS)) return;
-        int level = hand.getEnchantments().get(Enchantment.LOOT_BONUS_MOBS);
+        int level = 0;
+        if (BaseEnchant.hasEnchant(hand, Enchantment.LOOT_BONUS_MOBS))
+            level = hand.getEnchantments().get(Enchantment.LOOT_BONUS_MOBS);
         if (rand > (int) (1 + (level * 1.5))) return;
         ItemStack i = randomizeEnchant(e.getEntity().getKiller());
         e.getDrops().add(i);

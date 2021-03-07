@@ -24,8 +24,9 @@ public class FishingListener implements Listener {
         if (e.getState() == PlayerFishEvent.State.CAUGHT_FISH) {
             int rand = VRNUtil.rng(1, 180);
             ItemStack hand = e.getPlayer().getEquipment().getItemInMainHand();
-            if (!BaseEnchant.hasEnchant(hand, Enchantment.LUCK)) return;
-            int level = hand.getEnchantments().get(Enchantment.LUCK);
+            int level = 0;
+            if (BaseEnchant.hasEnchant(hand, Enchantment.LUCK))
+                level = hand.getEnchantments().get(Enchantment.LUCK);
             if (rand > (1 + (level * 2))) return;
             ItemStack i = randomizeEnchant(e.getPlayer());
             ((Item) e.getCaught()).setItemStack(i);
