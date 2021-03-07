@@ -18,7 +18,7 @@ public class ReflectionUtils {
         return f;
     }
 
-    public static void setAccessable(Class<?> clazz, String field) {
+    public static void setAccessible(Class<?> clazz, String field) {
         Field f = getDeclaredField(clazz, field);
         f.setAccessible(true);
         try {
@@ -42,5 +42,15 @@ public class ReflectionUtils {
             throw new NullPointerException("Could not get field content from field " + field + ".");
         }
         return o;
+    }
+
+    public static void setFieldContent(Field f, Object o, Object value) {
+        f.setAccessible(true);
+        try {
+            f.set(o, value);
+        }
+        catch (ReflectiveOperationException e) {
+            e.printStackTrace();
+        }
     }
 }

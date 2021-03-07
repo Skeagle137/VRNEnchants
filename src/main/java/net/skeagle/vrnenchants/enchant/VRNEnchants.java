@@ -56,7 +56,7 @@ public class VRNEnchants {
     public static void registerEnchant(Enchantment ench) {
         boolean isregistered = Arrays.stream(Enchantment.values()).collect(Collectors.toList()).contains(ench);
         if (isregistered) return;
-        ReflectionUtils.setAccessable(Enchantment.class, "acceptingNew");
+        ReflectionUtils.setAccessible(Enchantment.class, "acceptingNew");
         Enchantment.registerEnchantment(ench);
     }
 

@@ -22,7 +22,7 @@ public class EnchVenom extends BaseEnchant {
     @Override
     protected void onDamage(final int level, final LivingEntity damager, final EntityDamageByEntityEvent e) {
         if (!(e.getEntity() instanceof LivingEntity)) return;
-        if (new RNG().calcChance(1 + level))
+        if (new RNG().calcChance(3 + level))
             ((LivingEntity) e.getEntity()).addPotionEffect(new PotionEffect(PotionEffectType.POISON, level * 20, 1, false, true, true));
     }
 

@@ -16,7 +16,7 @@ public class EnchWithering extends BaseEnchant {
     private static final Enchantment instance = new EnchWithering();
 
     private EnchWithering() {
-        super("Withering", 3, EnchantmentTarget.WEAPON, VRNEnchants.VRN.VENOM.getEnch());
+        super("Withering", 3, EnchantmentTarget.WEAPON);
         setRarity(Rarity.COMMON);
     }
 
@@ -24,7 +24,7 @@ public class EnchWithering extends BaseEnchant {
     protected void onDamage(final int level, final LivingEntity damager, final EntityDamageByEntityEvent e) {
         if (!(e.getEntity() instanceof LivingEntity)) return;
 
-        if (new RNG().calcChance(1 + level))
+        if (new RNG().calcChance(3 + level))
             ((LivingEntity) e.getEntity()).addPotionEffect(new PotionEffect(PotionEffectType.WITHER, level * 25, 1, false, true, true));
     }
 
