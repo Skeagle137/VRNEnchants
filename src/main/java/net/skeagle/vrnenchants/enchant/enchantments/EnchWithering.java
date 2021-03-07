@@ -1,6 +1,5 @@
 package net.skeagle.vrnenchants.enchant.enchantments;
 
-import lombok.Getter;
 import net.skeagle.vrnenchants.enchant.BaseEnchant;
 import net.skeagle.vrnenchants.enchant.RNG;
 import net.skeagle.vrnenchants.enchant.Rarity;
@@ -14,7 +13,6 @@ import org.bukkit.potion.PotionEffectType;
 
 public class EnchWithering extends BaseEnchant {
 
-    @Getter
     private static final Enchantment instance = new EnchWithering();
 
     private EnchWithering() {
@@ -32,5 +30,9 @@ public class EnchWithering extends BaseEnchant {
 
     public String setDescription() {
         return "chance to inflict the target with wither. The higher the level, the longer the effect lasts.";
+    }
+
+    public static Enchantment getInstance() {
+        return instance;
     }
 }

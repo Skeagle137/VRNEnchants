@@ -6,7 +6,6 @@ package net.skeagle.vrnenchants.enchant.enchantments;
 public class EnchCalvary/* extends BaseEnchant*/ {
 
     /*
-    @Getter
     private static final Enchantment instance = new EnchCalvary();
 
     private EnchCalvary() {
@@ -16,6 +15,10 @@ public class EnchCalvary/* extends BaseEnchant*/ {
 
     public String setDescription() {
         return "Provides extra levels of defense for horses.";
+    }
+
+    public static Enchantment getInstance() {
+        return instance;
     }
 
      */

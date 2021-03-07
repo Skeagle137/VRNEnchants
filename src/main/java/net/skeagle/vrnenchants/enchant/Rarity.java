@@ -39,21 +39,17 @@ public enum Rarity {
 
     public static Rarity getRarityFromCombinedPoints(final int points) {
         Rarity rarity = COMMON;
-        for (final Rarity r : Rarity.values()) {
-            if (points >= r.getCombinedPoints()) {
+        for (final Rarity r : Rarity.values())
+            if (points >= r.getCombinedPoints())
                 rarity = r;
-            }
-        }
         return rarity;
     }
 
     public static String getPrefixFromCombinedPoints(final int points) {
         String prefix = COMMON.getPrefix();
-        for (final Rarity r : Rarity.values()) {
-            if (points >= r.getCombinedPoints()) {
+        for (final Rarity r : Rarity.values())
+            if (points >= r.getCombinedPoints())
                 prefix = r.getPrefix();
-            }
-        }
         return prefix;
     }
 }

@@ -1,6 +1,5 @@
 package net.skeagle.vrnenchants.enchant.enchantments;
 
-import lombok.Getter;
 import net.skeagle.vrnenchants.enchant.BaseEnchant;
 import net.skeagle.vrnenchants.enchant.Rarity;
 import org.bukkit.enchantments.Enchantment;
@@ -8,7 +7,6 @@ import org.bukkit.enchantments.EnchantmentTarget;
 
 public class EnchFisherman extends BaseEnchant {
 
-    @Getter
     private static final Enchantment instance = new EnchFisherman();
 
     private EnchFisherman() {
@@ -20,5 +18,9 @@ public class EnchFisherman extends BaseEnchant {
 
     public String setDescription() {
         return "Increases the chances of getting a higher tier enchant on enchanted books when fishing.";
+    }
+
+    public static Enchantment getInstance() {
+        return instance;
     }
 }

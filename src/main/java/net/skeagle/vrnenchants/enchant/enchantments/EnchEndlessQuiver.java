@@ -1,25 +1,20 @@
 package net.skeagle.vrnenchants.enchant.enchantments;
 
-import lombok.Getter;
 import net.skeagle.vrnenchants.enchant.BaseEnchant;
 import net.skeagle.vrnenchants.enchant.RNG;
 import net.skeagle.vrnenchants.enchant.Rarity;
-import net.skeagle.vrnenchants.util.ItemUtil;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.enchantments.EnchantmentTarget;
 import org.bukkit.entity.*;
 import org.bukkit.event.entity.ProjectileHitEvent;
-import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionType;
 
 public class EnchEndlessQuiver extends BaseEnchant {
 
-    @Getter
     private static final Enchantment instance = new EnchEndlessQuiver();
 
     private EnchEndlessQuiver() {
@@ -51,5 +46,9 @@ public class EnchEndlessQuiver extends BaseEnchant {
 
     public String setDescription() {
         return "Similar to infinity, but only applies to spectral and tipped arrows.";
+    }
+
+    public static Enchantment getInstance() {
+        return instance;
     }
 }

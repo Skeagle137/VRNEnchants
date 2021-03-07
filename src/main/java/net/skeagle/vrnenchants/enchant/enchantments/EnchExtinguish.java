@@ -1,6 +1,5 @@
 package net.skeagle.vrnenchants.enchant.enchantments;
 
-import lombok.Getter;
 import net.skeagle.vrnenchants.enchant.BaseEnchant;
 import net.skeagle.vrnenchants.enchant.RNG;
 import net.skeagle.vrnenchants.enchant.Rarity;
@@ -11,7 +10,6 @@ import org.bukkit.event.entity.EntityDamageEvent;
 
 public class EnchExtinguish extends BaseEnchant {
 
-    @Getter
     private static final Enchantment instance = new EnchExtinguish();
 
     private EnchExtinguish() {
@@ -28,5 +26,9 @@ public class EnchExtinguish extends BaseEnchant {
 
     public String setDescription() {
         return "Has a chance to extinguish yourself early when burning.";
+    }
+
+    public static Enchantment getInstance() {
+        return instance;
     }
 }

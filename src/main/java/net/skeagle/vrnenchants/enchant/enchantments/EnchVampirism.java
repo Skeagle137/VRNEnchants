@@ -1,6 +1,5 @@
 package net.skeagle.vrnenchants.enchant.enchantments;
 
-import lombok.Getter;
 import net.skeagle.vrnenchants.enchant.BaseEnchant;
 import net.skeagle.vrnenchants.enchant.RNG;
 import net.skeagle.vrnenchants.enchant.Rarity;
@@ -12,7 +11,6 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 public class EnchVampirism extends BaseEnchant {
 
-    @Getter
     private static final Enchantment instance = new EnchVampirism();
 
     private EnchVampirism() {
@@ -35,5 +33,9 @@ public class EnchVampirism extends BaseEnchant {
 
     public String setDescription() {
         return "chance to steal hearts from the target.";
+    }
+
+    public static Enchantment getInstance() {
+        return instance;
     }
 }

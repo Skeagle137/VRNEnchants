@@ -2,13 +2,10 @@ package net.skeagle.vrnenchants.commands;
 
 import net.skeagle.vrnenchants.enchant.BaseEnchant;
 import net.skeagle.vrnenchants.enchant.VRNEnchants;
-import net.skeagle.vrnenchants.enchant.enchantments.EnchSpeedy;
 import net.skeagle.vrnenchants.util.VRNUtil;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.EnchantmentStorageMeta;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.mineacademy.fo.command.SimpleCommand;
 
 import java.util.ArrayList;
@@ -22,7 +19,7 @@ public class Enchant extends SimpleCommand {
         super("enchant|ench");
         setDescription("Enchants the item held in your main hand.");
         setPermission("vrn.enchant");
-        setPermissionMessage(VRNUtil.noperm);
+        setPermissionMessage(VRNUtil.NOPERM);
     }
 
     @Override

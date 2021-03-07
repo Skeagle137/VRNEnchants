@@ -1,12 +1,10 @@
 package net.skeagle.vrnenchants.enchant.extended.armorequip;
 
-import lombok.Getter;
 import org.bukkit.inventory.ItemStack;
 
 public enum ArmorType {
     HELMET(5), CHESTPLATE(6), LEGGINGS(7), BOOTS(8);
 
-    @Getter
     private final int slot;
 
     ArmorType(int slot){
@@ -27,6 +25,10 @@ public enum ArmorType {
             return BOOTS;
         else
             return null;
+    }
+
+    public int getSlot() {
+        return slot;
     }
 }
 

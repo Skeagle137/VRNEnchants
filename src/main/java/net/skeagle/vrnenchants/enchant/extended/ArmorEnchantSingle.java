@@ -1,6 +1,5 @@
 package net.skeagle.vrnenchants.enchant.extended;
 
-import lombok.Getter;
 import net.skeagle.vrnenchants.enchant.Target;
 import org.bukkit.enchantments.Enchantment;
 
@@ -20,11 +19,14 @@ public class ArmorEnchantSingle extends ArmorEnchant {
         LEGS(Target.LEGGINGS),
         BOOTS(Target.BOOTS);
 
-        @Getter
         private final Target target;
 
         ArmorTarget(Target target) {
             this.target = target;
+        }
+
+        public Target getTarget() {
+            return target;
         }
     }
 }

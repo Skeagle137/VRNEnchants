@@ -1,9 +1,10 @@
 package net.skeagle.vrnenchants.enchant.enchantments;
 
-import lombok.Getter;
 import net.minecraft.server.v1_16_R3.*;
+import net.skeagle.vrnenchants.VRNMain;
 import net.skeagle.vrnenchants.enchant.BaseEnchant;
 import net.skeagle.vrnenchants.enchant.Rarity;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -14,7 +15,6 @@ import org.bukkit.enchantments.EnchantmentTarget;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.mineacademy.fo.Common;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -23,7 +23,6 @@ import static net.skeagle.vrnenchants.util.VRNUtil.sayActionBar;
 
 public class EnchMineSight extends BaseEnchant {
 
-    @Getter
     private static final Enchantment instance = new EnchMineSight();
 
     private EnchMineSight() {
@@ -46,10 +45,10 @@ public class EnchMineSight extends BaseEnchant {
         final ArrayList<Block> blocks = getBlocks(p.getLocation().getBlock(), level);
         outline(p, blocks, level);
         cooldown.add(p);
-        Common.runLater(20 * (60 * (6 - level)), () -> {
+        Bukkit.getScheduler().runTaskLater(VRNMain.getInstance(), () -> {
             cooldown.remove(p);
             sayActionBar(p, "&aYou are now able to use mine sight again.");
-        });
+        }, 20 * (60 * (6 - level)));
     }
 
     public String setDescription() {
@@ -59,14 +58,10 @@ public class EnchMineSight extends BaseEnchant {
     private ArrayList<Block> getBlocks(final Block start, final int level) {
         final int radius = level + 3;
         final ArrayList<Block> blocks = new ArrayList<>();
-        for (double x = start.getLocation().getX() - radius; x <= start.getLocation().getX() + radius; x++) {
-            for (double y = start.getLocation().getY() - radius; y <= start.getLocation().getY() + radius; y++) {
-                for (double z = start.getLocation().getZ() - radius; z <= start.getLocation().getZ() + radius; z++) {
-                    final Location loc = new Location(start.getWorld(), x, y, z);
-                    blocks.add(loc.getBlock());
-                }
-            }
-        }
+        for (double x = start.getLocation().getX() - radius; x <= start.getLocation().getX() + radius; x++)
+            for (double y = start.getLocation().getY() - radius; y <= start.getLocation().getY() + radius; y++)
+                for (double z = start.getLocation().getZ() - radius; z <= start.getLocation().getZ() + radius; z++)
+                    blocks.add(new Location(start.getWorld(), x, y, z).getBlock());
         return filterBlocks(blocks);
     }
 
@@ -88,16 +83,15 @@ public class EnchMineSight extends BaseEnchant {
             ((CraftPlayer) p).getHandle().playerConnection.sendPacket(entityMetadata);
             blockCorrespondingEntity.put(b, shulk);
         }
-        for (EnumChatFormat color : colorsUsed) {
+        for (EnumChatFormat color : colorsUsed)
             setTeams(p, color);
-        }
-        Common.runLater((duration) * 20, () -> {
+        Bukkit.getScheduler().runTaskLater(VRNMain.getInstance(), () -> {
             PacketPlayOutEntityDestroy destroy;
             for (final EntityShulker shulk : blockCorrespondingEntity.values()) {
                 destroy = new PacketPlayOutEntityDestroy(shulk.getId());
                 ((CraftPlayer) p).getHandle().playerConnection.sendPacket(destroy);
             }
-        });
+        }, (duration) * 20);
     }
 
     private enum Sorter {
@@ -126,11 +120,9 @@ public class EnchMineSight extends BaseEnchant {
         }
 
         public static EnumChatFormat getColorFrom(final Block b) {
-            for (final Sorter sorter : Sorter.values()) {
-                if (b.getType() == sorter.block) {
+            for (final Sorter sorter : Sorter.values())
+                if (b.getType() == sorter.block)
                     return sorter.color;
-                }
-            }
             return EnumChatFormat.WHITE;
         }
     }
@@ -144,27 +136,26 @@ public class EnchMineSight extends BaseEnchant {
         team.setDisplayName(new ChatMessage("minesight" + color.character));
         team.setColor(color);
         ((CraftPlayer) p).getHandle().playerConnection.sendPacket(new PacketPlayOutScoreboardTeam(team, 0));
-        for (Block b : blockCorrespondingEntity.keySet()) {
-            if (Sorter.getColorFrom(b) == color) {
+        for (Block b : blockCorrespondingEntity.keySet())
+            if (Sorter.getColorFrom(b) == color)
                 ((CraftPlayer) p).getHandle().playerConnection.sendPacket(
                         new PacketPlayOutScoreboardTeam(team, Collections.singletonList(String.valueOf(blockCorrespondingEntity.get(b).getUniqueID())), 3));
-            }
-        }
     }
 
     private ArrayList<Block> filterBlocks(final ArrayList<Block> blocks) {
         final ArrayList<Block> newBlocks = new ArrayList<>();
-        for (final Block b : blocks) {
-            for (final Sorter sort : Sorter.values()) {
+        for (final Block b : blocks)
+            for (final Sorter sort : Sorter.values())
                 if (b.getType() == sort.getBlock()) {
-                    if (!colorsUsed.contains(Sorter.getColorFrom(b))) {
+                    if (!colorsUsed.contains(Sorter.getColorFrom(b)))
                         colorsUsed.add(Sorter.getColorFrom(b));
-                    }
                     newBlocks.add(b);
                 }
-            }
-        }
         return newBlocks;
+    }
+
+    public static Enchantment getInstance() {
+        return instance;
     }
 
 }

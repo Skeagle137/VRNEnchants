@@ -1,6 +1,5 @@
 package net.skeagle.vrnenchants.enchant.enchantments;
 
-import lombok.Getter;
 import net.skeagle.vrnenchants.enchant.BaseEnchant;
 import net.skeagle.vrnenchants.enchant.Rarity;
 import org.bukkit.enchantments.Enchantment;
@@ -8,7 +7,7 @@ import org.bukkit.enchantments.EnchantmentTarget;
 
 public class EnchVolley/* extends BaseEnchant*/ {
 
-    /*@Getter
+    /*
     private static final Enchantment instance = new EnchVolley();
 
     private EnchVolley() {
@@ -18,6 +17,10 @@ public class EnchVolley/* extends BaseEnchant*/ {
 
     public String setDescription() {
         return "Shoot multiple arrows at once.";
+    }
+
+    public static Enchantment getInstance() {
+        return instance;
     }
      */
 }

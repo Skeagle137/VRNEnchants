@@ -1,6 +1,5 @@
 package net.skeagle.vrnenchants.enchant.enchantments;
 
-import lombok.Getter;
 import net.skeagle.vrnenchants.enchant.BaseEnchant;
 import net.skeagle.vrnenchants.enchant.RNG;
 import net.skeagle.vrnenchants.enchant.Rarity;
@@ -11,7 +10,6 @@ import org.bukkit.event.block.BlockBreakEvent;
 
 public class EnchHarvest extends BaseEnchant {
 
-    @Getter
     private static final Enchantment instance = new EnchHarvest();
 
     private EnchHarvest() {
@@ -33,5 +31,9 @@ public class EnchHarvest extends BaseEnchant {
 
     public String setDescription() {
         return "Chance of reaping double or triple the items from the amount of a single crop.";
+    }
+
+    public static Enchantment getInstance() {
+        return instance;
     }
 }

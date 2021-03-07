@@ -1,6 +1,5 @@
 package net.skeagle.vrnenchants.enchant.enchantments;
 
-import lombok.Getter;
 import net.skeagle.vrnenchants.enchant.BaseEnchant;
 import net.skeagle.vrnenchants.enchant.RNG;
 import net.skeagle.vrnenchants.enchant.Rarity;
@@ -14,7 +13,6 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 public class EnchGoldDigger/* extends BaseEnchant*/ {
 
     /*
-    @Getter
     private static final Enchantment instance = new EnchGoldDigger();
 
     private EnchGoldDigger() {
@@ -32,6 +30,10 @@ public class EnchGoldDigger/* extends BaseEnchant*/ {
 
     public String setDescription() {
         return "Killing mobs has a chance to drop gold nuggets, or more ingots if the mob already drops gold.";
+    }
+
+    public static Enchantment getInstance() {
+        return instance;
     }
 
      */

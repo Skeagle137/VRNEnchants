@@ -1,10 +1,8 @@
 package net.skeagle.vrnenchants.enchant.enchantments;
 
-import lombok.Getter;
 import net.skeagle.vrnenchants.enchant.BaseEnchant;
 import net.skeagle.vrnenchants.enchant.RNG;
 import net.skeagle.vrnenchants.enchant.Rarity;
-import net.skeagle.vrnenchants.enchant.VRNEnchants;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.enchantments.EnchantmentTarget;
 import org.bukkit.entity.LivingEntity;
@@ -14,7 +12,6 @@ import org.bukkit.potion.PotionEffectType;
 
 public class EnchVenom extends BaseEnchant {
 
-    @Getter
     private static final Enchantment instance = new EnchVenom();
 
     private EnchVenom() {
@@ -31,5 +28,9 @@ public class EnchVenom extends BaseEnchant {
 
     public String setDescription() {
         return "chance to inflict the target with poison. The higher the level, the longer the effect lasts.";
+    }
+
+    public static Enchantment getInstance() {
+        return instance;
     }
 }

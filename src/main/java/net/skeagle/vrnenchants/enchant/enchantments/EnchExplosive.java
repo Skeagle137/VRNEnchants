@@ -1,6 +1,5 @@
 package net.skeagle.vrnenchants.enchant.enchantments;
 
-import lombok.Getter;
 import net.skeagle.vrnenchants.enchant.BaseEnchant;
 import net.skeagle.vrnenchants.enchant.Rarity;
 import org.bukkit.enchantments.Enchantment;
@@ -10,7 +9,6 @@ import org.bukkit.event.entity.ProjectileHitEvent;
 
 public class EnchExplosive extends BaseEnchant {
 
-    @Getter
     private static final Enchantment instance = new EnchExplosive();
 
     private EnchExplosive() {
@@ -26,4 +24,9 @@ public class EnchExplosive extends BaseEnchant {
     public String setDescription() {
         return "Arrows explode when they hit an object or the ground.";
     }
+
+    public static Enchantment getInstance() {
+        return instance;
+    }
+
 }

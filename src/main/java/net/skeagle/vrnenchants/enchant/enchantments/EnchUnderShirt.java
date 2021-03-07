@@ -1,6 +1,5 @@
 package net.skeagle.vrnenchants.enchant.enchantments;
 
-import lombok.Getter;
 import net.skeagle.vrnenchants.enchant.BaseEnchant;
 import net.skeagle.vrnenchants.enchant.Rarity;
 import org.bukkit.enchantments.Enchantment;
@@ -13,12 +12,11 @@ import java.util.ArrayList;
 
 public class EnchUnderShirt extends BaseEnchant {
 
-    @Getter
     private static final Enchantment instance = new EnchUnderShirt();
 
     private EnchUnderShirt() {
         super("UnderShirt", 1, EnchantmentTarget.ARMOR_TORSO);
-        setRarity(Rarity.LEGENDARY);
+        setRarity(Rarity.EPIC);
     }
 
     private final ArrayList<Player> cooldown = new ArrayList<>();
@@ -34,5 +32,9 @@ public class EnchUnderShirt extends BaseEnchant {
 
     public String setDescription() {
         return "Receiving a fatal blow will not kill you, but instead leave you on half a heart.";
+    }
+
+    public static Enchantment getInstance() {
+        return instance;
     }
 }

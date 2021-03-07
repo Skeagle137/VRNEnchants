@@ -1,5 +1,6 @@
 package net.skeagle.vrnenchants.enchant.extended;
 
+import net.skeagle.vrnenchants.VRNMain;
 import net.skeagle.vrnenchants.enchant.BaseEnchant;
 import net.skeagle.vrnenchants.enchant.extended.armorequip.ArmorEquipEvent;
 import net.skeagle.vrnenchants.enchant.extended.armorequip.ArmorType;
@@ -11,7 +12,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.mineacademy.fo.Common;
 
 import java.util.*;
 import java.util.function.BiConsumer;
@@ -27,10 +27,10 @@ public class TaskArmorEnchant extends BukkitRunnable implements Listener {
                 if (entity instanceof LivingEntity) {
                     if (entityMap.containsKey(entity.getUniqueId())) {
                         LivingEntity e = (LivingEntity) entity;
-                        Common.runLater(() -> {
+                        Bukkit.getScheduler().runTaskLater(VRNMain.getInstance(), () -> {
                             ItemStack[] armor = updateArmor(e, entityMap.get(e.getUniqueId()), false);
                             run((ench, level) -> ench.onTick(e, getParts(armor), level), entityMap.get(e.getUniqueId()));
-                        });
+                        }, 0);
                     }
                 }
             }

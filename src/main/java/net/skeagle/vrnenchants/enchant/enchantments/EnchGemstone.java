@@ -1,6 +1,5 @@
 package net.skeagle.vrnenchants.enchant.enchantments;
 
-import lombok.Getter;
 import net.skeagle.vrnenchants.enchant.BaseEnchant;
 import net.skeagle.vrnenchants.enchant.RNG;
 import net.skeagle.vrnenchants.enchant.Rarity;
@@ -10,7 +9,6 @@ import org.bukkit.event.block.BlockBreakEvent;
 
 public class EnchGemstone extends BaseEnchant {
 
-    @Getter
     private static final Enchantment instance = new EnchGemstone();
 
     private EnchGemstone() {
@@ -20,13 +18,15 @@ public class EnchGemstone extends BaseEnchant {
 
     @Override
     protected void onBreakBlock(final int level, final BlockBreakEvent e) {
-        final RNG r = new RNG();
-        if (r.calcChance(5, level)) {
+        if (new RNG().calcChance(10, 5, level))
             e.setExpToDrop(e.getExpToDrop() * 3);
-        }
     }
 
     public String setDescription() {
         return "Chance of getting triple the xp from mining an ore. Higher levels increase the chance.";
+    }
+
+    public static Enchantment getInstance() {
+        return instance;
     }
 }

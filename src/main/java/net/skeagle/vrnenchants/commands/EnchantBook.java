@@ -19,7 +19,7 @@ public class EnchantBook extends SimpleCommand {
         super("enchantbook|enchbook");
         setDescription("Adds custom enchants to an enchanted book");
         setPermission("vrn.enchant");
-        setPermissionMessage(VRNUtil.noperm);
+        setPermissionMessage(VRNUtil.NOPERM);
     }
 
     @Override

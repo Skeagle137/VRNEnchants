@@ -1,6 +1,5 @@
 package net.skeagle.vrnenchants.enchant.enchantments;
 
-import lombok.Getter;
 import net.skeagle.vrnenchants.enchant.BaseEnchant;
 import net.skeagle.vrnenchants.enchant.RNG;
 import net.skeagle.vrnenchants.enchant.Rarity;
@@ -14,7 +13,6 @@ import org.bukkit.potion.PotionEffectType;
 
 public class EnchSpeedy extends BaseEnchant {
 
-    @Getter
     private static final Enchantment instance = new EnchSpeedy();
 
     private EnchSpeedy() {
@@ -28,5 +26,9 @@ public class EnchSpeedy extends BaseEnchant {
 
         if (new RNG().calcChance(15, 5, level))
             damager.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, (level * 20) + 20, level - 1, false, true, true));
+    }
+
+    public static Enchantment getInstance() {
+        return instance;
     }
 }

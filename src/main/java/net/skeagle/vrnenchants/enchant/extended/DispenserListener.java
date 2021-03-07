@@ -15,9 +15,8 @@ public class DispenserListener implements Listener {
         if (type != null) {
             final ArmorEquipEvent armorEquipEvent = new ArmorEquipEvent(e.getTargetEntity(), ArmorEquipEvent.EquipMethod.DISPENSER, type, null, e.getItem());
             Bukkit.getServer().getPluginManager().callEvent(armorEquipEvent);
-            if (armorEquipEvent.isCancelled()) {
+            if (armorEquipEvent.isCancelled())
                 e.setCancelled(true);
-            }
         }
     }
 }

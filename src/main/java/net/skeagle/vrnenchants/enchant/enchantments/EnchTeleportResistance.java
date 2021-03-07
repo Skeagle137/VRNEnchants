@@ -1,6 +1,5 @@
 package net.skeagle.vrnenchants.enchant.enchantments;
 
-import lombok.Getter;
 import net.skeagle.vrnenchants.enchant.BaseEnchant;
 import net.skeagle.vrnenchants.enchant.Rarity;
 import org.bukkit.Location;
@@ -13,7 +12,6 @@ import org.bukkit.inventory.ItemStack;
 
 public class EnchTeleportResistance extends BaseEnchant implements Listener {
 
-    @Getter
     private static final Enchantment instance = new EnchTeleportResistance();
 
     public EnchTeleportResistance() {
@@ -35,5 +33,9 @@ public class EnchTeleportResistance extends BaseEnchant implements Listener {
 
     public String setDescription() {
         return "Gives immunity to damage from teleporting with ender pearls.";
+    }
+
+    public static Enchantment getInstance() {
+        return instance;
     }
 }

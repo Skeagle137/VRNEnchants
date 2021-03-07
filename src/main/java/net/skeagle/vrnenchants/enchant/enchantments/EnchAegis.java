@@ -1,6 +1,5 @@
 package net.skeagle.vrnenchants.enchant.enchantments;
 
-import lombok.Getter;
 import net.skeagle.vrnenchants.enchant.BaseEnchant;
 import net.skeagle.vrnenchants.enchant.RNG;
 import net.skeagle.vrnenchants.enchant.Rarity;
@@ -16,7 +15,6 @@ import static net.skeagle.vrnenchants.util.VRNUtil.sayNoPrefix;
 
 public class EnchAegis extends BaseEnchant {
 
-    @Getter
     private static final Enchantment instance = new EnchAegis();
 
     private EnchAegis() {
@@ -38,6 +36,10 @@ public class EnchAegis extends BaseEnchant {
 
     public String setDescription() {
         return "Has a chance to deflect melee attacks.";
+    }
+
+    public static Enchantment getInstance() {
+        return instance;
     }
 
 }

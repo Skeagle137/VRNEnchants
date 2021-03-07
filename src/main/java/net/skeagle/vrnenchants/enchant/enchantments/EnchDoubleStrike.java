@@ -1,6 +1,5 @@
 package net.skeagle.vrnenchants.enchant.enchantments;
 
-import lombok.Getter;
 import net.skeagle.vrnenchants.enchant.BaseEnchant;
 import net.skeagle.vrnenchants.enchant.RNG;
 import net.skeagle.vrnenchants.enchant.Rarity;
@@ -11,7 +10,6 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 public class EnchDoubleStrike extends BaseEnchant {
 
-    @Getter
     private static final Enchantment instance = new EnchDoubleStrike();
 
     private EnchDoubleStrike() {
@@ -30,5 +28,9 @@ public class EnchDoubleStrike extends BaseEnchant {
 
     public String setDescription() {
         return "chance to do double damage to the target.";
+    }
+
+    public static Enchantment getInstance() {
+        return instance;
     }
 }
