@@ -4,3 +4,13 @@ main: net.skeagle.vrnenchants.VRNMain
 author: Skeagle
 description: ${project.description}
 api-version: 1.16
+
+commands:
+  enchant:
+    description: Enchants the item held in your main hand.
+    usage: /enchant <enchantment> <level>
+    permission: vrn.enchant
+  enchantbook:
+    description: Generates or adds custom enchants to a book.
+    usage: /enchantbook <enchantment> <level>
+    permission: vrn.enchant

@@ -16,21 +16,28 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
 
 import static net.skeagle.vrnenchants.enchant.VRNEnchants.registerEnchant;
-import static net.skeagle.vrnenchants.util.VRNUtil.color;
+import static net.skeagle.vrnenchants.util.VRNUtil.*;
 
 public class BaseEnchant extends Enchantment {
 
     private static final String[] NUMERALS = { "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X" };
     private final String name;
     private final int maxlevel;
+    private int level;
     private final EnchantmentTarget target;
     private Enchantment[] conflicting;
     private boolean cursed = false;
     private Rarity rarity;
+    private final EnchantCooldown enchantCooldown = new EnchantCooldown();
+    private long cooldown;
+    private String cooldownMessage;
+    private boolean cooldownErrorVisible;
+    private EnchantCooldown.CooldownMessageType type = EnchantCooldown.CooldownMessageType.CHAT;
 
     public BaseEnchant(String name, int maxlevel, EnchantmentTarget target) {
         super(new NamespacedKey(VRNMain.getInstance(), name.toLowerCase().replaceAll(" ", "_")));
@@ -65,7 +72,7 @@ public class BaseEnchant extends Enchantment {
         return 1;
     }
 
-    @Override
+    @Override @SuppressWarnings("deprecation")
     public final EnchantmentTarget getItemTarget() {
         return (target != null ? target : EnchantmentTarget.ALL);
     }
@@ -88,6 +95,55 @@ public class BaseEnchant extends Enchantment {
         return this.rarity = rarity;
     }
 
+    public final EnchantCooldown getCooldownMap() {
+        return enchantCooldown;
+    }
+
+    public final long getCooldown() {
+        return cooldown;
+    }
+
+    protected final void setInitialCooldown(long seconds) {
+        this.cooldown = seconds;
+    }
+
+    public final void setCooldownMessage(String cooldownMessage) {
+        this.cooldownMessage = cooldownMessage;
+    }
+
+    public final void setCooldownMessageType(EnchantCooldown.CooldownMessageType type) {
+        this.type = type;
+    }
+
+    public final boolean isCooldownErrorVisible() {
+        return cooldownErrorVisible;
+    }
+
+    public final void setCooldownErrorVisible(boolean cooldownErrorVisible) {
+        this.cooldownErrorVisible = cooldownErrorVisible;
+    }
+
+    public final void setCooldown(LivingEntity e) {
+        enchantCooldown.set(e, cooldown);
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                enchantCooldown.set(e, enchantCooldown.get(e) - 1);
+                if (enchantCooldown.get(e) <= 0) {
+                    this.cancel();
+                    enchantCooldown.remove(e);
+                    if (cooldownMessage != null && !cooldownMessage.isEmpty() && e instanceof Player) {
+                        if (type == EnchantCooldown.CooldownMessageType.ACTION)
+                            sayActionBar((Player) e, cooldownMessage);
+                        else if (type == EnchantCooldown.CooldownMessageType.CHAT)
+                            sayNoPrefix(e, cooldownMessage);
+
+                    }
+                }
+            }
+        }.runTaskTimer(VRNMain.getInstance(), 20, 20);
+    }
+
     @Override
     public final boolean conflictsWith(Enchantment other) {
         return conflicting != null;
@@ -104,6 +160,14 @@ public class BaseEnchant extends Enchantment {
 
     protected final boolean setCursed() {
         return cursed = true;
+    }
+
+    protected final int getLevel() {
+        return this.level;
+    }
+
+    protected final void setLevel(int level) {
+        this.level = level;
     }
 
     protected void onDamage(int level, LivingEntity damager, EntityDamageByEntityEvent e) {
@@ -155,51 +219,41 @@ public class BaseEnchant extends Enchantment {
         if (!(ench instanceof BaseEnchant)) return null;
         BaseEnchant enchant = (BaseEnchant) ench;
         String prefix = enchant.getRarity().getPrefix();
-        if (level == 1 && enchant.getMaxLevel() == 1) {
+        if (level == 1 && enchant.getMaxLevel() == 1)
             return color(prefix + enchant.getName() + "&r");
-        }
-        if (level > 10 || level <= 0) {
+        if (level > 10 || level < 1)
             return color(prefix + enchant.getName() + " enchantment.level." + level + "&r");
-        }
         return color(prefix + enchant.getName() + " " + NUMERALS[level - 1] + "&r");
     }
 
     public static void updateLore(ItemStack i) {
         final ItemMeta meta = i.getItemMeta();
-        if (meta == null) {
+        if (meta == null)
             return;
-        }
         Map<Enchantment, Integer> enchants;
         if (meta instanceof EnchantmentStorageMeta) {
-            final EnchantmentStorageMeta meta2 = (EnchantmentStorageMeta)meta;
+            final EnchantmentStorageMeta meta2 = (EnchantmentStorageMeta) meta;
             enchants = meta2.getStoredEnchants();
         }
-        else {
+        else
             enchants = meta.getEnchants();
-        }
         List<String> lore = meta.getLore();
-        if (lore == null) {
+        if (lore == null)
             lore = new ArrayList<>();
-        }
-        else {
+        else
             lore.removeIf(line -> !line.startsWith(color("&7")));
-        }
         for (final Map.Entry<Enchantment, Integer> e : enchants.entrySet()) {
-            if (!(e.getKey() instanceof BaseEnchant)) {
+            if (!(e.getKey() instanceof BaseEnchant))
                 continue;
-            }
             final BaseEnchant ench = (BaseEnchant) e.getKey();
             String enchlore;
             String prefix = ench.getRarity().getPrefix();
-            if (e.getValue() == 1 && ench.getMaxLevel() == 1) {
+            if (e.getValue() == 1 && ench.getMaxLevel() == 1)
                 enchlore = color(prefix + ench.getName() + "&r");
-            }
-            else if (e.getValue() > 10 || e.getValue() <= 0) {
+            else if (e.getValue() > 10 || e.getValue() <= 0)
                 enchlore = color(prefix + ench.getName() + " enchantment.level." + e.getValue() + "&r");
-            }
-            else {
+            else
                 enchlore = color(prefix + ench.getName() + " " + NUMERALS[e.getValue() - 1] + "&r");
-            }
             lore.add(0, enchlore);
         }
         meta.setLore(lore);

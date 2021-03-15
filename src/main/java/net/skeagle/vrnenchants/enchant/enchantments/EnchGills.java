@@ -2,6 +2,7 @@ package net.skeagle.vrnenchants.enchant.enchantments;
 
 import net.skeagle.vrnenchants.VRNMain;
 import net.skeagle.vrnenchants.enchant.BaseEnchant;
+import net.skeagle.vrnenchants.enchant.ICooldown;
 import net.skeagle.vrnenchants.enchant.Rarity;
 import org.bukkit.Bukkit;
 import org.bukkit.enchantments.Enchantment;
@@ -13,28 +14,24 @@ import java.util.ArrayList;
 
 import static net.skeagle.vrnenchants.util.VRNUtil.sayActionBar;
 
-public class EnchGills extends BaseEnchant {
+public class EnchGills extends BaseEnchant implements ICooldown {
 
     private static final Enchantment instance = new EnchGills();
 
     public EnchGills() {
         super("Gills", 2, EnchantmentTarget.ARMOR_FEET);
         setRarity(Rarity.EPIC);
+        setCooldownMessage("&aGills Replenished!");
+        setCooldownErrorVisible(false);
     }
-
-    private final ArrayList<Player> its_just_a_one_time_thing = new ArrayList<>();
 
     @Override
     protected void onDamaged(final int level, final Player p, final EntityDamageEvent e) {
-        if (e.getCause() != EntityDamageEvent.DamageCause.DROWNING || p.getRemainingAir() != 0 || its_just_a_one_time_thing.contains(p))
+        if (e.getCause() != EntityDamageEvent.DamageCause.DROWNING || p.getRemainingAir() != 0)
             return;
         e.setCancelled(true);
         p.setRemainingAir(p.getMaximumAir() / (4 - level));
-        its_just_a_one_time_thing.add(p);
-        Bukkit.getScheduler().runTaskLater(VRNMain.getInstance(), () -> {
-            its_just_a_one_time_thing.remove(p);
-            sayActionBar(p, "&aGills Replenished!");
-        }, 20 * (60 * level));
+        setCooldown(p);
     }
 
     public String setDescription() {
@@ -43,5 +40,10 @@ public class EnchGills extends BaseEnchant {
 
     public static Enchantment getInstance() {
         return instance;
+    }
+
+    @Override
+    public int cooldown(int level) {
+        return (60 * level);
     }
 }

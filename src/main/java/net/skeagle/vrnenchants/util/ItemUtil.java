@@ -1,13 +1,11 @@
 package net.skeagle.vrnenchants.util;
 
-import lombok.NonNull;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.mineacademy.fo.remain.CompProperty;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,7 +15,7 @@ import static net.skeagle.vrnenchants.util.VRNUtil.color;
 
 public final class ItemUtil {
 
-    public static Builder genItem(Material mat, String name, @NonNull String... lore) {
+    public static Builder genItem(Material mat, String name, String... lore) {
         if (lore == null)
             throw new NullPointerException("lore is marked non-null but is null");
         else
@@ -190,7 +188,6 @@ public final class ItemUtil {
             if (unbreakable) {
                 flags.add(ItemFlag.HIDE_ATTRIBUTES);
                 flags.add(ItemFlag.HIDE_UNBREAKABLE);
-                CompProperty.UNBREAKABLE.apply(im, true);
             }
 
             i.setItemMeta(im);

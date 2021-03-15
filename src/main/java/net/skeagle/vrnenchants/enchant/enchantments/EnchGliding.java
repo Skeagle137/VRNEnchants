@@ -16,6 +16,8 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 public class EnchGliding extends BaseEnchant implements Listener {
 
@@ -26,20 +28,20 @@ public class EnchGliding extends BaseEnchant implements Listener {
         setRarity(Rarity.MYTHICAL);
     }
 
-    private final ArrayList<Player> cooldown = new ArrayList<>();
+    private final List<UUID> cooldown = new ArrayList<>();
 
     @EventHandler
     protected void onSneak(final PlayerToggleSneakEvent e) {
-        if (!e.isSneaking() || cooldown.contains(e.getPlayer())) return;
+        if (!e.isSneaking() || cooldown.contains(e.getPlayer().getUniqueId())) return;
         final ItemStack item = e.getPlayer().getEquipment().getLeggings();
         if (item == null || !hasEnchant(item, this)) return;
         if (e.getPlayer().getFallDistance() > 55 - (5 * getEnchants(item).get(this)))
             if (e.getPlayer().getPotionEffect(PotionEffectType.SLOW_FALLING) == null) {
-                cooldown.add(e.getPlayer());
+                cooldown.add(e.getPlayer().getUniqueId());
                 e.getPlayer().setVelocity(e.getPlayer().getVelocity().setY(-0.05));
                 e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, 5, 1, false, false, false));
                 e.getPlayer().getWorld().spawnParticle(Particle.END_ROD, e.getPlayer().getLocation().clone().add(0, -3.2, 0), 40, 0.5, 0.1, 0.5, 0.02);
-                Bukkit.getScheduler().runTaskLater(VRNMain.getInstance(), () -> cooldown.remove(e.getPlayer()), 20 * 15);
+                Bukkit.getScheduler().runTaskLater(VRNMain.getInstance(), () -> cooldown.remove(e.getPlayer().getUniqueId()), 20 * 15);
             }
     }
 

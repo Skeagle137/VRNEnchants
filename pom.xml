@@ -12,7 +12,6 @@
 
     <properties>
         <main.class>net.skeagle.vrncore.VRNcore</main.class>
-        <foundation.version>5.7.6</foundation.version>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
@@ -21,10 +20,6 @@
         <repository>
             <id>spigotmc-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
-        </repository>
-        <repository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
         </repository>
         <repository>
             <id>sonatype</id>
@@ -43,24 +38,6 @@
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot</artifactId>
             <version>1.16.4-R0.1-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.github.kangarko</groupId>
-            <artifactId>Foundation</artifactId>
-            <version>${foundation.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.mineacademy.plugin</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.12</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
@@ -90,23 +67,6 @@
                         <configuration>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
                             <finalName>${project.name} v${project.version}</finalName>
-                            <artifactSet>
-                                <includes>
-                                    <include>com.github.kangarko:Game*</include>
-                                    <include>com.github.kangarko:Foundation*</include>
-                                </includes>
-                            </artifactSet>
-                            <relocations>
-                                <relocation>
-                                    <pattern>org.mineacademy</pattern>
-                                    <shadedPattern>${project.groupId}.${project.artifactId}.lib</shadedPattern>
-                                    <excludes>
-                                        <exclude>org.mineacademy.${project.artifactId}.*</exclude>
-                                        <exclude>org.mineacademy.boss.*</exclude>
-                                        <exclude>org.mineacademy.worldeditbridge.*</exclude>
-                                    </excludes>
-                                </relocation>
-                            </relocations>
                         </configuration>
                     </execution>
                 </executions>

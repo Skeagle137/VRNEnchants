@@ -22,7 +22,7 @@ public class FishingListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onFish(PlayerFishEvent e) {
         if (e.getState() == PlayerFishEvent.State.CAUGHT_FISH) {
-            int rand = VRNUtil.rng(1, 180);
+            int rand = VRNUtil.rng(1, 300);
             ItemStack hand = e.getPlayer().getEquipment().getItemInMainHand();
             int level = 0;
             if (BaseEnchant.hasEnchant(hand, Enchantment.LUCK))
@@ -42,9 +42,9 @@ public class FishingListener implements Listener {
                 .addEntry(Rarity.UNCOMMON, 900 + (level * 45))
                 .addEntry(Rarity.RARE, 750 + (level * 25))
                 .addEntry(Rarity.EPIC, 500 + (level * 20))
-                .addEntry(Rarity.LEGENDARY, 250 + (level > 1 ? 30 : 0))
-                .addEntry(Rarity.MYTHICAL, 75 + (level > 1 ? 20 : 0))
-                .addEntry(Rarity.COSMIC, 10 + (level > 1 ? 10 : 0)).build();
+                .addEntry(Rarity.LEGENDARY, 250 + (level > 1 ? 15 : 0))
+                .addEntry(Rarity.MYTHICAL, 75 + (level > 1 ? 10 : 0))
+                .addEntry(Rarity.COSMIC, 10 + (level > 1 ? 5 : 0)).build();
         ArrayList<VRNEnchants.VRN> sameRarity = new ArrayList<>();
         for (VRNEnchants.VRN vrn : VRNEnchants.VRN.values())
             if (((BaseEnchant) vrn.getEnch()).getRarity() == randRarity)

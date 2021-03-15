@@ -3,6 +3,8 @@ package net.skeagle.vrnenchants.enchant.enchantments;
 import net.minecraft.server.v1_16_R3.*;
 import net.skeagle.vrnenchants.VRNMain;
 import net.skeagle.vrnenchants.enchant.BaseEnchant;
+import net.skeagle.vrnenchants.enchant.EnchantCooldown;
+import net.skeagle.vrnenchants.enchant.ICooldown;
 import net.skeagle.vrnenchants.enchant.Rarity;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -19,36 +21,26 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
-import static net.skeagle.vrnenchants.util.VRNUtil.sayActionBar;
-
-public class EnchMineSight extends BaseEnchant {
+public class EnchMineSight extends BaseEnchant implements ICooldown {
 
     private static final Enchantment instance = new EnchMineSight();
 
     private EnchMineSight() {
         super("Mine Sight", 3, EnchantmentTarget.TOOL);
         setRarity(Rarity.LEGENDARY);
+        setCooldownMessage("&aYou are now able to use mine sight again.");
     }
 
     private final HashMap<Block, EntityShulker> blockCorrespondingEntity = new HashMap<>();
     private final ArrayList<EnumChatFormat> colorsUsed = new ArrayList<>();
-    private final ArrayList<Player> cooldown = new ArrayList<>();
 
     @Override
     protected void onInteract(final int level, final PlayerInteractEvent e) {
         if (e.getAction() != Action.RIGHT_CLICK_BLOCK && e.getAction() != Action.RIGHT_CLICK_AIR) return;
         final Player p = e.getPlayer();
-        if (cooldown.contains(p)) {
-            sayActionBar(p, "&cYou cannot do this yet.");
-            return;
-        }
         final ArrayList<Block> blocks = getBlocks(p.getLocation().getBlock(), level);
         outline(p, blocks, level);
-        cooldown.add(p);
-        Bukkit.getScheduler().runTaskLater(VRNMain.getInstance(), () -> {
-            cooldown.remove(p);
-            sayActionBar(p, "&aYou are now able to use mine sight again.");
-        }, 20 * (60 * (6 - level)));
+        setCooldown(p);
     }
 
     public String setDescription() {
@@ -56,7 +48,7 @@ public class EnchMineSight extends BaseEnchant {
     }
 
     private ArrayList<Block> getBlocks(final Block start, final int level) {
-        final int radius = level + 3;
+        final int radius = (level * 2) + 3;
         final ArrayList<Block> blocks = new ArrayList<>();
         for (double x = start.getLocation().getX() - radius; x <= start.getLocation().getX() + radius; x++)
             for (double y = start.getLocation().getY() - radius; y <= start.getLocation().getY() + radius; y++)
@@ -91,7 +83,12 @@ public class EnchMineSight extends BaseEnchant {
                 destroy = new PacketPlayOutEntityDestroy(shulk.getId());
                 ((CraftPlayer) p).getHandle().playerConnection.sendPacket(destroy);
             }
-        }, (duration) * 20);
+        }, (long) (duration * 1.25) * 20);
+    }
+
+    @Override
+    public int cooldown(int level) {
+        return 60 * (5 - level);
     }
 
     private enum Sorter {

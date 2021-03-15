@@ -3,6 +3,7 @@ package net.skeagle.vrnenchants.enchant.enchantments;
 import net.skeagle.vrnenchants.enchant.BaseEnchant;
 import net.skeagle.vrnenchants.enchant.RNG;
 import net.skeagle.vrnenchants.enchant.Rarity;
+import org.bukkit.Particle;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.enchantments.EnchantmentTarget;
 import org.bukkit.entity.LivingEntity;
@@ -22,8 +23,10 @@ public class EnchDoubleStrike extends BaseEnchant {
         if (!(e.getEntity() instanceof LivingEntity)) return;
 
         final RNG rng = new RNG();
-        if (rng.calcChance(1.5, level))
+        if (rng.calcChance(0, 1, level)) {
             e.setDamage(e.getDamage() * 2);
+            damager.getWorld().spawnParticle(Particle.LAVA, e.getEntity().getLocation().clone().add(0, 1, 0), 5, 0.3, 0.3, 0.3, 0.1);
+        }
     }
 
     public String setDescription() {
