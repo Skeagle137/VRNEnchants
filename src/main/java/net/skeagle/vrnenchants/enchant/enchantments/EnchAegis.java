@@ -25,12 +25,13 @@ public class EnchAegis extends BaseEnchant {
     @Override
     protected void onDamaged(int level, Player p, EntityDamageEvent e) {
         if (e.getCause() != EntityDamageEvent.DamageCause.ENTITY_SWEEP_ATTACK && e.getCause() != EntityDamageEvent.DamageCause.ENTITY_ATTACK) return;
-        if (new RNG().calcChance(18,6, level)) {
+        if (new RNG().calcChance(4,4, level)) {
             e.setCancelled(true);
             if (!(((EntityDamageByEntityEvent) e).getDamager() instanceof Player)) return;
             Player a = (Player) ((EntityDamageByEntityEvent) e).getDamager();
             a.playSound(a.getLocation(), Sound.BLOCK_ANVIL_PLACE, SoundCategory.PLAYERS, 1.0f, 0.85f);
             sayNoPrefix(a, "&cYour attack was blocked by " + p.getName() + "'s Aegis!");
+            sayNoPrefix(p, "&b" + a.getName() + "'s attack was blocked by Aegis!");
         }
     }
 
