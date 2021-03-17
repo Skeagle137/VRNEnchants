@@ -1,18 +1,12 @@
 package net.skeagle.vrnenchants.enchant.enchantments;
 
-import net.skeagle.vrnenchants.VRNMain;
 import net.skeagle.vrnenchants.enchant.BaseEnchant;
 import net.skeagle.vrnenchants.enchant.ICooldown;
 import net.skeagle.vrnenchants.enchant.Rarity;
-import org.bukkit.Bukkit;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.enchantments.EnchantmentTarget;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
-
-import java.util.ArrayList;
-
-import static net.skeagle.vrnenchants.util.VRNUtil.sayActionBar;
 
 public class EnchGills extends BaseEnchant implements ICooldown {
 

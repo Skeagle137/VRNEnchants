@@ -13,6 +13,8 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import static net.skeagle.vrnenchants.util.VRNUtil.color;
+
 public class EnchStun extends BaseEnchant {
 
     private static final Enchantment instance = new EnchStun();
@@ -32,7 +34,7 @@ public class EnchStun extends BaseEnchant {
             en.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING, (level > 1 ? 3 : 2) * 20, 6, false, false, false));
             if (e.getEntity() instanceof Player) {
                 ((Player) e.getEntity()).playSound(e.getEntity().getLocation(), Sound.BLOCK_GLASS_BREAK, SoundCategory.PLAYERS, 1.0f, 0.5f);
-                ((Player) e.getEntity()).sendTitle("&c&lStunned!", "&cCannot move from " + e.getDamager().getName() + "'s stun!",
+                ((Player) e.getEntity()).sendTitle(color("&c&lStunned!"), color("&cCannot move from " + e.getDamager().getName() + "'s stun!"),
                         0, (level > 2 ? 4 : 3) * 20, 1);
             }
         }

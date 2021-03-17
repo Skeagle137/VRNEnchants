@@ -1,9 +1,8 @@
 package net.skeagle.vrnenchants.enchant.enchantments;
 
 import net.minecraft.server.v1_16_R3.*;
-import net.skeagle.vrnenchants.VRNMain;
+import net.skeagle.vrnenchants.VRNEnchants;
 import net.skeagle.vrnenchants.enchant.BaseEnchant;
-import net.skeagle.vrnenchants.enchant.EnchantCooldown;
 import net.skeagle.vrnenchants.enchant.ICooldown;
 import net.skeagle.vrnenchants.enchant.Rarity;
 import org.bukkit.Bukkit;
@@ -77,7 +76,7 @@ public class EnchMineSight extends BaseEnchant implements ICooldown {
         }
         for (EnumChatFormat color : colorsUsed)
             setTeams(p, color);
-        Bukkit.getScheduler().runTaskLater(VRNMain.getInstance(), () -> {
+        Bukkit.getScheduler().runTaskLater(VRNEnchants.getInstance(), () -> {
             PacketPlayOutEntityDestroy destroy;
             for (final EntityShulker shulk : blockCorrespondingEntity.values()) {
                 destroy = new PacketPlayOutEntityDestroy(shulk.getId());

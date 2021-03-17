@@ -19,8 +19,7 @@ public class EnchHarvest extends BaseEnchant {
 
     @Override
     protected void onBreakBlock(final int level, final BlockBreakEvent e) {
-        final RNG r = new RNG();
-        if (r.calcChance(5, level)) {
+        if (new RNG().calcChance(15, level)) {
             if (!(e.getBlock().getBlockData() instanceof Ageable)) return;
             Ageable crop = (Ageable) e.getBlock().getBlockData();
             if (crop.getMaximumAge() != crop.getAge()) return;

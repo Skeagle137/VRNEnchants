@@ -2,11 +2,10 @@ package net.skeagle.vrnenchants;
 
 import net.skeagle.vrnenchants.commands.Enchant;
 import net.skeagle.vrnenchants.commands.EnchantBook;
-import net.skeagle.vrnenchants.enchant.VRNEnchants;
+import net.skeagle.vrnenchants.enchant.EnchantRegistry;
 import net.skeagle.vrnenchants.enchant.EnchantListener;
 import net.skeagle.vrnenchants.enchant.enchantments.EnchGliding;
 import net.skeagle.vrnenchants.enchant.enchantments.EnchTeleportResistance;
-import net.skeagle.vrnenchants.enchant.enchantments.EnchThunderStrike;
 import net.skeagle.vrnenchants.enchant.extended.DispenserListener;
 import net.skeagle.vrnenchants.enchant.extended.armorequip.ArmorListener;
 import net.skeagle.vrnenchants.listener.*;
@@ -15,9 +14,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-public class VRNMain extends JavaPlugin {
+public class VRNEnchants extends JavaPlugin {
 
-    private static VRNMain plugin;
+    private static VRNEnchants plugin;
     private TaskArmorEnchant armor;
 
     @Override
@@ -29,7 +28,7 @@ public class VRNMain extends JavaPlugin {
         this.getCommand("enchantbook").setExecutor(new EnchantBook());
         this.getCommand("enchantbook").setTabCompleter(new EnchantBook());
         //enchants
-        VRNEnchants.registerOnStart();
+        EnchantRegistry.registerOnStart();
         //listeners
         Bukkit.getPluginManager().registerEvents(new EnchantListener(), this);
         Bukkit.getPluginManager().registerEvents(new ProjectileTracker(), this);
@@ -63,7 +62,7 @@ public class VRNMain extends JavaPlugin {
         stopTasks(armor);
     }
 
-    public static VRNMain getInstance() {
+    public static VRNEnchants getInstance() {
         return plugin;
     }
 }

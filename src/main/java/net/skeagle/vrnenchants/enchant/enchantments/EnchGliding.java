@@ -1,13 +1,12 @@
 package net.skeagle.vrnenchants.enchant.enchantments;
 
-import net.skeagle.vrnenchants.VRNMain;
+import net.skeagle.vrnenchants.VRNEnchants;
 import net.skeagle.vrnenchants.enchant.BaseEnchant;
 import net.skeagle.vrnenchants.enchant.Rarity;
 import org.bukkit.Bukkit;
 import org.bukkit.Particle;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.enchantments.EnchantmentTarget;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
@@ -41,7 +40,7 @@ public class EnchGliding extends BaseEnchant implements Listener {
                 e.getPlayer().setVelocity(e.getPlayer().getVelocity().setY(-0.05));
                 e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, 5, 1, false, false, false));
                 e.getPlayer().getWorld().spawnParticle(Particle.END_ROD, e.getPlayer().getLocation().clone().add(0, -3.2, 0), 40, 0.5, 0.1, 0.5, 0.02);
-                Bukkit.getScheduler().runTaskLater(VRNMain.getInstance(), () -> cooldown.remove(e.getPlayer().getUniqueId()), 20 * 15);
+                Bukkit.getScheduler().runTaskLater(VRNEnchants.getInstance(), () -> cooldown.remove(e.getPlayer().getUniqueId()), 20 * 15);
             }
     }
 

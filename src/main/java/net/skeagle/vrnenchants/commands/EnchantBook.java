@@ -1,7 +1,7 @@
 package net.skeagle.vrnenchants.commands;
 
 import net.skeagle.vrnenchants.enchant.BaseEnchant;
-import net.skeagle.vrnenchants.enchant.VRNEnchants;
+import net.skeagle.vrnenchants.enchant.EnchantRegistry;
 import net.skeagle.vrnenchants.util.VRNUtil;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -100,7 +100,7 @@ public class EnchantBook implements CommandExecutor, TabCompleter {
             }
             for (final Enchantment ench : Enchantment.values())
                 i.addUnsafeEnchantment(ench, level);
-            for (final VRNEnchants.VRN entry : VRNEnchants.VRN.values()) {
+            for (final EnchantRegistry.VRN entry : EnchantRegistry.VRN.values()) {
                 BaseEnchant.applyEnchant(i, entry.getEnch(), level);
                 BaseEnchant.updateLore(i);
             }

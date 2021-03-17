@@ -19,7 +19,7 @@ public class EnchEnderShot extends BaseEnchant {
 
     private EnchEnderShot() {
         super("Ender Shot", 1, EnchantmentTarget.BOW);
-        setRarity(Rarity.EPIC);
+        setRarity(Rarity.LEGENDARY);
     }
 
     @Override
@@ -60,6 +60,7 @@ public class EnchEnderShot extends BaseEnchant {
             return;
         }
         shooter.teleport(loc);
+
     }
 
     private boolean isSafe(Block b) {

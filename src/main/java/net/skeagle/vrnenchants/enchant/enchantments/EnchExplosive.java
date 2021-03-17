@@ -14,14 +14,14 @@ public class EnchExplosive extends BaseEnchant {
     private static final Enchantment instance = new EnchExplosive();
 
     private EnchExplosive() {
-        super("Explosive", 5, EnchantmentTarget.BOW);
+        super("Explosive", 6, EnchantmentTarget.BOW);
         setRarity(Rarity.EPIC);
     }
 
     @Override
     protected void onHit(final int level, final LivingEntity shooter, final ProjectileHitEvent e) {
-        if (new RNG().calcChance(10, 2, level)) {
-            int i = 400 + (level * 10);
+        if (new RNG().calcChance(6, 2, level)) {
+            int i = 400 + (level * 5);
             e.getEntity().getWorld().createExplosion(e.getEntity().getLocation(), (float) ((VRNUtil.rng((Math.min(i, 500)), 500) / 100) / 2), false, false, shooter);
         }
     }

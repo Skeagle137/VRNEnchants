@@ -1,6 +1,6 @@
 package net.skeagle.vrnenchants.enchant;
 
-import net.skeagle.vrnenchants.VRNMain;
+import net.skeagle.vrnenchants.VRNEnchants;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
@@ -8,10 +8,7 @@ import org.bukkit.enchantments.EnchantmentTarget;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.ProjectileHitEvent;
-import org.bukkit.event.entity.ProjectileLaunchEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
@@ -20,7 +17,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
 
-import static net.skeagle.vrnenchants.enchant.VRNEnchants.registerEnchant;
+import static net.skeagle.vrnenchants.enchant.EnchantRegistry.registerEnchant;
 import static net.skeagle.vrnenchants.util.VRNUtil.*;
 
 public class BaseEnchant extends Enchantment {
@@ -31,16 +28,16 @@ public class BaseEnchant extends Enchantment {
     private int level;
     private final EnchantmentTarget target;
     private Enchantment[] conflicting;
-    private boolean cursed = false;
+    private boolean cursed;
     private Rarity rarity;
     private final EnchantCooldown enchantCooldown = new EnchantCooldown();
     private long cooldown;
     private String cooldownMessage;
-    private boolean cooldownErrorVisible;
+    private boolean cooldownErrorVisible = true;
     private EnchantCooldown.CooldownMessageType type = EnchantCooldown.CooldownMessageType.CHAT;
 
     public BaseEnchant(String name, int maxlevel, EnchantmentTarget target) {
-        super(new NamespacedKey(VRNMain.getInstance(), name.toLowerCase().replaceAll(" ", "_")));
+        super(new NamespacedKey(VRNEnchants.getInstance(), name.toLowerCase().replaceAll(" ", "_")));
         this.name = name;
         this.maxlevel = maxlevel;
         this.target = target;
@@ -48,7 +45,7 @@ public class BaseEnchant extends Enchantment {
     }
 
     public BaseEnchant(String name, int maxlevel, EnchantmentTarget target, Enchantment... conflicting) {
-        super(new NamespacedKey(VRNMain.getInstance(), name.toLowerCase().replaceAll(" ", "_")));
+        super(new NamespacedKey(VRNEnchants.getInstance(), name.toLowerCase().replaceAll(" ", "_")));
         this.name = name;
         this.maxlevel = maxlevel;
         this.target = target;
@@ -141,7 +138,7 @@ public class BaseEnchant extends Enchantment {
                     }
                 }
             }
-        }.runTaskTimer(VRNMain.getInstance(), 20, 20);
+        }.runTaskTimer(VRNEnchants.getInstance(), 20, 20);
     }
 
     @Override
@@ -186,6 +183,9 @@ public class BaseEnchant extends Enchantment {
     }
 
     protected void onDamaged(int level, Player player, EntityDamageEvent e) {
+    }
+
+    protected void onKill(int level, Player killer, EntityDeathEvent e) {
     }
 
     public static boolean hasEnchant(ItemStack i, Enchantment enchant) {

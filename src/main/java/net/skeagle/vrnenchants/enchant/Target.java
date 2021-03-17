@@ -1,5 +1,6 @@
 package net.skeagle.vrnenchants.enchant;
 
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 public enum Target {
@@ -21,14 +22,15 @@ public enum Target {
         this.keyword = keyword;
     }
 
-    public static boolean parse(ItemStack i) {
+    public static boolean matches(ItemStack i) {
         for (Target et : Target.values())
             if (i.getType().toString().endsWith(et.keyword))
                 return true;
         return false;
     }
 
-    public static boolean parse(ItemStack i, Target... targets) {
+    public static boolean matches(ItemStack i, Target... targets) {
+        if (i == null || i.getType() == Material.AIR) return false;
         for (Target et : targets)
             if (i.getType().toString().endsWith(et.keyword))
                 return true;
@@ -36,10 +38,10 @@ public enum Target {
     }
 
     public static boolean isArmor(ItemStack i) {
-        return parse(i, HELMETS, CHESTPLATES, LEGGINGS, BOOTS);
+        return matches(i, HELMETS, CHESTPLATES, LEGGINGS, BOOTS);
     }
 
     public static boolean isTool(ItemStack i) {
-        return parse(i, PICKAXES, AXES, SHOVELS, HOES);
+        return matches(i, PICKAXES, AXES, SHOVELS, HOES);
     }
 }

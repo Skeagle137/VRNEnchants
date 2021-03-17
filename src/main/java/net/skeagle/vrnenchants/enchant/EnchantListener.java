@@ -11,6 +11,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
@@ -38,9 +39,10 @@ public class EnchantListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onInteract(PlayerInteractEvent e) {
         run(e.getPlayer(), (enchant, level) -> {
+            if (e.getItem() == null) return;
             if (e.getHand() == EquipmentSlot.OFF_HAND) return;
             if (e.getClickedBlock() != null && e.getClickedBlock().getType().isInteractable()) return;
-            if (!Target.isTool(e.getItem())) return;
+            if (Target.isArmor(e.getItem())) return;
             prepareCooldown(enchant, level);
             if (hasCooldown(enchant, e.getPlayer())) {
                 if (enchant.isCooldownErrorVisible())
@@ -76,6 +78,18 @@ public class EnchantListener implements Listener {
             enchant.onShoot(level, shooter, e);
         });
         ProjectileTracker.track(e.getEntity(), inground -> run(shooter, (enchant, level) -> enchant.onHit(level, shooter, inground)));
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onKill(EntityDeathEvent e) {
+        if (!(e.getEntity().getKiller() == null)) return;
+        Player killer = e.getEntity().getKiller();
+        run(killer, (enchant, level) -> {
+            prepareCooldown(enchant, level);
+            if (hasCooldown(enchant, killer))
+                return;
+            enchant.onKill(level, killer, e);
+        });
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)

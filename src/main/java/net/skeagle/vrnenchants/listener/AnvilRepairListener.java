@@ -1,6 +1,6 @@
 package net.skeagle.vrnenchants.listener;
 
-import net.skeagle.vrnenchants.VRNMain;
+import net.skeagle.vrnenchants.VRNEnchants;
 import net.skeagle.vrnenchants.enchant.BaseEnchant;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -53,7 +53,7 @@ public class AnvilRepairListener implements Listener {
             updateLore(result);
             e.setResult(result);
             final int finalCost = cost;
-            Bukkit.getScheduler().runTask(VRNMain.getInstance(), () -> inv.setRepairCost(finalCost));
+            Bukkit.getScheduler().runTask(VRNEnchants.getInstance(), () -> inv.setRepairCost(finalCost));
         }
     }
 }

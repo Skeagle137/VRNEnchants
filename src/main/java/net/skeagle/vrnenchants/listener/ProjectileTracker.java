@@ -1,6 +1,6 @@
 package net.skeagle.vrnenchants.listener;
 
-import net.skeagle.vrnenchants.VRNMain;
+import net.skeagle.vrnenchants.VRNEnchants;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
@@ -18,7 +18,7 @@ public class ProjectileTracker implements Listener {
 
     public static void track(Projectile projectile, IDetectGround inground) {
         projectiles.put(projectile.getUniqueId(), inground);
-        Bukkit.getScheduler().runTaskLater(VRNMain.getInstance(), () -> projectiles.remove(projectile.getUniqueId()), 600);
+        Bukkit.getScheduler().runTaskLater(VRNEnchants.getInstance(), () -> projectiles.remove(projectile.getUniqueId()), 600);
     }
 
     @EventHandler (priority = EventPriority.HIGHEST)

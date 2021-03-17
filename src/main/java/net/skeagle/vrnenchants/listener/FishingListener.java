@@ -3,7 +3,7 @@ package net.skeagle.vrnenchants.listener;
 import net.skeagle.vrnenchants.enchant.BaseEnchant;
 import net.skeagle.vrnenchants.enchant.RNG;
 import net.skeagle.vrnenchants.enchant.Rarity;
-import net.skeagle.vrnenchants.enchant.VRNEnchants;
+import net.skeagle.vrnenchants.enchant.EnchantRegistry;
 import net.skeagle.vrnenchants.enchant.enchantments.EnchFisherman;
 import net.skeagle.vrnenchants.util.VRNUtil;
 import org.bukkit.enchantments.Enchantment;
@@ -45,12 +45,12 @@ public class FishingListener implements Listener {
                 .addEntry(Rarity.LEGENDARY, 250 + (level > 1 ? 15 : 0))
                 .addEntry(Rarity.MYTHICAL, 75 + (level > 1 ? 10 : 0))
                 .addEntry(Rarity.COSMIC, 10 + (level > 1 ? 5 : 0)).build();
-        ArrayList<VRNEnchants.VRN> sameRarity = new ArrayList<>();
-        for (VRNEnchants.VRN vrn : VRNEnchants.VRN.values())
+        ArrayList<EnchantRegistry.VRN> sameRarity = new ArrayList<>();
+        for (EnchantRegistry.VRN vrn : EnchantRegistry.VRN.values())
             if (((BaseEnchant) vrn.getEnch()).getRarity() == randRarity)
                 sameRarity.add(vrn);
         int randEnch = VRNUtil.rng(0, sameRarity.size() - 1);
-        BaseEnchant ench = (BaseEnchant) VRNEnchants.VRN.valueOf(sameRarity.get(randEnch).toString()).getEnch();
+        BaseEnchant ench = (BaseEnchant) EnchantRegistry.VRN.valueOf(sameRarity.get(randEnch).toString()).getEnch();
         int randLevel;
         if (ench.getRarity().getIndividualPoints() < 15) { //not legendary or higher
             randLevel = new RNG.Randomizer<Integer>()

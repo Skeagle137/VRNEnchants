@@ -1,6 +1,6 @@
 package net.skeagle.vrnenchants.enchant.extended;
 
-import net.skeagle.vrnenchants.VRNMain;
+import net.skeagle.vrnenchants.VRNEnchants;
 import net.skeagle.vrnenchants.enchant.BaseEnchant;
 import net.skeagle.vrnenchants.enchant.extended.armorequip.ArmorEquipEvent;
 import net.skeagle.vrnenchants.enchant.extended.armorequip.ArmorType;
@@ -27,7 +27,7 @@ public class TaskArmorEnchant extends BukkitRunnable implements Listener {
                 if (entity instanceof LivingEntity) {
                     if (entityMap.containsKey(entity.getUniqueId())) {
                         LivingEntity e = (LivingEntity) entity;
-                        Bukkit.getScheduler().runTaskLater(VRNMain.getInstance(), () -> {
+                        Bukkit.getScheduler().runTaskLater(VRNEnchants.getInstance(), () -> {
                             ItemStack[] armor = updateArmor(e, entityMap.get(e.getUniqueId()), false);
                             run((ench, level) -> ench.onTick(e, getParts(armor), level), entityMap.get(e.getUniqueId()));
                         }, 0);
