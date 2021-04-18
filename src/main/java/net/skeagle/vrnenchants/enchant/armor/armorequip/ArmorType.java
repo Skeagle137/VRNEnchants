@@ -1,4 +1,4 @@
-package net.skeagle.vrnenchants.enchant.extended.armorequip;
+package net.skeagle.vrnenchants.enchant.armor.armorequip;
 
 import org.bukkit.inventory.ItemStack;
 
@@ -11,7 +11,7 @@ public enum ArmorType {
         this.slot = slot;
     }
 
-    public static ArmorType matchType(final ItemStack itemStack) {
+    public static ArmorType matchType(ItemStack itemStack) {
         if (ArmorListener.isAirOrNull(itemStack))
             return null;
         String type = itemStack.getType().name();

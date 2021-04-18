@@ -1,45 +1,39 @@
-package net.skeagle.vrnenchants.enchant.extended;
+package net.skeagle.vrnenchants.enchant.armor;
 
 import net.skeagle.vrnenchants.VRNEnchants;
 import net.skeagle.vrnenchants.enchant.BaseEnchant;
-import net.skeagle.vrnenchants.enchant.extended.armorequip.ArmorEquipEvent;
-import net.skeagle.vrnenchants.enchant.extended.armorequip.ArmorType;
+import net.skeagle.vrnenchants.enchant.armor.armorequip.ArmorEquipEvent;
+import net.skeagle.vrnenchants.enchant.armor.armorequip.ArmorType;
 import org.bukkit.Bukkit;
-import org.bukkit.World;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 import java.util.function.BiConsumer;
 
 public class TaskArmorEnchant extends BukkitRunnable implements Listener {
 
-    private static final HashMap<UUID, ItemStack> entityMap = new HashMap<>();
+    private static final HashMap<UUID, ItemStack> playerArmorMap = new HashMap<>();
 
     @Override
     public void run() {
-        for (World w : Bukkit.getWorlds()) {
-            for (Entity entity : w.getEntities()) {
-                if (entity instanceof LivingEntity) {
-                    if (entityMap.containsKey(entity.getUniqueId())) {
-                        LivingEntity e = (LivingEntity) entity;
-                        Bukkit.getScheduler().runTaskLater(VRNEnchants.getInstance(), () -> {
-                            ItemStack[] armor = updateArmor(e, entityMap.get(e.getUniqueId()), false);
-                            run((ench, level) -> ench.onTick(e, getParts(armor), level), entityMap.get(e.getUniqueId()));
-                        }, 0);
-                    }
-                }
-            }
+        for (Player pl : Bukkit.getOnlinePlayers()) {
+            ItemStack[] armor = updateArmor(pl, playerArmorMap.get(pl.getUniqueId()), false);
+            Bukkit.getScheduler().runTask(VRNEnchants.getInstance(), () ->
+                run((ench, level) -> ench.onTick(pl, getParts(armor), level), playerArmorMap.get(pl.getUniqueId())));
         }
     }
 
     private void run(BiConsumer<ArmorEnchant, Integer> ench, ItemStack piece) {
         ArrayList<ArmorEnchant> temp_cache = new ArrayList<>();
-        for (final Map.Entry<BaseEnchant, Integer> e : BaseEnchant.getEnchants(piece).entrySet())
+        for (Map.Entry<BaseEnchant, Integer> e : BaseEnchant.getEnchants(piece).entrySet())
             if (e.getKey() instanceof ArmorEnchant && !temp_cache.contains(e.getKey())) {
                 temp_cache.add((ArmorEnchant) e.getKey());
                 ench.accept((ArmorEnchant) e.getKey(), e.getValue());
@@ -92,19 +86,19 @@ public class TaskArmorEnchant extends BukkitRunnable implements Listener {
             return;
         }
         if (isArmorNotNull(e.getNewArmorPiece())) {
-            entityMap.put(en.getUniqueId(), e.getNewArmorPiece());
+            playerArmorMap.put(en.getUniqueId(), e.getNewArmorPiece());
             ItemStack armorpiece = e.getNewArmorPiece();
             ItemStack[] armor = updateArmor(en, armorpiece, false);
             run((ench, level) -> ench.onEquip(en, getParts(armor), level), armorpiece);
         }
         else {
             if (getParts(updateArmor(en, e.getOldArmorPiece(), true)) != 0) {
-                entityMap.put(en.getUniqueId(), e.getOldArmorPiece());
+                playerArmorMap.put(en.getUniqueId(), e.getOldArmorPiece());
                 run((ench, level) -> ench.onUnEquip(en, getParts(updateArmor(en, e.getOldArmorPiece(), true)), level), e.getOldArmorPiece());
                 return;
             }
             run((ench, level) -> ench.onUnEquip(en, 0, level), e.getOldArmorPiece());
-            entityMap.remove(en.getUniqueId());
+            playerArmorMap.remove(en.getUniqueId());
         }
     }
 }

@@ -1,18 +1,17 @@
-package net.skeagle.vrnenchants.enchant.extended;
+package net.skeagle.vrnenchants.enchant.armor;
 
 import net.skeagle.vrnenchants.enchant.BaseEnchant;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.enchantments.EnchantmentTarget;
+import net.skeagle.vrnenchants.enchant.Target;
 import org.bukkit.entity.LivingEntity;
 
 public abstract class ArmorEnchant extends BaseEnchant {
 
     public ArmorEnchant(String name, int maxlevel) {
-        super(name, maxlevel, EnchantmentTarget.ARMOR);
+        super(name, maxlevel, Target.HELMETS, Target.CHESTPLATES, Target.LEGGINGS, Target.BOOTS, Target.ELYTRA);
     }
 
-    public ArmorEnchant(String name, int maxlevel, Enchantment... conflicting) {
-        super(name, maxlevel, EnchantmentTarget.ARMOR, conflicting);
+    public ArmorEnchant(String name, int maxlevel, Target... target) {
+        super(name, maxlevel, target);
     }
 
     protected void onTick(LivingEntity entity, int armorparts, int level) {

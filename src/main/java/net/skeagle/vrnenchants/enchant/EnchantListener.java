@@ -2,21 +2,21 @@ package net.skeagle.vrnenchants.enchant;
 
 import net.skeagle.vrnenchants.listener.ProjectileTracker;
 import net.skeagle.vrnenchants.util.TimeUtil;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.ProjectileLaunchEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.projectiles.ProjectileSource;
+
 import java.util.Map;
 import java.util.function.BiConsumer;
 
@@ -38,19 +38,30 @@ public class EnchantListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onInteract(PlayerInteractEvent e) {
-        run(e.getPlayer(), (enchant, level) -> {
-            if (e.getItem() == null) return;
-            if (e.getHand() == EquipmentSlot.OFF_HAND) return;
-            if (e.getClickedBlock() != null && e.getClickedBlock().getType().isInteractable()) return;
-            if (Target.isArmor(e.getItem())) return;
-            prepareCooldown(enchant, level);
-            if (hasCooldown(enchant, e.getPlayer())) {
-                if (enchant.isCooldownErrorVisible())
-                    say(e.getPlayer(), "&cYou must wait " + TimeUtil.timeToMessage(enchant.getCooldownMap().get(e.getPlayer())) + " to use " + enchant.getName() + " again.");
-                return;
-            }
-            enchant.onInteract(level, e);
-        });
+        if (e.getItem() == null) return;
+        if (e.getAction() == Action.LEFT_CLICK_AIR || e.getAction() == Action.LEFT_CLICK_BLOCK) return;
+        if (e.getClickedBlock() != null && e.getClickedBlock().getType().isInteractable()) return;
+        if (Target.isArmor(e.getItem())) return;
+        if (e.getHand() == EquipmentSlot.HAND) {
+            run(e.getPlayer(), (enchant, level) -> {
+                prepareCooldown(enchant, level);
+                if (hasCooldown(enchant, e.getPlayer())) {
+                    if (enchant.isCooldownErrorVisible())
+                        say(e.getPlayer(), "&cYou must wait " + TimeUtil.timeToMessage(enchant.getCooldownMap().get(e.getPlayer())) + " to use " + enchant.getName() + " again.");
+                } else
+                    enchant.onInteract(level, e);
+            });
+        }
+        else if (e.getHand() == EquipmentSlot.OFF_HAND && e.getItem().getType() == Material.SHIELD) {
+            runOffHand(e.getPlayer(), (enchant, level) -> {
+                prepareCooldown(enchant, level);
+                if (hasCooldown(enchant, e.getPlayer())) {
+                    if (enchant.isCooldownErrorVisible())
+                        say(e.getPlayer(), "&cYou must wait " + TimeUtil.timeToMessage(enchant.getCooldownMap().get(e.getPlayer())) + " to use " + enchant.getName() + " again.");
+                } else
+                    enchant.onInteract(level, e);
+            });
+        }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -65,9 +76,9 @@ public class EnchantListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onShoot(ProjectileLaunchEvent e) {
-        final ProjectileSource projectileSource = e.getEntity().getShooter();
+        ProjectileSource projectileSource = e.getEntity().getShooter();
         if (!(projectileSource instanceof LivingEntity)) return;
-        final LivingEntity shooter = (LivingEntity) projectileSource;
+        LivingEntity shooter = (LivingEntity) projectileSource;
         run(shooter, (enchant, level) -> {
             prepareCooldown(enchant, level);
             if (hasCooldown(enchant, shooter)) {
@@ -82,7 +93,7 @@ public class EnchantListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onKill(EntityDeathEvent e) {
-        if (!(e.getEntity().getKiller() == null)) return;
+        if (e.getEntity().getKiller() == null) return;
         Player killer = e.getEntity().getKiller();
         run(killer, (enchant, level) -> {
             prepareCooldown(enchant, level);
@@ -93,30 +104,77 @@ public class EnchantListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onDeath(PlayerDeathEvent e) {
+        for (ItemStack item : e.getEntity().getInventory()) {
+            run(e.getEntity(), (enchant, level) -> {
+                prepareCooldown(enchant, level);
+                if (!hasCooldown(enchant, e.getEntity()))
+                    enchant.onDeath(level, e.getEntity(), item, e);
+            });
+        }
+        for (ItemStack item : e.getEntity().getInventory().getArmorContents()) {
+            runArmor(e.getEntity(), (enchant, level) -> {
+                prepareCooldown(enchant, level);
+                if (!hasCooldown(enchant, e.getEntity()))
+                    enchant.onDeath(level, e.getEntity(), item, e);
+            }, item);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onDamaged(EntityDamageEvent e) {
         if (!(e.getEntity() instanceof Player)) return;
-        runArmor((Player) e.getEntity(), (enchant, level) -> {
+        runArmorAll((Player) e.getEntity(), (enchant, level) -> {
             prepareCooldown(enchant, level);
-            if (hasCooldown(enchant, (Player) e.getEntity()))
-                return;
-            enchant.onDamaged(level, (Player) e.getEntity(), e);
+            if (!hasCooldown(enchant, (Player) e.getEntity()))
+                enchant.onDamaged(level, (Player) e.getEntity(), e);
+        });
+        runOffHand((Player) e.getEntity(), (enchant, level) -> {
+            prepareCooldown(enchant, level);
+            if (!hasCooldown(enchant, (Player) e.getEntity()))
+                enchant.onDamaged(level, (Player) e.getEntity(), e);
         });
     }
 
     @SuppressWarnings("all")
     private void run(LivingEntity entity, BiConsumer<BaseEnchant, Integer> ench) {
-        final ItemStack i = entity.getEquipment().getItemInHand();
-        if (i == null) return;
-        for (final Map.Entry<BaseEnchant, Integer> e : BaseEnchant.getEnchants(i).entrySet())
+        final ItemStack i = entity.getEquipment().getItemInMainHand();
+        if (i == null || i.getType() == Material.AIR) return;
+        for (final Map.Entry<BaseEnchant, Integer> e : BaseEnchant.getEnchants(i).entrySet()) {
+            if (!Target.matches(i, e.getKey().getTargets()) && isNotCreative(entity))
+                return;
             ench.accept(e.getKey(), e.getValue());
+        }
     }
 
-    private void runArmor(LivingEntity entity, BiConsumer<BaseEnchant, Integer> ench) {
+    @SuppressWarnings("all")
+    private void runOffHand(LivingEntity entity, BiConsumer<BaseEnchant, Integer> ench) {
+        final ItemStack i = entity.getEquipment().getItemInOffHand();
+        if (i == null || i.getType() == Material.AIR) return;
+        for (final Map.Entry<BaseEnchant, Integer> e : BaseEnchant.getEnchants(i).entrySet()) {
+            if (!Target.matches(i, e.getKey().getTargets()) && isNotCreative(entity))
+                return;
+            ench.accept(e.getKey(), e.getValue());
+        }
+    }
+
+    private void runArmorAll(LivingEntity entity, BiConsumer<BaseEnchant, Integer> ench) {
         for (ItemStack i : entity.getEquipment().getArmorContents()) {
             if (i == null || i.getType() == Material.AIR) continue;
-            for (final Map.Entry<BaseEnchant, Integer> e : BaseEnchant.getEnchants(i).entrySet())
-                if (e.getKey().getItemTarget().includes(i.getType()))
-                    ench.accept(e.getKey(), e.getValue());
+            for (Map.Entry<BaseEnchant, Integer> e : BaseEnchant.getEnchants(i).entrySet()) {
+                if (!Target.matches(i, e.getKey().getTargets()) && isNotCreative(entity))
+                    return;
+                ench.accept(e.getKey(), e.getValue());
+            }
+        }
+    }
+
+    private void runArmor(LivingEntity entity, BiConsumer<BaseEnchant, Integer> ench, ItemStack i) {
+        if (i == null || i.getType() == Material.AIR) return;
+        for (Map.Entry<BaseEnchant, Integer> e : BaseEnchant.getEnchants(i).entrySet()) {
+            if (!Target.matches(i, e.getKey().getTargets()) && isNotCreative(entity))
+                return;
+            ench.accept(e.getKey(), e.getValue());
         }
     }
 
@@ -129,5 +187,9 @@ public class EnchantListener implements Listener {
 
     private boolean hasCooldown(BaseEnchant ench, LivingEntity e) {
         return ench.getCooldownMap().contains(e) && ench.getCooldown() != 0;
+    }
+
+    private boolean isNotCreative(LivingEntity en) {
+        return !(en instanceof Player) || ((Player) en).getGameMode() != GameMode.CREATIVE;
     }
 }

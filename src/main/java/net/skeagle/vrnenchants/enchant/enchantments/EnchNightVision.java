@@ -1,12 +1,14 @@
 package net.skeagle.vrnenchants.enchant.enchantments;
 
+import net.skeagle.vrnenchants.enchant.EnchDescription;
 import net.skeagle.vrnenchants.enchant.Rarity;
-import net.skeagle.vrnenchants.enchant.extended.ArmorEnchantSingle;
+import net.skeagle.vrnenchants.enchant.armor.ArmorEnchantSingle;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+@EnchDescription("Gives you night vision to see in the dark.")
 public class EnchNightVision extends ArmorEnchantSingle {
 
     private static final Enchantment instance = new EnchNightVision();
@@ -14,10 +16,6 @@ public class EnchNightVision extends ArmorEnchantSingle {
     private EnchNightVision() {
         super("Night Vision", 3, ArmorTarget.HELMET);
         setRarity(Rarity.UNCOMMON);
-    }
-
-    public String setDescription() {
-        return "Helps you to see in the dark.";
     }
 
     @Override

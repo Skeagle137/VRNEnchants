@@ -1,12 +1,9 @@
 package net.skeagle.vrnenchants.enchant.enchantments;
 
-import net.skeagle.vrnenchants.enchant.BaseEnchant;
-import net.skeagle.vrnenchants.enchant.RNG;
-import net.skeagle.vrnenchants.enchant.Rarity;
+import net.skeagle.vrnenchants.enchant.*;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.enchantments.EnchantmentTarget;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -15,12 +12,13 @@ import org.bukkit.potion.PotionEffectType;
 
 import static net.skeagle.vrnenchants.util.VRNUtil.color;
 
+@EnchDescription("Chance to stun the target on first strike.")
 public class EnchStun extends BaseEnchant {
 
     private static final Enchantment instance = new EnchStun();
 
     private EnchStun() {
-        super("Stun", 2, EnchantmentTarget.WEAPON);
+        super("Stun", 2, Target.SWORDS, Target.AXES);
         setRarity(Rarity.LEGENDARY);
     }
 
@@ -39,10 +37,6 @@ public class EnchStun extends BaseEnchant {
             }
         }
 
-    }
-
-    public String setDescription() {
-        return "chance to stun the target on first strike. Higher levels have a higher chance of stunning.";
     }
 
     public static Enchantment getInstance() {

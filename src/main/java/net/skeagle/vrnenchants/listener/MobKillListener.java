@@ -1,9 +1,9 @@
 package net.skeagle.vrnenchants.listener;
 
 import net.skeagle.vrnenchants.enchant.BaseEnchant;
+import net.skeagle.vrnenchants.enchant.EnchantRegistry;
 import net.skeagle.vrnenchants.enchant.RNG;
 import net.skeagle.vrnenchants.enchant.Rarity;
-import net.skeagle.vrnenchants.enchant.EnchantRegistry;
 import net.skeagle.vrnenchants.enchant.enchantments.EnchBookworm;
 import net.skeagle.vrnenchants.util.VRNUtil;
 import org.bukkit.enchantments.Enchantment;
@@ -42,7 +42,7 @@ public class MobKillListener implements Listener {
                 .addEntry(Rarity.RARE, 500 + (level > 1 ? 75 : 0))
                 .addEntry(Rarity.EPIC, 300 + (level > 1 ? 60 : 0))
                 .addEntry(Rarity.LEGENDARY, 100 + (level > 2 ? 30 : 0))
-                .addEntry(Rarity.MYTHICAL, 20 + (level > 2 ? 20 : 0)).build();
+                .addEntry(Rarity.MYTHICAL, 15 + (level > 2 ? 20 : 0)).build();
                 //cant get cosmic enchants from mobs
         ArrayList<EnchantRegistry.VRN> sameRarity = new ArrayList<>();
         for (EnchantRegistry.VRN vrn : EnchantRegistry.VRN.values())
@@ -64,6 +64,6 @@ public class MobKillListener implements Listener {
                     .addEntry(3, 20 + (level > 2 ? 5 : 0)).build();
         }
         if (randLevel > ench.getMaxLevel()) randLevel = ench.getMaxLevel();
-        return BaseEnchant.generateEnchantBook(ench, randLevel);
+        return BaseEnchant.generateEnchantBook(null, ench, randLevel);
     }
 }

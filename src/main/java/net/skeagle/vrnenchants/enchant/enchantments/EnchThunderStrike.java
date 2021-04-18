@@ -1,26 +1,25 @@
 package net.skeagle.vrnenchants.enchant.enchantments;
 
-import net.skeagle.vrnenchants.enchant.BaseEnchant;
-import net.skeagle.vrnenchants.enchant.RNG;
-import net.skeagle.vrnenchants.enchant.Rarity;
-import net.skeagle.vrnenchants.enchant.EnchantRegistry;
+import net.skeagle.vrnenchants.enchant.*;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.enchantments.EnchantmentTarget;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LightningStrike;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
+@EnchDescription("Chance to hit the target with lightning, also causing area of effect damage.")
 public class EnchThunderStrike extends BaseEnchant implements Listener {
 
     private static final Enchantment instance = new EnchThunderStrike();
 
     public EnchThunderStrike() {
-        super("Thunder Strike", 2, EnchantmentTarget.WEAPON, EnchantRegistry.VRN.VENOM.getEnch());
+        super("Thunder Strike", 2, Target.SWORDS);
         setRarity(Rarity.MYTHICAL);
     }
 
     @Override
-    protected void onDamage(final int level, final LivingEntity damager, final EntityDamageByEntityEvent e) {
+    protected void onDamage(int level, LivingEntity damager, EntityDamageByEntityEvent e) {
         if (!(e.getEntity() instanceof LivingEntity)) return;
 
         if (new RNG().calcChance(6, 2, level)) {
@@ -30,10 +29,6 @@ public class EnchThunderStrike extends BaseEnchant implements Listener {
                 ((LivingEntity) en).damage(2 + level, damager);
             }
         }
-    }
-
-    public String setDescription() {
-        return "Chance to hit the target with lightning, also causing area of effect damage.";
     }
 
     public static Enchantment getInstance() {

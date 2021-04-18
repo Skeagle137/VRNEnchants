@@ -1,4 +1,4 @@
-package net.skeagle.vrnenchants.enchant.extended.armorequip;
+package net.skeagle.vrnenchants.enchant.armor.armorequip;
 
 
 import org.bukkit.entity.LivingEntity;
@@ -15,7 +15,7 @@ public final class ArmorEquipEvent extends EntityEvent implements Cancellable {
     private final ArmorType type;
     private ItemStack oldArmorPiece, newArmorPiece;
 
-    public ArmorEquipEvent(final LivingEntity e, final EquipMethod equipType, final ArmorType type, final ItemStack oldArmorPiece, final ItemStack newArmorPiece) {
+    public ArmorEquipEvent(LivingEntity e, EquipMethod equipType, ArmorType type, ItemStack oldArmorPiece, ItemStack newArmorPiece) {
         super(e);
         this.equipType = equipType;
         this.type = type;

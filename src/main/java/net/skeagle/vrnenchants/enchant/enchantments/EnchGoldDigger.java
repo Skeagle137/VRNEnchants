@@ -1,40 +1,28 @@
 package net.skeagle.vrnenchants.enchant.enchantments;
 
-import net.skeagle.vrnenchants.enchant.BaseEnchant;
-import net.skeagle.vrnenchants.enchant.RNG;
-import net.skeagle.vrnenchants.enchant.Rarity;
+import net.skeagle.vrnenchants.enchant.*;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.enchantments.EnchantmentTarget;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityDeathEvent;
 
-//postponed, probably need a dedicated death event
+@EnchDescription("Killing mobs has a chance to drop gold nuggets, or more ingots if the mob already drops gold.")
+public class EnchGoldDigger extends BaseEnchant {
 
-public class EnchGoldDigger/* extends BaseEnchant*/ {
-
-    /*
     private static final Enchantment instance = new EnchGoldDigger();
 
     private EnchGoldDigger() {
-        super("Gold Digger", 2, EnchantmentTarget.WEAPON);
+        super("Gold Digger", 2, Target.PICKAXES);
         setRarity(Rarity.UNCOMMON);
     }
 
     @Override
-    protected void onEntityKilled(int level, LivingEntity entity, EntityDamageByEntityEvent e) {
-        final RNG r = new RNG();
-        if (r.calcChance(15 + (level * 10))) {
-            if (e.getEntity())
-        }
-    }
+    protected void onKill(int level, Player killer, EntityDeathEvent e) {
+        if (new RNG().calcChance(15 + (level * 10))) {
 
-    public String setDescription() {
-        return "Killing mobs has a chance to drop gold nuggets, or more ingots if the mob already drops gold.";
+        }
     }
 
     public static Enchantment getInstance() {
         return instance;
     }
-
-     */
 }

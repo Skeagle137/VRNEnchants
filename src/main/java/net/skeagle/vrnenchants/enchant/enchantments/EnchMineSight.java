@@ -2,9 +2,7 @@ package net.skeagle.vrnenchants.enchant.enchantments;
 
 import net.minecraft.server.v1_16_R3.*;
 import net.skeagle.vrnenchants.VRNEnchants;
-import net.skeagle.vrnenchants.enchant.BaseEnchant;
-import net.skeagle.vrnenchants.enchant.ICooldown;
-import net.skeagle.vrnenchants.enchant.Rarity;
+import net.skeagle.vrnenchants.enchant.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -12,20 +10,21 @@ import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.v1_16_R3.CraftWorld;
 import org.bukkit.craftbukkit.v1_16_R3.entity.CraftPlayer;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.enchantments.EnchantmentTarget;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
+@EnchDescription("Right clicking your pickaxe will allow you to see nearby ores for a few seconds.")
 public class EnchMineSight extends BaseEnchant implements ICooldown {
 
     private static final Enchantment instance = new EnchMineSight();
 
     private EnchMineSight() {
-        super("Mine Sight", 3, EnchantmentTarget.TOOL);
+        super("Mine Sight", 3, Target.PICKAXES);
         setRarity(Rarity.LEGENDARY);
         setCooldownMessage("&aYou are now able to use mine sight again.");
     }
@@ -34,21 +33,17 @@ public class EnchMineSight extends BaseEnchant implements ICooldown {
     private final ArrayList<EnumChatFormat> colorsUsed = new ArrayList<>();
 
     @Override
-    protected void onInteract(final int level, final PlayerInteractEvent e) {
+    protected void onInteract(int level, PlayerInteractEvent e) {
         if (e.getAction() != Action.RIGHT_CLICK_BLOCK && e.getAction() != Action.RIGHT_CLICK_AIR) return;
-        final Player p = e.getPlayer();
-        final ArrayList<Block> blocks = getBlocks(p.getLocation().getBlock(), level);
+        Player p = e.getPlayer();
+        ArrayList<Block> blocks = getBlocks(p.getLocation().getBlock(), level);
         outline(p, blocks, level);
         setCooldown(p);
     }
 
-    public String setDescription() {
-        return "Right clicking your pickaxe will allow you to see nearby ores for a few seconds.";
-    }
-
-    private ArrayList<Block> getBlocks(final Block start, final int level) {
-        final int radius = (level * 2) + 3;
-        final ArrayList<Block> blocks = new ArrayList<>();
+    private ArrayList<Block> getBlocks(Block start, int level) {
+        int radius = (level * 2) + 3;
+        ArrayList<Block> blocks = new ArrayList<>();
         for (double x = start.getLocation().getX() - radius; x <= start.getLocation().getX() + radius; x++)
             for (double y = start.getLocation().getY() - radius; y <= start.getLocation().getY() + radius; y++)
                 for (double z = start.getLocation().getZ() - radius; z <= start.getLocation().getZ() + radius; z++)
@@ -56,21 +51,21 @@ public class EnchMineSight extends BaseEnchant implements ICooldown {
         return filterBlocks(blocks);
     }
 
-    private void outline(final Player p, ArrayList<Block> blocks, int duration) {
-        for (final Block b : blocks) {
-            final Location loc = b.getLocation();
-            final WorldServer world = ((CraftWorld) p.getWorld()).getHandle();
-            final EntityShulker shulk = new EntityShulker(EntityTypes.SHULKER, world);
+    private void outline(Player p, ArrayList<Block> blocks, int duration) {
+        for (Block b : blocks) {
+            Location loc = b.getLocation();
+            WorldServer world = ((CraftWorld) p.getWorld()).getHandle();
+            EntityShulker shulk = new EntityShulker(EntityTypes.SHULKER, world);
             shulk.setPositionRotation(loc.getX() + 0.5D, loc.getY(), loc.getZ() + 0.5D, 0, 0);
             shulk.setHeadRotation(0);
             shulk.setInvulnerable(true);
             shulk.setNoAI(true);
             shulk.setSilent(true);
-            final DataWatcher watcher = shulk.getDataWatcher();
+            DataWatcher watcher = shulk.getDataWatcher();
             watcher.set(new DataWatcherObject<>(0, DataWatcherRegistry.a), (byte) 96);
-            final PacketPlayOutSpawnEntityLiving spawnEntityLiving = new PacketPlayOutSpawnEntityLiving(shulk);
+            PacketPlayOutSpawnEntityLiving spawnEntityLiving = new PacketPlayOutSpawnEntityLiving(shulk);
             ((CraftPlayer) p).getHandle().playerConnection.sendPacket(spawnEntityLiving);
-            final PacketPlayOutEntityMetadata entityMetadata = new PacketPlayOutEntityMetadata(shulk.getId(), watcher, false);
+            PacketPlayOutEntityMetadata entityMetadata = new PacketPlayOutEntityMetadata(shulk.getId(), watcher, false);
             ((CraftPlayer) p).getHandle().playerConnection.sendPacket(entityMetadata);
             blockCorrespondingEntity.put(b, shulk);
         }
@@ -78,7 +73,7 @@ public class EnchMineSight extends BaseEnchant implements ICooldown {
             setTeams(p, color);
         Bukkit.getScheduler().runTaskLater(VRNEnchants.getInstance(), () -> {
             PacketPlayOutEntityDestroy destroy;
-            for (final EntityShulker shulk : blockCorrespondingEntity.values()) {
+            for (EntityShulker shulk : blockCorrespondingEntity.values()) {
                 destroy = new PacketPlayOutEntityDestroy(shulk.getId());
                 ((CraftPlayer) p).getHandle().playerConnection.sendPacket(destroy);
             }
@@ -106,7 +101,7 @@ public class EnchMineSight extends BaseEnchant implements ICooldown {
         private final EnumChatFormat color;
         private final Material block;
 
-        Sorter(final EnumChatFormat color, final Material block) {
+        Sorter(EnumChatFormat color, Material block) {
             this.color = color;
             this.block = block;
         }
@@ -115,8 +110,8 @@ public class EnchMineSight extends BaseEnchant implements ICooldown {
             return block;
         }
 
-        public static EnumChatFormat getColorFrom(final Block b) {
-            for (final Sorter sorter : Sorter.values())
+        public static EnumChatFormat getColorFrom(Block b) {
+            for (Sorter sorter : Sorter.values())
                 if (b.getType() == sorter.block)
                     return sorter.color;
             return EnumChatFormat.WHITE;
@@ -138,10 +133,10 @@ public class EnchMineSight extends BaseEnchant implements ICooldown {
                         new PacketPlayOutScoreboardTeam(team, Collections.singletonList(String.valueOf(blockCorrespondingEntity.get(b).getUniqueID())), 3));
     }
 
-    private ArrayList<Block> filterBlocks(final ArrayList<Block> blocks) {
-        final ArrayList<Block> newBlocks = new ArrayList<>();
-        for (final Block b : blocks)
-            for (final Sorter sort : Sorter.values())
+    private ArrayList<Block> filterBlocks(ArrayList<Block> blocks) {
+        ArrayList<Block> newBlocks = new ArrayList<>();
+        for (Block b : blocks)
+            for (Sorter sort : Sorter.values())
                 if (b.getType() == sort.getBlock()) {
                     if (!colorsUsed.contains(Sorter.getColorFrom(b)))
                         colorsUsed.add(Sorter.getColorFrom(b));

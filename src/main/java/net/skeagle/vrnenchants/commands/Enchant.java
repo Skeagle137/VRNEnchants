@@ -82,7 +82,7 @@ public class Enchant implements CommandExecutor, TabCompleter {
             return true;
         }
         Player p = (Player) cs;
-        final ItemStack i = p.getInventory().getItemInMainHand();
+        ItemStack i = p.getInventory().getItemInMainHand();
         if (i.getType() == Material.AIR) {
             say(p, "&cYou must be holding an item to enchant.");
             return true;
@@ -97,17 +97,17 @@ public class Enchant implements CommandExecutor, TabCompleter {
                 say(p, "&cLevel cannot be less than 1.");
                 return true;
             }
-            for (final Enchantment ench : Enchantment.values())
+            for (Enchantment ench : Enchantment.values())
                 i.addUnsafeEnchantment(ench, level);
-            for (final EnchantRegistry.VRN entry : EnchantRegistry.VRN.values()) {
+            for (EnchantRegistry.VRN entry : EnchantRegistry.VRN.values()) {
                 BaseEnchant.applyEnchant(i, entry.getEnch(), level);
                 BaseEnchant.updateLore(i);
             }
             return true;
         }
-        final Enchantment enchant = checkArgs(args);
+        Enchantment enchant = checkArgs(args);
         if (enchant == null) {
-            say(p, "That is not an available enchant.");
+            say(p, "&cThat is not an available enchant.");
             return true;
         }
         int level = parseLevel(args, p);
@@ -134,7 +134,7 @@ public class Enchant implements CommandExecutor, TabCompleter {
     }
 
     private Enchantment checkArgs(String[] args) {
-        for (final Enchantment enchants : Enchantment.values())
+        for (Enchantment enchants : Enchantment.values())
             if (args[0].equalsIgnoreCase(enchants.getKey().toString().replaceAll("minecraft:", "").replaceAll("vrnenchants:","")))
                 return enchants;
         return null;
@@ -153,8 +153,8 @@ public class Enchant implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String s, String[] args) {
         if (args.length == 1) {
-            final ArrayList<String> names = new ArrayList<>();
-            for (final Enchantment enchants : Enchantment.values()) {
+            ArrayList<String> names = new ArrayList<>();
+            for (Enchantment enchants : Enchantment.values()) {
                 names.add(enchants.getKey().toString().replaceAll("minecraft:", "").replaceAll("vrnenchants:", ""));
                 names.add("all");
             }

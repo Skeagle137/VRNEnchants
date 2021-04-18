@@ -1,22 +1,19 @@
 package net.skeagle.vrnenchants.enchant.enchantments;
 
-import net.skeagle.vrnenchants.enchant.BaseEnchant;
-import net.skeagle.vrnenchants.enchant.RNG;
-import net.skeagle.vrnenchants.enchant.Rarity;
+import net.skeagle.vrnenchants.enchant.*;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.enchantments.EnchantmentTarget;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-
+@EnchDescription("Attacking enemies has a chance to give you a speed boost.")
 public class EnchSpeedy extends BaseEnchant {
 
     private static final Enchantment instance = new EnchSpeedy();
 
     private EnchSpeedy() {
-        super("Speedy", 2, EnchantmentTarget.WEAPON);
+        super("Speedy", 2, Target.SWORDS);
         setRarity(Rarity.UNCOMMON);
     }
 

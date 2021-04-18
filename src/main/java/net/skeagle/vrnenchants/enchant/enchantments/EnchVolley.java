@@ -1,10 +1,8 @@
 package net.skeagle.vrnenchants.enchant.enchantments;
 
-import net.skeagle.vrnenchants.enchant.BaseEnchant;
-import net.skeagle.vrnenchants.enchant.Rarity;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.enchantments.EnchantmentTarget;
+//maybe? otherwise, not now.
 
+//@EnchDescription("Shoot multiple arrows at once.")
 public class EnchVolley/* extends BaseEnchant*/ {
 
     /*

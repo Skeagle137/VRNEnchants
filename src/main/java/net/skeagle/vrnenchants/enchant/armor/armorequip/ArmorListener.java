@@ -1,8 +1,6 @@
-package net.skeagle.vrnenchants.enchant.extended.armorequip;
+package net.skeagle.vrnenchants.enchant.armor.armorequip;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
@@ -20,7 +18,7 @@ import org.bukkit.inventory.meta.Damageable;
 public class ArmorListener implements Listener {
 
     @EventHandler(priority =  EventPriority.HIGHEST, ignoreCancelled = true)
-    public final void inventoryClick(final InventoryClickEvent e) {
+    public final void inventoryClick(InventoryClickEvent e) {
         boolean shift = false, numberkey = false;
         if (e.getAction() == InventoryAction.NOTHING)
             return;

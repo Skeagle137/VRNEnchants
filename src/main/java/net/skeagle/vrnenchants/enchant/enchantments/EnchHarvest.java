@@ -1,35 +1,29 @@
 package net.skeagle.vrnenchants.enchant.enchantments;
 
-import net.skeagle.vrnenchants.enchant.BaseEnchant;
-import net.skeagle.vrnenchants.enchant.RNG;
-import net.skeagle.vrnenchants.enchant.Rarity;
+import net.skeagle.vrnenchants.enchant.*;
 import org.bukkit.block.data.Ageable;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.enchantments.EnchantmentTarget;
 import org.bukkit.event.block.BlockBreakEvent;
 
+@EnchDescription("Chance of reaping double or triple the items from the amount of a single crop.")
 public class EnchHarvest extends BaseEnchant {
 
     private static final Enchantment instance = new EnchHarvest();
 
     private EnchHarvest() {
-        super("Harvest", 3, EnchantmentTarget.TOOL);
+        super("Harvest", 3, Target.HOES);
         setRarity(Rarity.RARE);
     }
 
     @Override
-    protected void onBreakBlock(final int level, final BlockBreakEvent e) {
-        if (new RNG().calcChance(15, level)) {
+    protected void onBreakBlock(int level, BlockBreakEvent e) {
+        if (new RNG().calcChance(30, level)) {
             if (!(e.getBlock().getBlockData() instanceof Ageable)) return;
             Ageable crop = (Ageable) e.getBlock().getBlockData();
             if (crop.getMaximumAge() != crop.getAge()) return;
             e.getBlock().getDrops().forEach(drop ->
                 drop.setAmount(((int) (drop.getAmount() * (1.5 + (level / 2))))));
         }
-    }
-
-    public String setDescription() {
-        return "Chance of reaping double or triple the items from the amount of a single crop.";
     }
 
     public static Enchantment getInstance() {

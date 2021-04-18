@@ -1,11 +1,13 @@
 package net.skeagle.vrnenchants.enchant.enchantments;
 
+import net.skeagle.vrnenchants.enchant.EnchDescription;
 import net.skeagle.vrnenchants.enchant.Rarity;
-import net.skeagle.vrnenchants.enchant.extended.ArmorEnchant;
+import net.skeagle.vrnenchants.enchant.armor.ArmorEnchant;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.LivingEntity;
 
+@EnchDescription("Increases your max health by half a heart for each level.")
 public class EnchGrowth extends ArmorEnchant {
 
     private static final Enchantment instance = new EnchGrowth();
@@ -13,10 +15,6 @@ public class EnchGrowth extends ArmorEnchant {
     private EnchGrowth() {
         super("Growth", 5);
         setRarity(Rarity.LEGENDARY);
-    }
-
-    public String setDescription() {
-        return "Increases your max health by half a heart for each level.";
     }
 
     @Override

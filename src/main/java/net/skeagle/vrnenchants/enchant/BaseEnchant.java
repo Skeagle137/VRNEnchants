@@ -16,6 +16,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static net.skeagle.vrnenchants.enchant.EnchantRegistry.registerEnchant;
 import static net.skeagle.vrnenchants.util.VRNUtil.*;
@@ -25,32 +27,23 @@ public class BaseEnchant extends Enchantment {
     private static final String[] NUMERALS = { "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X" };
     private final String name;
     private final int maxlevel;
-    private int level;
-    private final EnchantmentTarget target;
-    private Enchantment[] conflicting;
+    private final Target[] targets;
     private boolean cursed;
     private Rarity rarity;
+    private List<Enchantment> conflicting;
     private final EnchantCooldown enchantCooldown = new EnchantCooldown();
     private long cooldown;
     private String cooldownMessage;
     private boolean cooldownErrorVisible = true;
     private EnchantCooldown.CooldownMessageType type = EnchantCooldown.CooldownMessageType.CHAT;
 
-    public BaseEnchant(String name, int maxlevel, EnchantmentTarget target) {
+    public BaseEnchant(String name, int maxlevel, Target... targets) {
         super(new NamespacedKey(VRNEnchants.getInstance(), name.toLowerCase().replaceAll(" ", "_")));
         this.name = name;
         this.maxlevel = maxlevel;
-        this.target = target;
-        registerEnchant(this);
-    }
-
-    public BaseEnchant(String name, int maxlevel, EnchantmentTarget target, Enchantment... conflicting) {
-        super(new NamespacedKey(VRNEnchants.getInstance(), name.toLowerCase().replaceAll(" ", "_")));
-        this.name = name;
-        this.maxlevel = maxlevel;
-        this.target = target;
-        this.conflicting = conflicting;
-        this.conflictingEnchants(conflicting);
+        this.targets = targets;
+        if (this instanceof IConflicting)
+            conflicting = ((IConflicting) this).enchants();
         registerEnchant(this);
     }
 
@@ -71,7 +64,7 @@ public class BaseEnchant extends Enchantment {
 
     @Override @SuppressWarnings("deprecation")
     public final EnchantmentTarget getItemTarget() {
-        return (target != null ? target : EnchantmentTarget.ALL);
+        return EnchantmentTarget.ALL;
     }
 
     @Override
@@ -82,6 +75,11 @@ public class BaseEnchant extends Enchantment {
     @Override
     public final boolean isCursed() {
         return cursed;
+    }
+
+    @Override
+    public boolean conflictsWith(Enchantment ench) {
+        return conflicting != null && conflicting.contains(ench);
     }
 
     public final Rarity getRarity() {
@@ -120,6 +118,14 @@ public class BaseEnchant extends Enchantment {
         this.cooldownErrorVisible = cooldownErrorVisible;
     }
 
+    public final void setConflicting(IConflicting conflicting) {
+        this.conflicting = conflicting.enchants();
+    }
+
+    public Target[] getTargets() {
+        return targets;
+    }
+
     public final void setCooldown(LivingEntity e) {
         enchantCooldown.set(e, cooldown);
         new BukkitRunnable() {
@@ -142,29 +148,16 @@ public class BaseEnchant extends Enchantment {
     }
 
     @Override
-    public final boolean conflictsWith(Enchantment other) {
-        return conflicting != null;
-    }
-
-    @Override
     public final boolean canEnchantItem(ItemStack item) {
-        return true;
+        return !itemConflicts(item, this);
     }
 
-    private ArrayList<Enchantment> conflictingEnchants(Enchantment[] conflicting) {
-        return new ArrayList<>(Arrays.asList(conflicting));
+    protected final boolean setCursed(boolean cursed) {
+        return this.cursed = cursed;
     }
 
-    protected final boolean setCursed() {
-        return cursed = true;
-    }
-
-    protected final int getLevel() {
-        return this.level;
-    }
-
-    protected final void setLevel(int level) {
-        this.level = level;
+    protected final boolean getCursed() {
+        return cursed;
     }
 
     protected void onDamage(int level, LivingEntity damager, EntityDamageByEntityEvent e) {
@@ -188,6 +181,9 @@ public class BaseEnchant extends Enchantment {
     protected void onKill(int level, Player killer, EntityDeathEvent e) {
     }
 
+    protected void onDeath(int level, Player player, ItemStack item, PlayerDeathEvent e) {
+    }
+
     public static boolean hasEnchant(ItemStack i, Enchantment enchant) {
         if(i.getItemMeta() != null && i.getItemMeta().getEnchants() != null && !i.getItemMeta().getEnchants().isEmpty())
             for (Map.Entry<Enchantment, Integer> enchants : i.getItemMeta().getEnchants().entrySet())
@@ -196,8 +192,21 @@ public class BaseEnchant extends Enchantment {
         return false;
     }
 
+    public static String getDescription(BaseEnchant ench) {
+       if (!ench.getClass().isAnnotationPresent(EnchDescription.class))
+           return null;
+       return ench.getClass().getAnnotation(EnchDescription.class).value();
+    }
+
+    public static List<Enchantment> getConflicting(BaseEnchant ench) {
+        if (!(ench instanceof IConflicting)) return null;
+        IConflicting conflicting = (IConflicting) ench;
+        if (conflicting.enchants().size() < 1) return null;
+        return conflicting.enchants();
+    }
+
     public static Map<BaseEnchant, Integer> getEnchants(ItemStack i) {
-        final Map<BaseEnchant, Integer> map = new HashMap<>();
+        Map<BaseEnchant, Integer> map = new HashMap<>();
         Map<Enchantment, Integer> vanilla;
         if (i == null) return map;
         ItemMeta meta = i.getItemMeta();
@@ -206,9 +215,9 @@ public class BaseEnchant extends Enchantment {
             vanilla = ((EnchantmentStorageMeta)meta).getStoredEnchants();
         else
             vanilla = meta.getEnchants();
-        for (final Map.Entry<Enchantment, Integer> e : vanilla.entrySet()) {
-            final Enchantment ench = e.getKey();
-            final int level = e.getValue();
+        for (Map.Entry<Enchantment, Integer> e : vanilla.entrySet()) {
+            Enchantment ench = e.getKey();
+            int level = e.getValue();
             if (ench instanceof BaseEnchant)
                 map.put((BaseEnchant) ench, level);
         }
@@ -227,25 +236,24 @@ public class BaseEnchant extends Enchantment {
     }
 
     public static void updateLore(ItemStack i) {
-        final ItemMeta meta = i.getItemMeta();
+        ItemMeta meta = i.getItemMeta();
         if (meta == null)
             return;
         Map<Enchantment, Integer> enchants;
         if (meta instanceof EnchantmentStorageMeta) {
-            final EnchantmentStorageMeta meta2 = (EnchantmentStorageMeta) meta;
+            EnchantmentStorageMeta meta2 = (EnchantmentStorageMeta) meta;
             enchants = meta2.getStoredEnchants();
         }
         else
             enchants = meta.getEnchants();
-        List<String> lore = meta.getLore();
-        if (lore == null)
-            lore = new ArrayList<>();
-        else
-            lore.removeIf(line -> !line.startsWith(color("&7")));
-        for (final Map.Entry<Enchantment, Integer> e : enchants.entrySet()) {
+        List<String> lore = new ArrayList<>();
+        meta.setLore(lore);
+        i.setItemMeta(meta);
+        int line = 0;
+        for (Map.Entry<Enchantment, Integer> e : enchants.entrySet()) {
             if (!(e.getKey() instanceof BaseEnchant))
                 continue;
-            final BaseEnchant ench = (BaseEnchant) e.getKey();
+            BaseEnchant ench = (BaseEnchant) e.getKey();
             String enchlore;
             String prefix = ench.getRarity().getPrefix();
             if (e.getValue() == 1 && ench.getMaxLevel() == 1)
@@ -254,37 +262,89 @@ public class BaseEnchant extends Enchantment {
                 enchlore = color(prefix + ench.getName() + " enchantment.level." + e.getValue() + "&r");
             else
                 enchlore = color(prefix + ench.getName() + " " + NUMERALS[e.getValue() - 1] + "&r");
-            lore.add(0, enchlore);
+            lore.add(line, enchlore);
+            line++;
+            if (i.getType() == Material.ENCHANTED_BOOK) {
+                String desc = getDescription(ench);
+                lore.add(line, desc != null ? color("&7&o" + desc) : color("&7&oThis enchant has no description."));
+                line++;
+                List<String> names = new ArrayList<>();
+                Arrays.stream(ench.getTargets()).collect(Collectors.toList()).forEach(t -> names.add(t.getName()));
+                lore.add(color("&eApplies to: &c" + String.join(", ", names)));
+                line++;
+                if (ench instanceof ICooldown) {
+                    lore.add(color("&eCooldown: &c" + ((ICooldown) ench).cooldown(e.getValue())) + " seconds");
+                    line++;
+                }
+            }
         }
         meta.setLore(lore);
         i.setItemMeta(meta);
     }
 
-    public static boolean canEnchant(final ItemStack item, final BaseEnchant ench, int lvl) {
-        if (!ench.canEnchantItem(item)) return false;
+    public static boolean isConflicting(Enchantment ench1, Enchantment ench2) {
+        if (ench1.conflictsWith(ench2)) return true;
+        if (!(ench1 instanceof BaseEnchant)) return false;
+        BaseEnchant base = (BaseEnchant) ench1;
+        if (ench2 instanceof BaseEnchant)
+            if (!Target.matches(base, ((BaseEnchant) ench2).getTargets()))
+                return true;
+        List<Enchantment> enchants = getConflicting(base);
+        if (enchants == null)
+            return false;
+        return enchants.stream().anyMatch(e -> e == ench2);
+    }
+
+    private static boolean itemConflicts(ItemStack item, Enchantment ench) {
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null)
+            return false;
+        if (!(ench instanceof BaseEnchant))
+            return meta.getEnchants().keySet().stream().anyMatch(ench::conflictsWith);
+        List<Enchantment> enchants = getConflicting((BaseEnchant) ench);
+        if (enchants == null)
+            return false;
+        int i = 0, limit = ((IConflicting) ench).limit();
+        Stream<Enchantment> s = meta.getEnchants().keySet().stream();
+        if (limit <= 1 && s.anyMatch(e -> isConflicting(ench, e)))
+            return true;
+        else
+            i += s.filter(e -> isConflicting(ench, e)).count();
+
+        if (enchants.contains(ench)) {
+            if (limit <= 1)
+                return true;
+            else
+                i++;
+        }
+        return i >= limit;
+    }
+
+    public static boolean canEnchant(ItemStack item, BaseEnchant ench, int lvl) {
+        if (!Target.matches(item, ench.targets)) return false;
         if (lvl < ench.getStartLevel())
             lvl = ench.getStartLevel();
         if (lvl > ench.getMaxLevel())
             lvl = ench.getMaxLevel();
-        final ItemMeta meta = item.getItemMeta();
+        ItemMeta meta = item.getItemMeta();
         if (meta == null)
             return false;
-        if (meta.getEnchants().keySet().stream().anyMatch(ench::conflictsWith))
+        if (itemConflicts(item, ench))
             return false;
-        final int lvlHas = meta.getEnchantLevel(ench);
+        int lvlHas = meta.getEnchantLevel(ench);
         return lvlHas < lvl;
     }
 
-    public static boolean applyEnchant(final ItemStack item, final Enchantment ench, final int level) {
+    public static boolean applyEnchant(ItemStack item, Enchantment ench, int level) {
         removeEnchant(item, ench, level);
-        final ItemMeta meta = item.getItemMeta();
+        ItemMeta meta = item.getItemMeta();
         if (meta == null)
             return false;
         List<String> lore = meta.getLore();
         if (lore == null)
             lore = new ArrayList<>();
         if (ench instanceof BaseEnchant) {
-            final String name = applyEnchantName(ench, level);
+            String name = applyEnchantName(ench, level);
             lore.add(0, name);
         }
         if (meta instanceof EnchantmentStorageMeta)
@@ -296,19 +356,21 @@ public class BaseEnchant extends Enchantment {
         return true;
     }
 
-    public static ItemStack generateEnchantBook (final Enchantment ench, final int level) {
-        final ItemStack i = new ItemStack(Material.ENCHANTED_BOOK);
-        final EnchantmentStorageMeta meta = (EnchantmentStorageMeta) i.getItemMeta();
+    public static ItemStack generateEnchantBook(ItemStack item, Enchantment ench, int level) {
+        ItemStack i = item;
+        if (i == null)
+            i = new ItemStack(Material.ENCHANTED_BOOK);
+        EnchantmentStorageMeta meta = (EnchantmentStorageMeta) i.getItemMeta();
         meta.addStoredEnchant(ench, level, true);
         i.setItemMeta(meta);
         updateLore(i);
         return i;
     }
 
-    private static void removeEnchant(final ItemStack item, final Enchantment ench, final int level) {
-        final ItemMeta meta = item.getItemMeta();
+    private static void removeEnchant(ItemStack item, Enchantment ench, int level) {
+        ItemMeta meta = item.getItemMeta();
         if (meta == null || !meta.hasEnchant(ench)) return;
-        final List<String> lore = meta.getLore();
+        List<String> lore = meta.getLore();
         if (ench instanceof BaseEnchant) {
             BaseEnchant e = (BaseEnchant) ench;
             if (lore != null) {

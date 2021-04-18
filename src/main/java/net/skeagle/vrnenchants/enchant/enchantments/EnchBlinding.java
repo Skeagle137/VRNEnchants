@@ -10,13 +10,13 @@ import org.bukkit.potion.PotionEffectType;
 import java.util.ArrayList;
 import java.util.List;
 
-@EnchDescription("Chance to inflict the target with wither.")
-public class EnchWithering extends BaseEnchant implements IConflicting {
+@EnchDescription("Chance to inflict the target with blindness.")
+public class EnchBlinding extends BaseEnchant implements IConflicting {
 
-    private static final Enchantment instance = new EnchWithering();
+    private static final Enchantment instance = new EnchBlinding();
 
-    private EnchWithering() {
-    super("Withering", 3, Target.SWORDS);
+    private EnchBlinding() {
+        super("Blinding", 2, Target.SWORDS);
         setRarity(Rarity.COMMON);
     }
 
@@ -25,7 +25,7 @@ public class EnchWithering extends BaseEnchant implements IConflicting {
         if (!(e.getEntity() instanceof LivingEntity)) return;
 
         if (new RNG().calcChance(3 + level))
-            ((LivingEntity) e.getEntity()).addPotionEffect(new PotionEffect(PotionEffectType.WITHER, level * 25, 1, false, true, true));
+            ((LivingEntity) e.getEntity()).addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20 + 40 + (level * 40), 2, false, true, true));
     }
 
     public static Enchantment getInstance() {
@@ -36,7 +36,7 @@ public class EnchWithering extends BaseEnchant implements IConflicting {
     public List<Enchantment> enchants() {
         List<Enchantment> enchs = new ArrayList<>();
         enchs.add(EnchVenom.getInstance());
-        enchs.add(EnchBlinding.getInstance());
+        enchs.add(EnchWithering.getInstance());
         enchs.add(FIRE_ASPECT);
         return enchs;
     }

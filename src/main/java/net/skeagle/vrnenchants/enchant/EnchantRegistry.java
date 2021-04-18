@@ -2,11 +2,13 @@ package net.skeagle.vrnenchants.enchant;
 
 import net.skeagle.vrnenchants.enchant.enchantments.*;
 import net.skeagle.vrnenchants.util.ReflectionUtils;
+import net.skeagle.vrnenchants.util.VRNUtil;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 public class EnchantRegistry {
@@ -31,7 +33,7 @@ public class EnchantRegistry {
         VAMPIRISM(EnchVampirism.getInstance()),
         ENDERSHOT(EnchEnderShot.getInstance()),
         ENDLESSQUIVER(EnchEndlessQuiver.getInstance()),
-        //SOULBOUND(EnchSoulBound.getInstance()),
+        SOULBOUND(EnchSoulBound.getInstance()),
         TELEPORTRESISTANCE(EnchTeleportResistance.getInstance()),
         BOOKWORM(EnchBookworm.getInstance()),
         FISHERMAN(EnchFisherman.getInstance()),
@@ -39,12 +41,21 @@ public class EnchantRegistry {
         THUNDERSTRIKE(EnchThunderStrike.getInstance()),
         AEGIS(EnchAegis.getInstance()),
         //VOLLEY(EnchVolley.getInstance()),
-        //GOLDDIGGER(EnchGoldDigger.getInstance()),
+        GOLDDIGGER(EnchGoldDigger.getInstance()),
+        SCAVENGER(EnchScavenger.getInstance()),
+        MELODIC(EnchMelodic.getInstance()),
+        BLINDING(EnchBlinding.getInstance()),
+        PARRY(EnchRepulsor.getInstance()),
+        HASTE(EnchHaste.getInstance()),
+        BRAVERY(EnchBravery.getInstance()),
+        TELEPATHY(EnchTelepathy.getInstance()),
+        VOIDLESS(EnchVoidless.getInstance()),
+        DECAPITATION(EnchDecapitation.getInstance()),
         ;
 
         private final Enchantment enchant;
 
-        VRN(final Enchantment enchant) {
+        VRN(Enchantment enchant) {
             this.enchant = enchant;
         }
 
@@ -54,10 +65,13 @@ public class EnchantRegistry {
     }
 
     public static void registerEnchant(Enchantment ench) {
-        boolean isregistered = Arrays.stream(Enchantment.values()).collect(Collectors.toList()).contains(ench);
-        if (isregistered) return;
+        if (Arrays.stream(Enchantment.values()).collect(Collectors.toList()).contains(ench)) return;
         ReflectionUtils.setAccessible(Enchantment.class, "acceptingNew");
         Enchantment.registerEnchantment(ench);
+        if (ench instanceof BaseEnchant) {
+            String desc = BaseEnchant.getDescription((BaseEnchant) ench);
+            if (desc == null) VRNUtil.log(Level.WARNING, "Enchant " + ((BaseEnchant) ench).getName() + " has no description.");
+        }
     }
 
     public static void registerOnStart() {

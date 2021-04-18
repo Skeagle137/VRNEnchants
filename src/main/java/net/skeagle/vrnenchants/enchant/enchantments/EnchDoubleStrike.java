@@ -1,36 +1,29 @@
 package net.skeagle.vrnenchants.enchant.enchantments;
 
-import net.skeagle.vrnenchants.enchant.BaseEnchant;
-import net.skeagle.vrnenchants.enchant.RNG;
-import net.skeagle.vrnenchants.enchant.Rarity;
+import net.skeagle.vrnenchants.enchant.*;
 import org.bukkit.Particle;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.enchantments.EnchantmentTarget;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
+@EnchDescription("Chance to do double damage to the target.")
 public class EnchDoubleStrike extends BaseEnchant {
 
     private static final Enchantment instance = new EnchDoubleStrike();
 
     private EnchDoubleStrike() {
-        super("Double Strike", 3, EnchantmentTarget.WEAPON);
+        super("Double Strike", 3, Target.SWORDS);
         setRarity(Rarity.COSMIC);
     }
 
     @Override
-    protected void onDamage(final int level, final LivingEntity damager, final EntityDamageByEntityEvent e) {
+    protected void onDamage(int level, LivingEntity damager, EntityDamageByEntityEvent e) {
         if (!(e.getEntity() instanceof LivingEntity)) return;
 
-        final RNG rng = new RNG();
-        if (rng.calcChance(0, 1, level)) {
+        if (new RNG().calcChance(0, 1, level)) {
             e.setDamage(e.getDamage() * 2);
             damager.getWorld().spawnParticle(Particle.LAVA, e.getEntity().getLocation().clone().add(0, 1, 0), 5, 0.3, 0.3, 0.3, 0.1);
         }
-    }
-
-    public String setDescription() {
-        return "chance to do double damage to the target.";
     }
 
     public static Enchantment getInstance() {

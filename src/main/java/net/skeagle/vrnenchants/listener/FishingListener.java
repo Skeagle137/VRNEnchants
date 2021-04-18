@@ -1,9 +1,9 @@
 package net.skeagle.vrnenchants.listener;
 
 import net.skeagle.vrnenchants.enchant.BaseEnchant;
+import net.skeagle.vrnenchants.enchant.EnchantRegistry;
 import net.skeagle.vrnenchants.enchant.RNG;
 import net.skeagle.vrnenchants.enchant.Rarity;
-import net.skeagle.vrnenchants.enchant.EnchantRegistry;
 import net.skeagle.vrnenchants.enchant.enchantments.EnchFisherman;
 import net.skeagle.vrnenchants.util.VRNUtil;
 import org.bukkit.enchantments.Enchantment;
@@ -66,6 +66,6 @@ public class FishingListener implements Listener {
                     .addEntry(3, 5 + (level > 1 ? 5 : 0)).build();
         }
         if (randLevel > ench.getMaxLevel()) randLevel = ench.getMaxLevel();
-        return BaseEnchant.generateEnchantBook(ench, randLevel);
+        return BaseEnchant.generateEnchantBook(null, ench, randLevel);
     }
 }

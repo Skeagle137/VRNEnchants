@@ -1,24 +1,25 @@
 package net.skeagle.vrnenchants.enchant.enchantments;
 
-import net.skeagle.vrnenchants.enchant.BaseEnchant;
-import net.skeagle.vrnenchants.enchant.RNG;
-import net.skeagle.vrnenchants.enchant.Rarity;
+import net.skeagle.vrnenchants.enchant.*;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.enchantments.EnchantmentTarget;
-import org.bukkit.entity.*;
+import org.bukkit.entity.Arrow;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionType;
 
+@EnchDescription("Similar to infinity, but only applies to spectral and tipped arrows.")
 public class EnchEndlessQuiver extends BaseEnchant {
 
     private static final Enchantment instance = new EnchEndlessQuiver();
 
     private EnchEndlessQuiver() {
-        super("Endless Quiver", 5, EnchantmentTarget.BOW);
+        super("Endless Quiver", 5, Target.BOW, Target.CROSSBOW);
         setRarity(Rarity.RARE);
     }
 
@@ -42,10 +43,6 @@ public class EnchEndlessQuiver extends BaseEnchant {
                 p.getInventory().addItem(i);
             }
         }
-    }
-
-    public String setDescription() {
-        return "Similar to infinity, but only applies to spectral and tipped arrows.";
     }
 
     public static Enchantment getInstance() {

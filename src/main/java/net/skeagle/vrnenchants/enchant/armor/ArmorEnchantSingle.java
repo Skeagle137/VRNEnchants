@@ -1,23 +1,19 @@
-package net.skeagle.vrnenchants.enchant.extended;
+package net.skeagle.vrnenchants.enchant.armor;
 
 import net.skeagle.vrnenchants.enchant.Target;
-import org.bukkit.enchantments.Enchantment;
 
 public class ArmorEnchantSingle extends ArmorEnchant {
 
-    public ArmorEnchantSingle(String name, int maxlevel, ArmorTarget target) {
-        super(name, maxlevel);
-    }
-
-    public ArmorEnchantSingle(String name, int maxlevel, ArmorTarget target, Enchantment... conflicting) {
-        super(name, maxlevel, conflicting);
+    public ArmorEnchantSingle(String name, int maxlevel, ArmorTarget armorTarget) {
+        super(name, maxlevel, armorTarget.getTarget());
     }
 
     protected enum ArmorTarget {
         HELMET(Target.HELMETS),
         CHEST(Target.CHESTPLATES),
         LEGS(Target.LEGGINGS),
-        BOOTS(Target.BOOTS);
+        BOOTS(Target.BOOTS),
+        ELYTRA(Target.ELYTRA);
 
         private final Target target;
 

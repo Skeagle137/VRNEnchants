@@ -1,25 +1,23 @@
 package net.skeagle.vrnenchants.enchant.enchantments;
 
-import net.skeagle.vrnenchants.enchant.BaseEnchant;
-import net.skeagle.vrnenchants.enchant.RNG;
-import net.skeagle.vrnenchants.enchant.Rarity;
+import net.skeagle.vrnenchants.enchant.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.enchantments.EnchantmentTarget;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
+@EnchDescription("Chance to steal hearts from the target.")
 public class EnchVampirism extends BaseEnchant {
 
     private static final Enchantment instance = new EnchVampirism();
 
     private EnchVampirism() {
-        super("Vampirism", 2, EnchantmentTarget.WEAPON);
+        super("Vampirism", 2, Target.SWORDS);
         setRarity(Rarity.LEGENDARY);
     }
 
     @Override
-    protected void onDamage(final int level, final LivingEntity damager, final EntityDamageByEntityEvent e) {
+    protected void onDamage(int level, LivingEntity damager, EntityDamageByEntityEvent e) {
         if (!(e.getEntity() instanceof LivingEntity)) return;
 
         if (new RNG().calcChance(4 + (level * 2))) {
@@ -29,10 +27,6 @@ public class EnchVampirism extends BaseEnchant {
             else
                 damager.setHealth(damager.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
         }
-    }
-
-    public String setDescription() {
-        return "chance to steal hearts from the target.";
     }
 
     public static Enchantment getInstance() {
