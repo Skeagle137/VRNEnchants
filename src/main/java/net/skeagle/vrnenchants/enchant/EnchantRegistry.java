@@ -45,7 +45,7 @@ public class EnchantRegistry {
         SCAVENGER(EnchScavenger.getInstance()),
         MELODIC(EnchMelodic.getInstance()),
         BLINDING(EnchBlinding.getInstance()),
-        PARRY(EnchRepulsor.getInstance()),
+        REPULSOR(EnchRepulsor.getInstance()),
         HASTE(EnchHaste.getInstance()),
         BRAVERY(EnchBravery.getInstance()),
         TELEPATHY(EnchTelepathy.getInstance()),
