@@ -16,7 +16,7 @@ public class EnchHunter extends BaseEnchant {
 
     private EnchHunter() {
         super("Hunter", 2, Target.SWORDS, Target.AXES);
-        setRarity(Rarity.COSMIC);
+        setRarity(Rarity.UNCOMMON);
     }
 
     @Override

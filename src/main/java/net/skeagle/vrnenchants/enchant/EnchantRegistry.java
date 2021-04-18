@@ -51,6 +51,8 @@ public class EnchantRegistry {
         TELEPATHY(EnchTelepathy.getInstance()),
         VOIDLESS(EnchVoidless.getInstance()),
         DECAPITATION(EnchDecapitation.getInstance()),
+        HUNTER(EnchHunter.getInstance()),
+        NETHER_SLAYER(EnchNetherSlayer.getInstance()),
         ;
 
         private final Enchantment enchant;
