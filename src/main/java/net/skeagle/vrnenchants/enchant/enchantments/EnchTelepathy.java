@@ -6,6 +6,7 @@ import net.skeagle.vrnenchants.enchant.Rarity;
 import net.skeagle.vrnenchants.enchant.Target;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -23,16 +24,20 @@ public class EnchTelepathy extends BaseEnchant {
 
     @Override
     protected void onBreakBlock(int level, BlockBreakEvent e) {
+        e.setDropItems(false);
+        if (e.getBlock().getState() instanceof InventoryHolder)
+            ((InventoryHolder) e.getBlock().getState()).getInventory().forEach(i -> {
+                if (i != null)
+                    e.getBlock().getWorld().dropItem(e.getBlock().getLocation(), i);
+            });
         List<ItemStack> dropNaturally = new ArrayList<>();
         for (ItemStack item : e.getBlock().getDrops()) {
-            if (e.getPlayer().getInventory().firstEmpty() != -1 || e.getPlayer().getInventory().first(item) != -1) {
-                e.setDropItems(false);
+            if (e.getPlayer().getInventory().firstEmpty() != -1 || e.getPlayer().getInventory().first(item) != -1)
                 e.getPlayer().getInventory().addItem(item);
-            }
             else
                 dropNaturally.add(item);
         }
-        dropNaturally.forEach(i -> e.getPlayer().getWorld().dropItem(e.getBlock().getLocation(), i));
+        dropNaturally.forEach(i -> e.getBlock().getWorld().dropItem(e.getBlock().getLocation(), i));
     }
 
     public static Enchantment getInstance() {
