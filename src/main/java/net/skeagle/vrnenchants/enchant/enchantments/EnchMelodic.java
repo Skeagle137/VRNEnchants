@@ -4,12 +4,12 @@ import net.skeagle.vrnenchants.enchant.*;
 import net.skeagle.vrnenchants.util.VRNUtil;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Monster;
+import org.bukkit.entity.Creeper;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 
-@EnchDescription("Allows you to have a chance of getting a disc from any hostile mob.")
+@EnchDescription("Allows you to have a chance of getting a disc from killing creepers directly.")
 public class EnchMelodic extends BaseEnchant {
 
     private static final Enchantment instance = new EnchMelodic();
@@ -21,8 +21,8 @@ public class EnchMelodic extends BaseEnchant {
 
     @Override
     protected void onKill(int level, Player killer, EntityDeathEvent e) {
-        if (!(e.getEntity() instanceof Monster)) return;
-        if (new RNG().calcChance(5, 15, level, 1000)) {
+        if (!(e.getEntity() instanceof Creeper)) return;
+        if (new RNG().calcChance(1, 1, level, 2000)) {
             int disc = VRNUtil.rng(1, 13);
             Material m;
             switch (disc) {
