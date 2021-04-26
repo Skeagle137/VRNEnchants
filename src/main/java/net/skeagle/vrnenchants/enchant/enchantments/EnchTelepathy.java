@@ -4,6 +4,7 @@ import net.skeagle.vrnenchants.enchant.BaseEnchant;
 import net.skeagle.vrnenchants.enchant.EnchDescription;
 import net.skeagle.vrnenchants.enchant.Rarity;
 import net.skeagle.vrnenchants.enchant.Target;
+import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.InventoryHolder;
@@ -24,6 +25,8 @@ public class EnchTelepathy extends BaseEnchant {
 
     @Override
     protected void onBreakBlock(int level, BlockBreakEvent e) {
+        if (e.getBlock().getState().getType() == Material.SHULKER_BOX) return;
+        if (BaseEnchant.hasEnchant(e.getPlayer().getEquipment().getItemInMainHand(), EnchAutoSmelt.getInstance())) return; //handled through auto smelt
         e.setDropItems(false);
         if (e.getBlock().getState() instanceof InventoryHolder)
             ((InventoryHolder) e.getBlock().getState()).getInventory().forEach(i -> {
