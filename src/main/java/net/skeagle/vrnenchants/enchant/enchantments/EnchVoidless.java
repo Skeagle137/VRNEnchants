@@ -1,15 +1,11 @@
 package net.skeagle.vrnenchants.enchant.enchantments;
 
-import net.minecraft.server.v1_16_R3.EntityThrownTrident;
 import net.skeagle.vrnenchants.VRNEnchants;
 import net.skeagle.vrnenchants.enchant.BaseEnchant;
 import net.skeagle.vrnenchants.enchant.EnchDescription;
 import net.skeagle.vrnenchants.enchant.Rarity;
 import net.skeagle.vrnenchants.enchant.Target;
-import org.bukkit.Bukkit;
 import org.bukkit.Sound;
-import org.bukkit.craftbukkit.v1_16_R3.entity.CraftTrident;
-import org.bukkit.craftbukkit.v1_16_R3.inventory.CraftItemStack;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
@@ -34,7 +30,6 @@ public class EnchVoidless extends BaseEnchant {
         setRarity(Rarity.LEGENDARY);
     }
 
-    private boolean hit;
     private static final Map<UUID, Integer> tridentMap = new HashMap<>();
 
     @Override
@@ -42,15 +37,17 @@ public class EnchVoidless extends BaseEnchant {
         if (!(shooter instanceof Player) || e.getEntity().getType() != EntityType.TRIDENT) return;
         if (tridentMap.containsKey(shooter.getUniqueId())) return;
         Trident tri = (Trident) e.getEntity();
-        EntityThrownTrident NMSTrident = ((CraftTrident) tri).getHandle();
         int task = new BukkitRunnable() {
             @Override
             public void run() {
-                if (!e.getEntity().isDead() || hit) return;
+                if (tridentMap.get(shooter.getUniqueId()) == null) {
+                    this.cancel();
+                    return;
+                }
+                if (!e.getEntity().isDead()) return;
                 e.getEntity().getWorld().playSound(e.getEntity().getLocation(), Sound.ITEM_TRIDENT_RETURN, 10.0F, 1.0F);
-                this.cancel();
                 Player p = (Player) shooter;
-                ItemStack i = CraftItemStack.asCraftMirror(NMSTrident.trident);
+                ItemStack i = tri.getItem();
                 if (p.getInventory().firstEmpty() != -1)
                     p.getInventory().addItem(i);
                 else
@@ -63,8 +60,7 @@ public class EnchVoidless extends BaseEnchant {
 
     @Override
     protected void onHit(int level, LivingEntity shooter, ProjectileHitEvent e) {
-        Bukkit.getScheduler().cancelTask(tridentMap.get(shooter.getUniqueId()));
-        hit = true;
+        tridentMap.remove(shooter.getUniqueId());
     }
 
     public static Enchantment getInstance() {
