@@ -26,7 +26,8 @@ public class EnchTelepathy extends BaseEnchant {
     @Override
     protected void onBreakBlock(int level, BlockBreakEvent e) {
         if (e.getBlock().getState().getType() == Material.SHULKER_BOX) return;
-        if (BaseEnchant.hasEnchant(e.getPlayer().getEquipment().getItemInMainHand(), EnchAutoSmelt.getInstance())) return; //handled through auto smelt
+        if (BaseEnchant.hasEnchant(e.getPlayer().getEquipment().getItemInMainHand(), EnchAutoSmelt.getInstance()))
+            if (e.getBlock().getType() == Material.IRON_ORE || e.getBlock().getType() == Material.GOLD_ORE) return; //handled through auto smelt
         e.setDropItems(false);
         if (e.getBlock().getState() instanceof InventoryHolder)
             ((InventoryHolder) e.getBlock().getState()).getInventory().forEach(i -> {
