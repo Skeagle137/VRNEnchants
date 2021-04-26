@@ -22,7 +22,7 @@ public class MobKillListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onKill(EntityDeathEvent e) {
         if (!(e.getEntity() instanceof Monster) || e.getEntity().getKiller() == null) return;
-        int rand = VRNUtil.rng(1, 700);
+        int rand = VRNUtil.rng(1, 1200);
         ItemStack hand = e.getEntity().getKiller().getEquipment().getItemInMainHand();
         int level = 0;
         if (BaseEnchant.hasEnchant(hand, Enchantment.LOOT_BONUS_MOBS))
