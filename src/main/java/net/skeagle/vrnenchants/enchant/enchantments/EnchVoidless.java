@@ -34,6 +34,7 @@ public class EnchVoidless extends BaseEnchant {
         setRarity(Rarity.LEGENDARY);
     }
 
+    private boolean hit;
     private static final Map<UUID, Integer> tridentMap = new HashMap<>();
 
     @Override
@@ -45,7 +46,7 @@ public class EnchVoidless extends BaseEnchant {
         int task = new BukkitRunnable() {
             @Override
             public void run() {
-                if (!e.getEntity().isDead()) return;
+                if (!e.getEntity().isDead() || hit) return;
                 e.getEntity().getWorld().playSound(e.getEntity().getLocation(), Sound.ITEM_TRIDENT_RETURN, 10.0F, 1.0F);
                 this.cancel();
                 Player p = (Player) shooter;
@@ -63,6 +64,7 @@ public class EnchVoidless extends BaseEnchant {
     @Override
     protected void onHit(int level, LivingEntity shooter, ProjectileHitEvent e) {
         Bukkit.getScheduler().cancelTask(tridentMap.get(shooter.getUniqueId()));
+        hit = true;
     }
 
     public static Enchantment getInstance() {
