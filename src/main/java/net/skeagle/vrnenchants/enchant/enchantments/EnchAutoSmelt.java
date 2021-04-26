@@ -1,12 +1,11 @@
 package net.skeagle.vrnenchants.enchant.enchantments;
 
-import net.skeagle.vrnenchants.enchant.BaseEnchant;
-import net.skeagle.vrnenchants.enchant.EnchDescription;
-import net.skeagle.vrnenchants.enchant.Rarity;
-import net.skeagle.vrnenchants.enchant.Target;
+import net.skeagle.vrnenchants.enchant.*;
 import net.skeagle.vrnenchants.util.VRNUtil;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
@@ -38,6 +37,14 @@ public class EnchAutoSmelt extends BaseEnchant {
 
         if (mat == null) return;
         e.setDropItems(false);
+
+        int i = VRNUtil.rng(2, 5);
+        if (BaseEnchant.hasEnchant(item, EnchGemstone.getInstance()))
+            if (new RNG().calcChance(10, 5, level))
+                i *= 3;
+
+        ExperienceOrb orb = (ExperienceOrb) e.getBlock().getWorld().spawnEntity(e.getBlock().getLocation().add(0.5, 0.5, 0.5), EntityType.EXPERIENCE_ORB);
+        orb.setExperience(i);
 
         if (!BaseEnchant.hasEnchant(item, EnchTelepathy.getInstance())) {
             e.getBlock().getWorld().dropItemNaturally(e.getBlock().getLocation(), new ItemStack(mat, fortune));
