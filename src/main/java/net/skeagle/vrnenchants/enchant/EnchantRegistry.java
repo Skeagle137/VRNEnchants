@@ -49,7 +49,6 @@ public class EnchantRegistry {
         HASTE(EnchHaste.getInstance()),
         BRAVERY(EnchBravery.getInstance()),
         TELEPATHY(EnchTelepathy.getInstance()),
-        VOIDLESS(EnchVoidless.getInstance()),
         DECAPITATION(EnchDecapitation.getInstance()),
         HUNTER(EnchHunter.getInstance()),
         NETHER_SLAYER(EnchNetherSlayer.getInstance()),
