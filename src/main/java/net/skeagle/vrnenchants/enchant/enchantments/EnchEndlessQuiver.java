@@ -25,8 +25,7 @@ public class EnchEndlessQuiver extends BaseEnchant {
 
     @Override
     protected void onHit(int level, LivingEntity shooter, ProjectileHitEvent e) {
-        if (!(e.getHitEntity() instanceof LivingEntity) || e.getHitEntity() == null || !(shooter instanceof Player) || e.getHitEntity().isInvulnerable()) return;
-        Player p = (Player) shooter;
+        if (!(e.getHitEntity() instanceof LivingEntity) || e.getHitEntity() == null || !(shooter instanceof Player p) || e.getHitEntity().isInvulnerable()) return;
         if (new RNG().calcChance(25, 5, level)) {
             if (e.getEntityType() == EntityType.SPECTRAL_ARROW)
                 p.getInventory().addItem(new ItemStack(Material.SPECTRAL_ARROW));

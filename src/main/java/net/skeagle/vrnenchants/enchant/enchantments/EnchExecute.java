@@ -36,8 +36,7 @@ public class EnchExecute extends BaseEnchant {
 
     @Override
     protected void onDamage(int level, LivingEntity damager, EntityDamageByEntityEvent e) {
-        if (!(e.getEntity() instanceof LivingEntity)) return;
-        LivingEntity en = (LivingEntity) e.getEntity();
+        if (!(e.getEntity() instanceof LivingEntity en)) return;
         if (hitList.get(damager.getUniqueId()) != null)
             if (hitList.get(damager.getUniqueId()).equals(e.getEntity().getUniqueId()))
                 return;

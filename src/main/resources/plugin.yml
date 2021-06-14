@@ -3,7 +3,7 @@ version: ${project.version}
 main: net.skeagle.vrnenchants.VRNEnchants
 author: Skeagle
 description: ${project.description}
-api-version: 1.16
+api-version: 1.17
 
 commands:
   enchant:
