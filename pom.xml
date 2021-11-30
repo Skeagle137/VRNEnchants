@@ -11,10 +11,10 @@
     <description>Adds new enchants to the server. Can be used with VRNcore.</description>
 
     <properties>
-        <java.version>16</java.version>
+        <java.version>17</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <mc.version>1.17</mc.version>
-        <vrnlib>1.3</vrnlib>
+        <mc.version>1.18</mc.version>
+        <vrnlib>1.4a</vrnlib>
     </properties>
 
     <repositories>
@@ -60,7 +60,7 @@
             <plugin>
                 <groupId>net.md-5</groupId>
                 <artifactId>specialsource-maven-plugin</artifactId>
-                <version>1.2.2</version>
+                <version>1.2.3</version>
                 <executions>
                     <execution>
                         <phase>package</phase>

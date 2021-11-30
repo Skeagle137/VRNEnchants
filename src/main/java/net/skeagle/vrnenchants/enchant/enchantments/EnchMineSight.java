@@ -3,7 +3,7 @@ package net.skeagle.vrnenchants.enchant.enchantments;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.protocol.game.ClientboundAddMobPacket;
-import net.minecraft.network.protocol.game.ClientboundRemoveEntityPacket;
+import net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket;
 import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket;
 import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -20,8 +20,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.v1_17_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_18_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_18_R1.entity.CraftPlayer;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
@@ -84,9 +84,9 @@ public class EnchMineSight extends BaseEnchant implements ICooldown {
         for (ChatColor color : colorsUsed)
             setTeams(p, color);
         Task.syncDelayed(() -> {
-            ClientboundRemoveEntityPacket destroy;
+            ClientboundRemoveEntitiesPacket destroy;
             for (Shulker shulk : blockCorrespondingEntity.values()) {
-                destroy = new ClientboundRemoveEntityPacket(shulk.getId());
+                destroy = new ClientboundRemoveEntitiesPacket(shulk.getId());
                 ((CraftPlayer) p).getHandle().connection.send(destroy);
             }
         },(long) (duration * 1.25) * 20);
@@ -138,7 +138,6 @@ public class EnchMineSight extends BaseEnchant implements ICooldown {
         nmsTeam.setCollisionRule(Team.CollisionRule.NEVER);
         nmsTeam.setDisplayName(new TextComponent("minesight" + color.getChar()));
         nmsTeam.setColor(ChatFormatting.getByCode(color.getChar()));
-        System.out.println(nmsTeam.getColor());
         ((CraftPlayer) p).getHandle().connection.send(ClientboundSetPlayerTeamPacket.createAddOrModifyPacket(nmsTeam, true));
         for (Block b : blockCorrespondingEntity.keySet()) {
             if (Sorter.getColorFrom(b) == color)
