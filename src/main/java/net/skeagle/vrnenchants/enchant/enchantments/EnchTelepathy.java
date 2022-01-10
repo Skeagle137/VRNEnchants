@@ -5,6 +5,7 @@ import net.skeagle.vrnenchants.enchant.BaseEnchant;
 import net.skeagle.vrnenchants.enchant.EnchDescription;
 import net.skeagle.vrnenchants.enchant.Rarity;
 import net.skeagle.vrnenchants.enchant.Target;
+import net.skeagle.vrnlib.misc.Task;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
@@ -38,7 +39,7 @@ public class EnchTelepathy extends BaseEnchant {
             itemsAround.add(i.getUniqueId());
         }
 
-        Bukkit.getScheduler().runTaskLater(VRNEnchants.getInstance(), () -> {
+        Task.syncDelayed(() -> {
             for (Entity en : getItemsNear(e.getBlock())) {
                 if (!(en instanceof Item)) continue;
                 Item i = (Item) en;
@@ -48,7 +49,7 @@ public class EnchTelepathy extends BaseEnchant {
             }
         }, 1);
 
-        Bukkit.getScheduler().runTaskLater(VRNEnchants.getInstance(), () -> {
+        Task.syncDelayed(() -> {
             for (Entity en : getItemsNear(e.getBlock())) {
                 if (!(en instanceof Item)) continue;
                 Item i = (Item) en;

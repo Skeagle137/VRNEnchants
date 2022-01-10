@@ -20,7 +20,7 @@ public class EnchVampirism extends BaseEnchant {
     protected void onDamage(int level, LivingEntity damager, EntityDamageByEntityEvent e) {
         if (!(e.getEntity() instanceof LivingEntity)) return;
 
-        if (new RNG().calcChance(4 + (level * 2))) {
+        if (new RNG().calcChance(2 + (level * 2))) {
             double health = damager.getHealth() + e.getFinalDamage() * (0.75 - (level > 1 ? 0.15 : 0));
             if ((damager.getHealth() + health) < damager.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue())
                 damager.setHealth(health);

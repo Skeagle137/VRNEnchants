@@ -5,11 +5,10 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LightningStrike;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 @EnchDescription("Chance to hit the target with lightning, also causing area of effect damage.")
-public class EnchThunderStrike extends BaseEnchant implements Listener {
+public class EnchThunderStrike extends BaseEnchant {
 
     private static final Enchantment instance = new EnchThunderStrike();
 
@@ -22,7 +21,7 @@ public class EnchThunderStrike extends BaseEnchant implements Listener {
     protected void onDamage(int level, LivingEntity damager, EntityDamageByEntityEvent e) {
         if (!(e.getEntity() instanceof LivingEntity)) return;
 
-        if (new RNG().calcChance(6, 2, level)) {
+        if (new RNG().calcChance(3, 2, level)) {
             LightningStrike strike = damager.getWorld().strikeLightningEffect(e.getEntity().getLocation());
             for (Entity en : strike.getNearbyEntities(1 + (level), 1 + (level), 1 + (level))) {
                 if (!(en instanceof LivingEntity) || en == damager) continue;

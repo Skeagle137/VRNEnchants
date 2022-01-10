@@ -25,7 +25,7 @@ public class EnchBlinding extends BaseEnchant implements IConflicting {
         if (!(e.getEntity() instanceof LivingEntity)) return;
 
         if (new RNG().calcChance(3 + level))
-            ((LivingEntity) e.getEntity()).addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20 + 40 + (level * 40), 2, false, true, true));
+            ((LivingEntity) e.getEntity()).addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20 + (level * 30), 1, false, false, true));
     }
 
     public static Enchantment getInstance() {

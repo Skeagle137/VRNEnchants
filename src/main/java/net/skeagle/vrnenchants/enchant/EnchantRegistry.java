@@ -33,15 +33,12 @@ public class EnchantRegistry {
         VAMPIRISM(EnchVampirism.getInstance()),
         ENDERSHOT(EnchEnderShot.getInstance()),
         ENDLESSQUIVER(EnchEndlessQuiver.getInstance()),
-        //SOULBOUND(EnchSoulBound.getInstance()),
         TELEPORTRESISTANCE(EnchTeleportResistance.getInstance()),
         BOOKWORM(EnchBookworm.getInstance()),
         FISHERMAN(EnchFisherman.getInstance()),
         EXTINGUISH(EnchExtinguish.getInstance()),
         THUNDERSTRIKE(EnchThunderStrike.getInstance()),
         AEGIS(EnchAegis.getInstance()),
-        //VOLLEY(EnchVolley.getInstance()),
-        //GOLDDIGGER(EnchGoldDigger.getInstance()),
         SCAVENGER(EnchScavenger.getInstance()),
         MELODIC(EnchMelodic.getInstance()),
         BLINDING(EnchBlinding.getInstance()),
@@ -52,8 +49,7 @@ public class EnchantRegistry {
         VOIDLESS(EnchVoidless.getInstance()),
         DECAPITATION(EnchDecapitation.getInstance()),
         HUNTER(EnchHunter.getInstance()),
-        NETHER_SLAYER(EnchNetherSlayer.getInstance()),
-        ;
+        NETHER_SLAYER(EnchNetherSlayer.getInstance());
 
         private final Enchantment enchant;
 
@@ -70,10 +66,6 @@ public class EnchantRegistry {
         if (Arrays.stream(Enchantment.values()).collect(Collectors.toList()).contains(ench)) return;
         ReflectionUtils.setAccessible(Enchantment.class, "acceptingNew");
         Enchantment.registerEnchantment(ench);
-        if (ench instanceof BaseEnchant) {
-            String desc = BaseEnchant.getDescription((BaseEnchant) ench);
-            if (desc == null) VRNUtil.log(Level.WARNING, "Enchant " + ((BaseEnchant) ench).getName() + " has no description.");
-        }
     }
 
     public static void registerOnStart() {

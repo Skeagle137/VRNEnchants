@@ -22,50 +22,23 @@ public class EnchMelodic extends BaseEnchant {
     @Override
     protected void onKill(int level, Player killer, EntityDeathEvent e) {
         if (!(e.getEntity() instanceof Creeper)) return;
-        if (new RNG().calcChance(1, 1, level, 2000)) {
+        if (new RNG().calcChance(0, 1, level, 1200)) {
             int disc = VRNUtil.rng(1, 13);
-            Material m;
-            switch (disc) {
-                case 1:
-                    m = Material.MUSIC_DISC_CAT;
-                    break;
-                case 2:
-                    m = Material.MUSIC_DISC_BLOCKS;
-                    break;
-                case 3:
-                    m = Material.MUSIC_DISC_CHIRP;
-                    break;
-                case 4:
-                    m = Material.MUSIC_DISC_FAR;
-                    break;
-                case 5:
-                    m = Material.MUSIC_DISC_MALL;
-                    break;
-                case 6:
-                    m = Material.MUSIC_DISC_MELLOHI;
-                    break;
-                case 7:
-                    m = Material.MUSIC_DISC_STAL;
-                    break;
-                case 8:
-                    m = Material.MUSIC_DISC_STRAD;
-                    break;
-                case 9:
-                    m = Material.MUSIC_DISC_WARD;
-                    break;
-                case 10:
-                    m = Material.MUSIC_DISC_11;
-                    break;
-                case 11:
-                    m = Material.MUSIC_DISC_WAIT;
-                    break;
-                case 12:
-                    m = Material.MUSIC_DISC_PIGSTEP;
-                    break;
-                default:
-                    m = Material.MUSIC_DISC_13;
-                    break;
-            }
+            Material m = switch (disc) {
+                case 1 -> Material.MUSIC_DISC_CAT;
+                case 2 -> Material.MUSIC_DISC_BLOCKS;
+                case 3 -> Material.MUSIC_DISC_CHIRP;
+                case 4 -> Material.MUSIC_DISC_FAR;
+                case 5 -> Material.MUSIC_DISC_MALL;
+                case 6 -> Material.MUSIC_DISC_MELLOHI;
+                case 7 -> Material.MUSIC_DISC_STAL;
+                case 8 -> Material.MUSIC_DISC_STRAD;
+                case 9 -> Material.MUSIC_DISC_WARD;
+                case 10 -> Material.MUSIC_DISC_11;
+                case 11 -> Material.MUSIC_DISC_WAIT;
+                case 12 -> Material.MUSIC_DISC_PIGSTEP;
+                default -> Material.MUSIC_DISC_13;
+            };
             killer.getWorld().dropItem(e.getEntity().getLocation(), new ItemStack(m));
         }
     }

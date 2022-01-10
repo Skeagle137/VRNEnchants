@@ -1,6 +1,7 @@
 package net.skeagle.vrnenchants.enchant;
 
 import net.skeagle.vrnenchants.VRNEnchants;
+import net.skeagle.vrnlib.misc.Task;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
@@ -19,6 +20,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static net.skeagle.vrncommands.BukkitUtils.color;
 import static net.skeagle.vrnenchants.enchant.EnchantRegistry.registerEnchant;
 import static net.skeagle.vrnenchants.util.VRNUtil.*;
 
@@ -28,7 +30,6 @@ public class BaseEnchant extends Enchantment {
     private final String name;
     private final int maxlevel;
     private final Target[] targets;
-    private boolean cursed;
     private Rarity rarity;
     private List<Enchantment> conflicting;
     private final EnchantCooldown enchantCooldown = new EnchantCooldown();
@@ -74,7 +75,7 @@ public class BaseEnchant extends Enchantment {
 
     @Override
     public final boolean isCursed() {
-        return cursed;
+        return false;
     }
 
     @Override
@@ -128,36 +129,25 @@ public class BaseEnchant extends Enchantment {
 
     public final void setCooldown(LivingEntity e) {
         enchantCooldown.set(e, cooldown);
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                enchantCooldown.set(e, enchantCooldown.get(e) - 1);
-                if (enchantCooldown.get(e) <= 0) {
-                    this.cancel();
-                    enchantCooldown.remove(e);
-                    if (cooldownMessage != null && !cooldownMessage.isEmpty() && e instanceof Player) {
-                        if (type == EnchantCooldown.CooldownMessageType.ACTION)
-                            sayActionBar((Player) e, cooldownMessage);
-                        else if (type == EnchantCooldown.CooldownMessageType.CHAT)
-                            sayNoPrefix(e, cooldownMessage);
+        Task.syncRepeating(task -> {
+            enchantCooldown.set(e, enchantCooldown.get(e) - 1);
+            if (enchantCooldown.get(e) <= 0) {
+                task.cancel();
+                enchantCooldown.remove(e);
+                if (cooldownMessage != null && !cooldownMessage.isEmpty() && e instanceof Player) {
+                    if (type == EnchantCooldown.CooldownMessageType.ACTION)
+                        sayActionBar((Player) e, cooldownMessage);
+                    else if (type == EnchantCooldown.CooldownMessageType.CHAT)
+                        sayNoPrefix(e, cooldownMessage);
 
-                    }
                 }
             }
-        }.runTaskTimer(VRNEnchants.getInstance(), 20, 20);
+        }, 20L, 20L);
     }
 
     @Override
     public final boolean canEnchantItem(ItemStack item) {
         return !itemConflicts(item, this);
-    }
-
-    protected final boolean setCursed(boolean cursed) {
-        return this.cursed = cursed;
-    }
-
-    protected final boolean getCursed() {
-        return cursed;
     }
 
     protected void onDamage(int level, LivingEntity damager, EntityDamageByEntityEvent e) {
@@ -179,9 +169,6 @@ public class BaseEnchant extends Enchantment {
     }
 
     protected void onKill(int level, Player killer, EntityDeathEvent e) {
-    }
-
-    protected void onDeath(int level, Player player, ItemStack item, PlayerDeathEvent e) {
     }
 
     public static boolean hasEnchant(ItemStack i, Enchantment enchant) {

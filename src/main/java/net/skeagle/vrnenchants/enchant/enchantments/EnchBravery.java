@@ -23,7 +23,7 @@ public class EnchBravery extends BaseEnchant implements ICooldown {
         if (!(e.getEntity() instanceof LivingEntity)) return;
 
         if (p.getHealth() < 3 + level)
-            p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, (level + 1) * 20, 1, false, true, true));
+            p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, (level + 1) * 20, Math.max(level - 2, 0), false, true, true));
     }
 
     public static Enchantment getInstance() {

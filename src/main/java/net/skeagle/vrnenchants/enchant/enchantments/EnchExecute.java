@@ -1,11 +1,9 @@
 package net.skeagle.vrnenchants.enchant.enchantments;
 
-import net.skeagle.vrnenchants.VRNEnchants;
 import net.skeagle.vrnenchants.enchant.BaseEnchant;
 import net.skeagle.vrnenchants.enchant.EnchDescription;
 import net.skeagle.vrnenchants.enchant.Rarity;
 import net.skeagle.vrnenchants.enchant.Target;
-import org.bukkit.Bukkit;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
@@ -14,10 +12,6 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
 
 import static net.skeagle.vrnenchants.util.VRNUtil.sayNoPrefix;
 
@@ -29,20 +23,12 @@ public class EnchExecute extends BaseEnchant {
     private EnchExecute() {
         super("Execute", 2, Target.SWORDS);
         setRarity(Rarity.MYTHICAL);
-        setCooldownErrorVisible(false);
     }
-
-    private final Map<UUID, UUID> hitList = new HashMap<>();
 
     @Override
     protected void onDamage(int level, LivingEntity damager, EntityDamageByEntityEvent e) {
         if (!(e.getEntity() instanceof LivingEntity en)) return;
-        if (hitList.get(damager.getUniqueId()) != null)
-            if (hitList.get(damager.getUniqueId()).equals(e.getEntity().getUniqueId()))
-                return;
         if (en.getHealth() < (level + 2)) {
-            hitList.put(damager.getUniqueId(), en.getUniqueId());
-            Bukkit.getScheduler().runTaskLater(VRNEnchants.getInstance(), () -> hitList.remove(damager.getUniqueId()), 100);
             en.damage(en.getHealth(), damager);
         }
     }

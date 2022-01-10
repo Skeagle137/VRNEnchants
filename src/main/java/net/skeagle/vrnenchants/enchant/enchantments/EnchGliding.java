@@ -25,7 +25,7 @@ public class EnchGliding extends BaseEnchant implements Listener {
     private static final Enchantment instance = new EnchGliding();
 
     public EnchGliding() {
-        super("Gliding", 6, Target.LEGGINGS);
+        super("Gliding", 5, Target.LEGGINGS);
         setRarity(Rarity.MYTHICAL);
     }
 
@@ -36,7 +36,7 @@ public class EnchGliding extends BaseEnchant implements Listener {
         if (!e.isSneaking() || cooldown.contains(e.getPlayer().getUniqueId())) return;
         ItemStack item = e.getPlayer().getEquipment().getLeggings();
         if (item == null || !hasEnchant(item, this)) return;
-        if (e.getPlayer().getFallDistance() > 55 - (5 * getEnchants(item).get(this)))
+        if (e.getPlayer().getFallDistance() > 50 - (5 * getEnchants(item).get(this)))
             if (e.getPlayer().getPotionEffect(PotionEffectType.SLOW_FALLING) == null) {
                 cooldown.add(e.getPlayer().getUniqueId());
                 e.getPlayer().setVelocity(e.getPlayer().getVelocity().setY(-0.05));

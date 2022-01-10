@@ -19,58 +19,6 @@ import static net.skeagle.vrnenchants.util.VRNUtil.say;
 
 public class Enchant implements CommandExecutor, TabCompleter {
 
-    /*public Enchant() {
-        super("enchant|ench");
-        setDescription("Enchants the item held in your main hand.");
-        setPermission("vrn.enchant");
-        setPermissionMessage(VRNUtil.NOPERM);
-    }
-
-     */
-
-    /*@Override
-    protected List<String> tabComplete() {
-        if (args.length == 1) {
-            final ArrayList<String> names = new ArrayList<>();
-            for (final Enchantment enchants : Enchantment.values()) {
-                names.add(enchants.getKey().toString().replaceAll("minecraft:", "").replaceAll("vrnenchants:", ""));
-                names.add("all");
-            }
-            return completeLastWord(names);
-        }
-        return new ArrayList<>();
-    }
-
-     */
-    /*
-        final ItemStack i = p.getInventory().getItemInMainHand();
-        if (i.getType() == Material.AIR) {
-            say(p, "&cYou must be holding an item to enchant.");
-            return true;
-        }
-        if (args.length < 1) {
-            say(p, "&cYou must provide an enchant name.");
-            return true;
-        }
-        if (args[0].equalsIgnoreCase("all")) {
-            for (final Enchantment ench : Enchantment.values())
-                i.addUnsafeEnchantment(ench, (args.length < 2 ? 1 : findNumber(1, "&cPlease specify a valid enchant level.")));
-            for (final VRNEnchants.VRN entry : VRNEnchants.VRN.values()) {
-                BaseEnchant.applyEnchant(i, entry.getEnch(), (args.length < 2 ? 1 : findNumber(1, "&cPlease specify a valid enchant level.")));
-                BaseEnchant.updateLore(i);
-            }
-            return true;
-        }
-        final Enchantment enchant = checkArgs(args);
-        if (enchant == null) {
-            say(getPlayer(), "That is not an available enchant.");
-            return true;
-        }
-        int level = (args.length < 2 ? 1 : findNumber(1, "&cPlease specify a valid enchant level."));
-        BaseEnchant.applyEnchant(i, enchant, level);
-        BaseEnchant.updateLore(i);
-    */
-
     @Override
     public boolean onCommand(CommandSender cs, Command command, String s, String[] args) {
         if (!(cs instanceof Player)) {

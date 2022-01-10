@@ -24,24 +24,22 @@ public class EnchAutoSmelt extends BaseEnchant {
 
     @Override
     protected void onBreakBlock(int level, BlockBreakEvent e) {
-        Material mat = null;
+        if (e.getBlock().getType() == Material.NETHER_GOLD_ORE || (!e.getBlock().getType().name().endsWith("GOLD_ORE") && !e.getBlock().getType().name().endsWith("IRON_ORE"))) {
+            return;
+        }
+        Material mat = e.getBlock().getType();
         ItemStack item = e.getPlayer().getEquipment().getItemInMainHand();
         int fortune = 1;
-        if (item.getEnchantments().containsKey(Enchantment.LOOT_BONUS_BLOCKS))
+        if (item.getEnchantments().containsKey(Enchantment.LOOT_BONUS_BLOCKS)) {
             fortune = calcFortune(item.getEnchantmentLevel(Enchantment.LOOT_BONUS_BLOCKS));
-
-        if (e.getBlock().getType() == Material.GOLD_ORE)
-            mat = Material.GOLD_INGOT;
-        else if (e.getBlock().getType() == Material.IRON_ORE)
-            mat = Material.IRON_INGOT;
-
-        if (mat == null) return;
+        }
         e.setDropItems(false);
 
         int i = VRNUtil.rng(2, 5);
-        if (BaseEnchant.hasEnchant(item, EnchGemstone.getInstance()))
+        if (BaseEnchant.hasEnchant(item, EnchGemstone.getInstance())) {
             if (new RNG().calcChance(10, 5, level))
                 i *= 3;
+        }
 
         ExperienceOrb orb = (ExperienceOrb) e.getBlock().getWorld().spawnEntity(e.getBlock().getLocation().add(0.5, 0.5, 0.5), EntityType.EXPERIENCE_ORB);
         orb.setExperience(i);

@@ -20,60 +20,6 @@ import static net.skeagle.vrnenchants.util.VRNUtil.say;
 
 public class EnchantBook implements CommandExecutor, TabCompleter {
 
-    /*public EnchantBook() {
-        super("enchantbook|enchbook");
-        setDescription("Generates or adds custom enchants to a book.");
-        setPermission("vrn.enchant");
-        setPermissionMessage(VRNUtil.NOPERM);
-    }
-
-     */
-
-    /*@Override
-    protected void onCommand() {
-        ItemStack i = getPlayer().getInventory().getItemInMainHand();
-        if (i.getType() != Material.BOOK && i.getType() != Material.ENCHANTED_BOOK && i.getType() != Material.AIR) {
-            say(getPlayer(), "&cYou must have nothing or a book in your hand.");
-            return;
-        }
-        if (args.length < 1) {
-            say(getPlayer(), "&cYou must provide an enchant name.");
-            return;
-        }
-        if (args[0].equalsIgnoreCase("all")) {
-            for (final Enchantment ench : Enchantment.values())
-                i.addUnsafeEnchantment(ench, (args.length < 2 ? 1 : findNumber(1, "&cPlease specify a valid enchant level.")));
-            for (final VRNEnchants.VRN entry : VRNEnchants.VRN.values()) {
-                BaseEnchant.applyEnchant(i, entry.getEnch(), (args.length < 2 ? 1 : findNumber(1, "&cPlease specify a valid enchant level.")));
-                BaseEnchant.updateLore(i);
-            }
-            return;
-        }
-        final Enchantment enchant = checkArgs();
-        if (enchant == null) {
-            say(getPlayer(), "That is not an available enchant.");
-            return;
-        }
-        int level = (args.length < 2 ? 1 : findNumber(1, "&cPlease specify a valid enchant level."));
-        ItemStack newbook = BaseEnchant.generateEnchantBook(enchant, level);
-        getPlayer().getInventory().setItemInMainHand(newbook);
-    }
-
-    @Override
-    protected List<String> tabComplete() {
-        if (args.length == 1) {
-            final ArrayList<String> names = new ArrayList<>();
-            for (final Enchantment enchants : Enchantment.values()) {
-                names.add(enchants.getKey().toString().replaceAll("minecraft:", "").replaceAll("vrnenchants:", ""));
-                names.add("all");
-            }
-            return completeLastWord(names);
-        }
-        return new ArrayList<>();
-    }
-
-     */
-
     @Override
     public boolean onCommand(CommandSender cs, Command command, String s, String[] args) {
         if (!(cs instanceof Player)) {

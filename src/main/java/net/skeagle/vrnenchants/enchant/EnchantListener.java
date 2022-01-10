@@ -1,7 +1,7 @@
 package net.skeagle.vrnenchants.enchant;
 
 import net.skeagle.vrnenchants.listener.ProjectileTracker;
-import net.skeagle.vrnenchants.util.TimeUtil;
+import net.skeagle.vrnlib.misc.TimeUtil;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
@@ -24,7 +24,7 @@ import static net.skeagle.vrnenchants.util.VRNUtil.say;
 
 public class EnchantListener implements Listener {
 
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onEntityDamage(EntityDamageByEntityEvent e) {
         if (!(e.getDamager() instanceof LivingEntity)) return;
         if (e.getCause() == EntityDamageEvent.DamageCause.THORNS) return;
@@ -64,7 +64,7 @@ public class EnchantListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    @EventHandler(ignoreCancelled = true)
     public void onBreakBlock(BlockBreakEvent e) {
         run(e.getPlayer(), (enchant, level) -> {
             prepareCooldown(enchant, level);
@@ -91,7 +91,7 @@ public class EnchantListener implements Listener {
         ProjectileTracker.track(e.getEntity(), inground -> run(shooter, (enchant, level) -> enchant.onHit(level, shooter, inground)));
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onKill(EntityDeathEvent e) {
         if (e.getEntity().getKiller() == null) return;
         Player killer = e.getEntity().getKiller();
@@ -103,25 +103,7 @@ public class EnchantListener implements Listener {
         });
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void onDeath(PlayerDeathEvent e) {
-        for (ItemStack item : e.getEntity().getInventory()) {
-            run(e.getEntity(), (enchant, level) -> {
-                prepareCooldown(enchant, level);
-                if (!hasCooldown(enchant, e.getEntity()))
-                    enchant.onDeath(level, e.getEntity(), item, e);
-            });
-        }
-        for (ItemStack item : e.getEntity().getInventory().getArmorContents()) {
-            runArmor(e.getEntity(), (enchant, level) -> {
-                prepareCooldown(enchant, level);
-                if (!hasCooldown(enchant, e.getEntity()))
-                    enchant.onDeath(level, e.getEntity(), item, e);
-            }, item);
-        }
-    }
-
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    @EventHandler(ignoreCancelled = true)
     public void onDamaged(EntityDamageEvent e) {
         if (!(e.getEntity() instanceof Player)) return;
         runArmorAll((Player) e.getEntity(), (enchant, level) -> {

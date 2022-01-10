@@ -27,7 +27,7 @@ public class MobKillListener implements Listener {
         int level = 0;
         if (BaseEnchant.hasEnchant(hand, Enchantment.LOOT_BONUS_MOBS))
             level = hand.getEnchantments().get(Enchantment.LOOT_BONUS_MOBS);
-        if (rand > (int) (1 + (level * 1.5))) return;
+        if (rand > (int) Math.ceil((1 + (level * 1.8)))) return;
         ItemStack i = randomizeEnchant(e.getEntity().getKiller());
         e.getDrops().add(i);
     }

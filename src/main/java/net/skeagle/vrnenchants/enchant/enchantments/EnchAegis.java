@@ -23,7 +23,7 @@ public class EnchAegis extends BaseEnchant {
     @Override
     protected void onDamaged(int level, Player player, EntityDamageEvent e) {
         if (e.getCause() != EntityDamageEvent.DamageCause.ENTITY_SWEEP_ATTACK && e.getCause() != EntityDamageEvent.DamageCause.ENTITY_ATTACK) return;
-        if (new RNG().calcChance(2,3, level)) {
+        if (new RNG().calcChance(0, 1, level)) {
             e.setCancelled(true);
             if (!(((EntityDamageByEntityEvent) e).getDamager() instanceof Player target)) return;
             target.playSound(target.getLocation(), Sound.BLOCK_ANVIL_PLACE, SoundCategory.PLAYERS, 1.0f, 0.85f);

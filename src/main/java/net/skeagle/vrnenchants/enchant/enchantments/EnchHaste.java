@@ -20,7 +20,7 @@ public class EnchHaste extends BaseEnchant {
     protected void onBreakBlock(int level, BlockBreakEvent e) {
         if (e.getPlayer().getPotionEffect(PotionEffectType.FAST_DIGGING) != null) return;
         if (new RNG().calcChance(10, 5, level, 1000))
-            e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, 20 + (level * 20), level, false, true, true));
+            e.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, 20 + (level * 20), level - 1, false, true, true));
     }
 
     public static Enchantment getInstance() {

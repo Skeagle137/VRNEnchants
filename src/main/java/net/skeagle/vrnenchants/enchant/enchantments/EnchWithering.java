@@ -25,7 +25,7 @@ public class EnchWithering extends BaseEnchant implements IConflicting {
         if (!(e.getEntity() instanceof LivingEntity)) return;
 
         if (new RNG().calcChance(3 + level))
-            ((LivingEntity) e.getEntity()).addPotionEffect(new PotionEffect(PotionEffectType.WITHER, level * 25, 1, false, true, true));
+            ((LivingEntity) e.getEntity()).addPotionEffect(new PotionEffect(PotionEffectType.WITHER, level * 25, Math.max(level - 2, 0), false, false, true));
     }
 
     public static Enchantment getInstance() {

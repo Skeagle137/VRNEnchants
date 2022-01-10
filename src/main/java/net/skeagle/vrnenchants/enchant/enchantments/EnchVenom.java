@@ -24,7 +24,7 @@ public class EnchVenom extends BaseEnchant implements IConflicting {
     protected void onDamage(int level, LivingEntity damager, EntityDamageByEntityEvent e) {
         if (!(e.getEntity() instanceof LivingEntity)) return;
         if (new RNG().calcChance(3 + level))
-            ((LivingEntity) e.getEntity()).addPotionEffect(new PotionEffect(PotionEffectType.POISON, level * 20, 1, false, true, true));
+            ((LivingEntity) e.getEntity()).addPotionEffect(new PotionEffect(PotionEffectType.POISON, level * 20, Math.max(level - 2, 0), false, false, true));
     }
 
     public static Enchantment getInstance() {

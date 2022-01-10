@@ -17,10 +17,10 @@ public class EnchUnderShirt extends BaseEnchant implements ICooldown {
 
     @Override
     protected void onDamaged(int level, Player p, EntityDamageEvent e) {
+        if (p.getHealth() - e.getFinalDamage() > 0) return;
         if (e.getCause() != EntityDamageEvent.DamageCause.ENTITY_ATTACK &&
                 e.getCause() != EntityDamageEvent.DamageCause.ENTITY_SWEEP_ATTACK &&
                 e.getCause() != EntityDamageEvent.DamageCause.ENTITY_EXPLOSION) return;
-        if (p.getHealth() - e.getFinalDamage() > 0) return;
         e.setDamage(0.05);
         p.setHealth(0.5);
         setCooldown(p);
