@@ -24,10 +24,11 @@ public class EnchAutoSmelt extends BaseEnchant {
 
     @Override
     protected void onBreakBlock(int level, BlockBreakEvent e) {
-        if (e.getBlock().getType() == Material.NETHER_GOLD_ORE || (!e.getBlock().getType().name().endsWith("GOLD_ORE") && !e.getBlock().getType().name().endsWith("IRON_ORE"))) {
+        if (e.getBlock().getType() == Material.NETHER_GOLD_ORE || (!e.getBlock().getType().name().endsWith("GOLD_ORE") &&
+                !e.getBlock().getType().name().endsWith("IRON_ORE")) && !e.getBlock().getType().name().endsWith("COPPER_ORE")) {
             return;
         }
-        Material mat = e.getBlock().getType();
+        Material mat = Material.valueOf(e.getBlock().getType().name().replaceAll("DEEPSLATE_", "").replaceAll("ORE", "INGOT"));
         ItemStack item = e.getPlayer().getEquipment().getItemInMainHand();
         int fortune = 1;
         if (item.getEnchantments().containsKey(Enchantment.LOOT_BONUS_BLOCKS)) {
