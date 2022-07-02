@@ -13,7 +13,7 @@
     <properties>
         <java.version>17</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <mc.version>1.18</mc.version>
+        <mc.version>1.19</mc.version>
         <vrnlib>2.0d</vrnlib>
     </properties>
 
@@ -25,12 +25,6 @@
     </repositories>
 
     <dependencies>
-        <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>spigot-api</artifactId>
-            <version>${mc.version}-R0.1-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot</artifactId>
@@ -60,7 +54,7 @@
             <plugin>
                 <groupId>net.md-5</groupId>
                 <artifactId>specialsource-maven-plugin</artifactId>
-                <version>1.2.3</version>
+                <version>1.2.4</version>
                 <executions>
                     <execution>
                         <phase>package</phase>

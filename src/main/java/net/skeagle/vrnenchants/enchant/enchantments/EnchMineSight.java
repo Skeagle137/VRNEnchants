@@ -1,8 +1,9 @@
 package net.skeagle.vrnenchants.enchant.enchantments;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.protocol.game.ClientboundAddMobPacket;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.contents.LiteralContents;
+import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket;
 import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket;
 import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
@@ -20,8 +21,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.v1_18_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_18_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_19_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_19_R1.entity.CraftPlayer;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
@@ -77,7 +78,7 @@ public class EnchMineSight extends BaseEnchant implements ICooldown {
             shulk.setSilent(true);
             SynchedEntityData data = shulk.getEntityData();
             data.set(new EntityDataAccessor<>(0, EntityDataSerializers.BYTE), (byte) 96);
-            ((CraftPlayer) p).getHandle().connection.send(new ClientboundAddMobPacket(shulk));
+            ((CraftPlayer) p).getHandle().connection.send(new ClientboundAddEntityPacket(shulk));
             ((CraftPlayer) p).getHandle().connection.send(new ClientboundSetEntityDataPacket(shulk.getId(), data, false));
             blockCorrespondingEntity.put(b, shulk);
         }
@@ -136,7 +137,7 @@ public class EnchMineSight extends BaseEnchant implements ICooldown {
         String s = "MINESIGHT@@" + color.getChar();
         PlayerTeam nmsTeam = board.addPlayerTeam(s);
         nmsTeam.setCollisionRule(Team.CollisionRule.NEVER);
-        nmsTeam.setDisplayName(new TextComponent("minesight" + color.getChar()));
+        nmsTeam.setDisplayName(MutableComponent.create(new LiteralContents("minesight" + color.getChar())));
         nmsTeam.setColor(ChatFormatting.getByCode(color.getChar()));
         ((CraftPlayer) p).getHandle().connection.send(ClientboundSetPlayerTeamPacket.createAddOrModifyPacket(nmsTeam, true));
         for (Block b : blockCorrespondingEntity.keySet()) {
