@@ -14,7 +14,7 @@
         <java.version>17</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <mc.version>1.19</mc.version>
-        <vrnlib>2.0d</vrnlib>
+        <vrnlib>2.1.2</vrnlib>
     </properties>
 
     <repositories>
