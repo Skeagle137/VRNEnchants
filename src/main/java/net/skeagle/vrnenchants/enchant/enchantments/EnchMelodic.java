@@ -9,37 +9,27 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Arrays;
+import java.util.List;
+
 @EnchDescription("Allows you to have a chance of getting a disc from killing creepers directly.")
 public class EnchMelodic extends BaseEnchant {
 
     private static final Enchantment instance = new EnchMelodic();
+    private final List<Material> discs;
 
     private EnchMelodic() {
         super("Melodic", 3, Target.SWORDS, Target.AXES);
         setRarity(Rarity.UNCOMMON);
+        this.discs = Arrays.stream(Material.values()).filter(mat -> mat.toString().startsWith("MUSIC_DISC")).toList();
     }
 
     @Override
     protected void onKill(int level, Player killer, EntityDeathEvent e) {
         if (!(e.getEntity() instanceof Creeper)) return;
         if (new RNG().calcChance(0, 1, level, 1200)) {
-            int disc = VRNUtil.rng(1, 13);
-            Material m = switch (disc) {
-                case 1 -> Material.MUSIC_DISC_CAT;
-                case 2 -> Material.MUSIC_DISC_BLOCKS;
-                case 3 -> Material.MUSIC_DISC_CHIRP;
-                case 4 -> Material.MUSIC_DISC_FAR;
-                case 5 -> Material.MUSIC_DISC_MALL;
-                case 6 -> Material.MUSIC_DISC_MELLOHI;
-                case 7 -> Material.MUSIC_DISC_STAL;
-                case 8 -> Material.MUSIC_DISC_STRAD;
-                case 9 -> Material.MUSIC_DISC_WARD;
-                case 10 -> Material.MUSIC_DISC_11;
-                case 11 -> Material.MUSIC_DISC_WAIT;
-                case 12 -> Material.MUSIC_DISC_PIGSTEP;
-                default -> Material.MUSIC_DISC_13;
-            };
-            killer.getWorld().dropItem(e.getEntity().getLocation(), new ItemStack(m));
+            int disc = VRNUtil.rng(0, discs.size() - 1);
+            killer.getWorld().dropItem(e.getEntity().getLocation(), new ItemStack(discs.get(disc)));
         }
     }
 
