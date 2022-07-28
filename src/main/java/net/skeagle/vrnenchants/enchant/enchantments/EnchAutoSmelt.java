@@ -24,19 +24,19 @@ public class EnchAutoSmelt extends BaseEnchant {
 
     @Override
     protected void onBreakBlock(int level, BlockBreakEvent e) {
-        if (e.getBlock().getType() == Material.NETHER_GOLD_ORE || (!e.getBlock().getType().name().endsWith("GOLD_ORE") &&
-                !e.getBlock().getType().name().endsWith("IRON_ORE")) && !e.getBlock().getType().name().endsWith("COPPER_ORE")) {
-            return;
-        }
-        Material mat = Material.valueOf(e.getBlock().getType().name().replaceAll("DEEPSLATE_", "").replaceAll("ORE", "INGOT"));
+        ItemStack stack = e.getBlock().getDrops().stream().findFirst().orElse(null);
+        if (stack == null || !stack.getType().toString().startsWith("RAW_") || stack.getType().isBlock()) return;
+        Material ingot = Material.valueOf(stack.getType().toString().replaceAll("RAW_", "") + "_INGOT");
+        int amount = stack.getAmount();
         ItemStack item = e.getPlayer().getEquipment().getItemInMainHand();
-        int fortune = 1;
-        if (item.getEnchantments().containsKey(Enchantment.LOOT_BONUS_BLOCKS)) {
-            fortune = calcFortune(item.getEnchantmentLevel(Enchantment.LOOT_BONUS_BLOCKS));
+
+        if (ingot == Material.COPPER_INGOT && item.getEnchantments().containsKey(Enchantment.LOOT_BONUS_BLOCKS)) {
+            int i = VRNUtil.rng(1, (item.getEnchantmentLevel(Enchantment.LOOT_BONUS_BLOCKS) + 2) - 2);
+            amount = amount * (i + 1);
         }
         e.setDropItems(false);
 
-        int i = VRNUtil.rng(2, 5);
+        int i = VRNUtil.rng(2, 5) * e.getBlock().getDrops().size();
         if (BaseEnchant.hasEnchant(item, EnchGemstone.getInstance())) {
             if (new RNG().calcChance(10, 5, level))
                 i *= 3;
@@ -46,17 +46,10 @@ public class EnchAutoSmelt extends BaseEnchant {
         orb.setExperience(i);
 
         if (!BaseEnchant.hasEnchant(item, EnchTelepathy.getInstance())) {
-            e.getBlock().getWorld().dropItemNaturally(e.getBlock().getLocation(), new ItemStack(mat, fortune));
+            e.getBlock().getWorld().dropItemNaturally(e.getBlock().getLocation(), new ItemStack(ingot, amount));
             return;
         }
-        dropTelepathy(e.getPlayer(), new ItemStack(mat, fortune));
-    }
-
-    private int calcFortune(int level) {
-        final int min = 1;
-        int max = level + 1;
-        if (VRNUtil.rng(min, max) > (float) (100 / (max + 1))) return min;
-        return ThreadLocalRandom.current().nextInt(max - min + 1) + min;
+        this.dropTelepathy(e.getPlayer(), new ItemStack(ingot, amount));
     }
 
     private void dropTelepathy(Player p, ItemStack item) {

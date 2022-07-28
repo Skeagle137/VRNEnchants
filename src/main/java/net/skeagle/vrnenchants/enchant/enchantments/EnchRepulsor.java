@@ -1,8 +1,7 @@
 package net.skeagle.vrnenchants.enchant.enchantments;
 
-import net.skeagle.vrnenchants.VRNEnchants;
 import net.skeagle.vrnenchants.enchant.*;
-import org.bukkit.Bukkit;
+import net.skeagle.vrnlib.misc.Task;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
@@ -37,7 +36,7 @@ public class EnchRepulsor extends BaseEnchant implements ICooldown {
         if (e.getAction() != Action.RIGHT_CLICK_AIR && e.getAction() != Action.RIGHT_CLICK_BLOCK) return;
         if (repulseList.contains(e.getPlayer().getUniqueId())) return;
         repulseList.add(e.getPlayer().getUniqueId());
-        Bukkit.getScheduler().runTaskLater(VRNEnchants.getInstance(), () -> repulseList.remove(e.getPlayer().getUniqueId()), 3 + level);
+        Task.syncDelayed(() -> repulseList.remove(e.getPlayer().getUniqueId()), 3 + level);
     }
 
     @Override

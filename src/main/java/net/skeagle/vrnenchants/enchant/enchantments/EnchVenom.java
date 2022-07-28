@@ -22,8 +22,7 @@ public class EnchVenom extends BaseEnchant implements IConflicting {
 
     @Override
     protected void onDamage(int level, LivingEntity damager, EntityDamageByEntityEvent e) {
-        if (!(e.getEntity() instanceof LivingEntity)) return;
-        if (new RNG().calcChance(3 + level))
+        if (new RNG().calcChance(40 + (level * 15)))
             ((LivingEntity) e.getEntity()).addPotionEffect(new PotionEffect(PotionEffectType.POISON, level * 20, Math.max(level - 2, 0), false, false, true));
     }
 
@@ -36,12 +35,6 @@ public class EnchVenom extends BaseEnchant implements IConflicting {
         List<Enchantment> enchs = new ArrayList<>();
         enchs.add(EnchWithering.getInstance());
         enchs.add(EnchBlinding.getInstance());
-        enchs.add(FIRE_ASPECT);
         return enchs;
-    }
-
-    @Override
-    public int limit() {
-        return 2;
     }
 }

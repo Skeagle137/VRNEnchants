@@ -21,8 +21,8 @@ public class EnchSpeedy extends BaseEnchant {
     protected void onDamage(final int level, final LivingEntity damager, final EntityDamageByEntityEvent e) {
         if (!(e.getEntity() instanceof LivingEntity)) return;
 
-        if (new RNG().calcChance(15, 5, level))
-            damager.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, (level * 20) + 20, level - 1, false, true, true));
+        if (new RNG().calcChance(15, 10, level))
+            damager.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, (level * 20) + 20, level - 1, false, false, true));
     }
 
     public static Enchantment getInstance() {

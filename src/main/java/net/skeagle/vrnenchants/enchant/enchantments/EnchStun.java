@@ -10,10 +10,13 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static net.skeagle.vrncommands.BukkitUtils.color;
 
 @EnchDescription("Chance to stun the target on first strike.")
-public class EnchStun extends BaseEnchant {
+public class EnchStun extends BaseEnchant implements IConflicting {
 
     private static final Enchantment instance = new EnchStun();
 
@@ -24,8 +27,6 @@ public class EnchStun extends BaseEnchant {
 
     @Override
     protected void onDamage(final int level, final LivingEntity damager, final EntityDamageByEntityEvent e) {
-        if (!(e.getEntity() instanceof LivingEntity)) return;
-
         if (new RNG().calcChance(2, level)) {
             LivingEntity en = ((LivingEntity) e.getEntity());
             en.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, (level + 1) * 20, 6, false, false, false));
@@ -37,6 +38,13 @@ public class EnchStun extends BaseEnchant {
             }
         }
 
+    }
+
+    @Override
+    public List<Enchantment> enchants() {
+        List<Enchantment> enchs = new ArrayList<>();
+        enchs.add(EnchVampirism.getInstance());
+        return enchs;
     }
 
     public static Enchantment getInstance() {

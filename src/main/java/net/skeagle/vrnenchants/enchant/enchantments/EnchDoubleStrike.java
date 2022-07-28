@@ -18,10 +18,8 @@ public class EnchDoubleStrike extends BaseEnchant {
 
     @Override
     protected void onDamage(int level, LivingEntity damager, EntityDamageByEntityEvent e) {
-        if (!(e.getEntity() instanceof LivingEntity)) return;
-
-        if (new RNG().calcChance(0, 1, level, 200)) {
-            e.setDamage(e.getDamage() * 2);
+        if (new RNG().calcChance(0, 2, level)) {
+            e.setDamage(e.getFinalDamage() * 2);
             damager.getWorld().spawnParticle(Particle.LAVA, e.getEntity().getLocation().clone().add(0, 1, 0), 5, 0.3, 0.3, 0.3, 0.1);
         }
     }

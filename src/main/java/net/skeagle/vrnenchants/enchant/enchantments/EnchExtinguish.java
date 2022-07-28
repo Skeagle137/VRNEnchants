@@ -18,7 +18,7 @@ public class EnchExtinguish extends BaseEnchant {
     @Override
     protected void onDamaged(int level, Player p, EntityDamageEvent e) {
         if (e.getCause() == EntityDamageEvent.DamageCause.FIRE_TICK && p.getFireTicks() > 0)
-            if (new RNG().calcChance(10,5, level))
+            if (new RNG().calcChance(5,10, level))
                 p.setFireTicks(0);
     }
 

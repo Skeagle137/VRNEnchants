@@ -19,8 +19,6 @@ public class EnchThunderStrike extends BaseEnchant {
 
     @Override
     protected void onDamage(int level, LivingEntity damager, EntityDamageByEntityEvent e) {
-        if (!(e.getEntity() instanceof LivingEntity)) return;
-
         if (new RNG().calcChance(3, 2, level)) {
             LightningStrike strike = damager.getWorld().strikeLightningEffect(e.getEntity().getLocation());
             for (Entity en : strike.getNearbyEntities(1 + (level), 1 + (level), 1 + (level))) {

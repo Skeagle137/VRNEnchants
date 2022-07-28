@@ -23,7 +23,7 @@ public class EnchNetherSlayer extends BaseEnchant {
     protected void onDamage(int level, LivingEntity damager, EntityDamageByEntityEvent e) {
         if (damager.getWorld().getEnvironment() != World.Environment.NETHER) return;
 
-        e.setDamage(e.getFinalDamage() + (level + 1));
+        e.setDamage(e.getFinalDamage() + (level * 2));
     }
 
     public static Enchantment getInstance() {

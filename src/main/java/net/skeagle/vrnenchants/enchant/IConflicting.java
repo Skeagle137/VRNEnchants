@@ -6,6 +6,4 @@ import java.util.List;
 
 public interface IConflicting {
     List<Enchantment> enchants();
-
-    int limit();
 }

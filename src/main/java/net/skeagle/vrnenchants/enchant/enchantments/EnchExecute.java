@@ -9,6 +9,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 
 import java.util.HashMap;
@@ -35,10 +36,11 @@ public class EnchExecute extends BaseEnchant {
         if (hitList.get(damager.getUniqueId()) != null)
             if (hitList.get(damager.getUniqueId()).equals(e.getEntity().getUniqueId()))
                 return;
-        if (en.getHealth() < (level + 2)) {
+        if (en.getHealth() <= (level + 2)) {
             hitList.put(damager.getUniqueId(), en.getUniqueId());
+            e.setCancelled(true);
+            Task.syncDelayed(() -> en.damage(en.getHealth(), e.getDamager()), 2L);
             Task.syncDelayed(() -> hitList.remove(damager.getUniqueId()), 100);
-            en.damage(en.getHealth(), damager);
         }
     }
 

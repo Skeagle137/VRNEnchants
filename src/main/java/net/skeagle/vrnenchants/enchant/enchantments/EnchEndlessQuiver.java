@@ -8,6 +8,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.ProjectileHitEvent;
+import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffect;
@@ -19,14 +20,14 @@ public class EnchEndlessQuiver extends BaseEnchant {
     private static final Enchantment instance = new EnchEndlessQuiver();
 
     private EnchEndlessQuiver() {
-        super("Endless Quiver", 5, Target.BOW, Target.CROSSBOW);
+        super("Endless Quiver", 4, Target.BOW, Target.CROSSBOW);
         setRarity(Rarity.RARE);
     }
 
     @Override
     protected void onHit(int level, LivingEntity shooter, ProjectileHitEvent e) {
         if (!(e.getHitEntity() instanceof LivingEntity) || e.getHitEntity() == null || !(shooter instanceof Player p) || e.getHitEntity().isInvulnerable()) return;
-        if (new RNG().calcChance(25, 5, level)) {
+        if (new RNG().calcChance(20, 20, level)) {
             if (e.getEntityType() == EntityType.SPECTRAL_ARROW)
                 p.getInventory().addItem(new ItemStack(Material.SPECTRAL_ARROW));
             else if (e.getEntityType() == EntityType.ARROW) {

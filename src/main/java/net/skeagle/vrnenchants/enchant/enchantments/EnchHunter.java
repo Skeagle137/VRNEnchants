@@ -21,9 +21,7 @@ public class EnchHunter extends BaseEnchant {
 
     @Override
     protected void onDamage(int level, LivingEntity damager, EntityDamageByEntityEvent e) {
-        if (!(e.getEntity() instanceof Animals)) return;
-
-        e.setDamage(e.getFinalDamage() + (level));
+        e.setDamage(e.getFinalDamage() + (level * 2));
     }
 
     public static Enchantment getInstance() {

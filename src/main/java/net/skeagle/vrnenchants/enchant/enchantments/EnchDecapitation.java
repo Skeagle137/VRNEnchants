@@ -21,7 +21,7 @@ public class EnchDecapitation extends BaseEnchant {
 
     @Override
     protected void onKill(int level, Player killer, EntityDeathEvent e) {
-        if (new RNG().calcChance(1, 1, level)) {
+        if (new RNG().calcChance(0, 2, level)) {
             ItemStack skull = switch (e.getEntity().getType()) {
                 case SKELETON -> new ItemStack(Material.SKELETON_SKULL);
                 case ZOMBIE, CREEPER, PLAYER -> new ItemStack(Material.valueOf(e.getEntityType() + "_HEAD"));

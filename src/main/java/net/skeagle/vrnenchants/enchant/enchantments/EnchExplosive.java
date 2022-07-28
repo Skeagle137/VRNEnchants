@@ -18,7 +18,7 @@ public class EnchExplosive extends BaseEnchant {
 
     @Override
     protected void onHit(int level, LivingEntity shooter, ProjectileHitEvent e) {
-        if (new RNG().calcChance(6, 2, level)) {
+        if (new RNG().calcChance(4, 4, level)) {
             int i = 400 + (level * 5);
             e.getEntity().getWorld().createExplosion(e.getEntity().getLocation(), (float) ((VRNUtil.rng((Math.min(i, 500)), 500) / 100) / 2), false, false, shooter);
         }
