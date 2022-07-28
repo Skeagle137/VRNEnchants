@@ -6,7 +6,7 @@
     <groupId>net.skeagle</groupId>
     <artifactId>vrnenchants</artifactId>
     <name>VRNEnchants</name>
-    <version>1.6-beta</version>
+    <version>1.6a-beta</version>
 
     <description>Adds new enchants to the server. Can be used with VRNcore.</description>
 
