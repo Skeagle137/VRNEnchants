@@ -102,10 +102,8 @@ public class AnvilRepairListener implements Listener {
             lore.add("&4&lThese enchants cannot be applied to " + item.getType().toString().toLowerCase().replaceAll("_", " ") + ":");
             this.addEntries(lore, itemEnchants.keySet(), cantAdd);
         }
-        System.out.println(lore);
         ItemBuilder stack = new ItemBuilder(warningItem.clone());
         lore.forEach(stack::addLore);
-        System.out.println(stack.getItemMeta().getLore());
         e.setResult(stack);
     }
 
