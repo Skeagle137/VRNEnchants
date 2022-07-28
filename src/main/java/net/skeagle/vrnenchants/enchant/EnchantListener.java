@@ -24,7 +24,7 @@ import static net.skeagle.vrnenchants.util.VRNUtil.say;
 
 public class EnchantListener implements Listener {
 
-    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onEntityDamage(EntityDamageByEntityEvent e) {
         if (!(e.getDamager() instanceof LivingEntity)) return;
         if (e.getCause() == EntityDamageEvent.DamageCause.THORNS) return;

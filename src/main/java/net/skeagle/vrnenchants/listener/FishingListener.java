@@ -52,7 +52,7 @@ public class FishingListener implements Listener {
         int randEnch = VRNUtil.rng(0, sameRarity.size() - 1);
         BaseEnchant ench = (BaseEnchant) EnchantRegistry.VRN.valueOf(sameRarity.get(randEnch).toString()).getEnch();
         int randLevel;
-        if (ench.getRarity().getIndividualPoints() < 15) { //not legendary or higher
+        if (ench.getRarity() != Rarity.LEGENDARY && ench.getRarity() != Rarity.MYTHICAL && ench.getRarity() != Rarity.COSMIC) {
             randLevel = new RNG.Randomizer<Integer>()
                     .addEntry(1, 80 - (level * 5))
                     .addEntry(2, 60 + (level * 5))
