@@ -16,151 +16,180 @@ import net.minecraft.world.scores.PlayerTeam;
 import net.minecraft.world.scores.Scoreboard;
 import net.minecraft.world.scores.Team;
 import net.skeagle.vrnenchants.enchant.*;
+import net.skeagle.vrnlib.misc.EventListener;
+import net.skeagle.vrnlib.misc.LocationUtils;
 import net.skeagle.vrnlib.misc.Task;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.v1_19_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_19_R1.entity.CraftPlayer;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @EnchDescription("Right clicking your pickaxe will allow you to see nearby ores for a few seconds.")
 public class EnchMineSight extends BaseEnchant implements ICooldown {
 
     private static final Enchantment instance = new EnchMineSight();
 
+    private final Map<UUID, ShulkerBlockData> shulkerData = new HashMap<>();
+
     private EnchMineSight() {
         super("Mine Sight", 3, Target.PICKAXES);
         setRarity(Rarity.LEGENDARY);
         setCooldownMessage("&aYou are now able to use mine sight again.");
+        new EventListener<>(PlayerQuitEvent.class, e -> shulkerData.remove(e.getPlayer().getUniqueId()));
     }
-
-    private final Map<Block, Shulker> blockCorrespondingEntity = new HashMap<>();
-    private final List<ChatColor> colorsUsed = new ArrayList<>();
 
     @Override
     protected void onInteract(int level, PlayerInteractEvent e) {
         if (e.getAction() != Action.RIGHT_CLICK_BLOCK && e.getAction() != Action.RIGHT_CLICK_AIR) return;
-        Player p = e.getPlayer();
-        List<Block> blocks = getBlocks(p.getLocation().getBlock(), level);
-        outline(p, blocks, level);
-        setCooldown(p);
-    }
+        Player player = e.getPlayer();
+        ShulkerBlockData data = new ShulkerBlockData();
+        List<Block> blocks = data.getBlocks(player, level);
+        data.outline(player, blocks);
+        shulkerData.put(player.getUniqueId(), data);
 
-    private List<Block> getBlocks(Block start, int level) {
-        int radius = (level * 2) + 3;
-        List<Block> blocks = new ArrayList<>();
-        for (double x = start.getLocation().getX() - radius; x <= start.getLocation().getX() + radius; x++)
-            for (double y = start.getLocation().getY() - radius; y <= start.getLocation().getY() + radius; y++)
-                for (double z = start.getLocation().getZ() - radius; z <= start.getLocation().getZ() + radius; z++)
-                    blocks.add(new Location(start.getWorld(), x, y, z).getBlock());
-        return filterBlocks(blocks);
-    }
+        EventListener<BlockBreakEvent> blockEvent = new EventListener<>(BlockBreakEvent.class, ev -> {
+            ShulkerBlockData blockData = shulkerData.get(player.getUniqueId());
+            blockData.removeShulker(player, ev.getBlock());
+            shulkerData.put(player.getUniqueId(), blockData);
+        });
 
-    private void outline(Player p, List<Block> blocks, int duration) {
-        for (Block b : blocks) {
-            Shulker shulk = new Shulker(EntityType.SHULKER, ((CraftWorld) b.getWorld()).getHandle());
-            shulk.setInvisible(true);
-            shulk.setXRot(0f);
-            shulk.setYRot(0f);
-            shulk.setPos(b.getLocation().getX() + 0.5, b.getLocation().getY(), b.getLocation().getZ() + 0.5);
-            shulk.setInvulnerable(true);
-            shulk.setNoAi(true);
-            shulk.setSilent(true);
-            SynchedEntityData data = shulk.getEntityData();
-            data.set(new EntityDataAccessor<>(0, EntityDataSerializers.BYTE), (byte) 96);
-            ((CraftPlayer) p).getHandle().connection.send(new ClientboundAddEntityPacket(shulk));
-            ((CraftPlayer) p).getHandle().connection.send(new ClientboundSetEntityDataPacket(shulk.getId(), data, false));
-            blockCorrespondingEntity.put(b, shulk);
-        }
-        for (ChatColor color : colorsUsed)
-            setTeams(p, color);
         Task.syncDelayed(() -> {
-            ClientboundRemoveEntitiesPacket destroy;
-            for (Shulker shulk : blockCorrespondingEntity.values()) {
-                destroy = new ClientboundRemoveEntitiesPacket(shulk.getId());
-                ((CraftPlayer) p).getHandle().connection.send(destroy);
-            }
-        },(long) (duration * 1.25) * 20);
+            shulkerData.get(player.getUniqueId()).removeAll(player);
+            blockEvent.unregister();
+            shulkerData.remove(player.getUniqueId());
+        }, (long) ((level + 1) * 1.5) * 20);
+        this.setCooldown(player);
     }
 
     @Override
     public int cooldown(int level) {
-        return 60 * (5 - level);
+        return 30 * (7 - level);
     }
 
     private enum Sorter {
-        COAL(ChatColor.BLACK, Material.COAL_ORE),
-        IRON(ChatColor.GRAY, Material.IRON_ORE),
-        GOLD(ChatColor.YELLOW, Material.GOLD_ORE),
-        LAPIS(ChatColor.BLUE, Material.LAPIS_ORE),
-        REDSTONE(ChatColor.RED, Material.REDSTONE_ORE),
-        DIAMOND(ChatColor.AQUA, Material.DIAMOND_ORE),
-        EMERALD(ChatColor.DARK_GREEN, Material.EMERALD_ORE),
-        QUARTZ(ChatColor.WHITE, Material.NETHER_QUARTZ_ORE),
-        NETHERITE(ChatColor.DARK_RED, Material.ANCIENT_DEBRIS),
-        NETHER_GOLD(ChatColor.YELLOW, Material.NETHER_GOLD_ORE),
-        GILDED_BLACKSTONE(ChatColor.YELLOW, Material.GILDED_BLACKSTONE),
-        COPPER(ChatColor.GOLD, Material.COPPER_ORE);
+        COAL_ORE(ChatColor.BLACK),
+        IRON_ORE(ChatColor.GRAY),
+        GOLD_ORE(ChatColor.YELLOW),
+        GILDED_BLACKSTONE(ChatColor.YELLOW),
+        LAPIS_ORE(ChatColor.BLUE),
+        REDSTONE_ORE(ChatColor.RED),
+        DIAMOND_ORE(ChatColor.AQUA),
+        EMERALD_ORE(ChatColor.DARK_GREEN),
+        QUARTZ_ORE(ChatColor.WHITE),
+        DEBRIS(ChatColor.DARK_RED),
+        COPPER_ORE(ChatColor.GOLD);
 
         private final ChatColor color;
-        private final Material block;
 
-        Sorter(ChatColor color, Material block) {
+        Sorter(ChatColor color) {
             this.color = color;
-            this.block = block;
         }
 
-        public Material getBlock() {
-            return block;
-        }
-
-        public static ChatColor getColorFrom(Block b) {
+        public static ChatColor getColorFrom(Block block) {
             for (Sorter sorter : Sorter.values())
-                if (b.getType() == sorter.block)
+                if (block.getType().toString().endsWith(sorter.toString()))
                     return sorter.color;
-            return ChatColor.WHITE;
+            return null;
         }
-    }
-
-    private void setTeams(Player p, ChatColor color) {
-        Scoreboard board = new Scoreboard();
-        String s = "MINESIGHT@@" + color.getChar();
-        PlayerTeam nmsTeam = board.addPlayerTeam(s);
-        nmsTeam.setCollisionRule(Team.CollisionRule.NEVER);
-        nmsTeam.setDisplayName(MutableComponent.create(new LiteralContents("minesight" + color.getChar())));
-        nmsTeam.setColor(ChatFormatting.getByCode(color.getChar()));
-        ((CraftPlayer) p).getHandle().connection.send(ClientboundSetPlayerTeamPacket.createAddOrModifyPacket(nmsTeam, true));
-        for (Block b : blockCorrespondingEntity.keySet()) {
-            if (Sorter.getColorFrom(b) == color)
-                ((CraftPlayer) p).getHandle().connection.send(ClientboundSetPlayerTeamPacket.createPlayerPacket(nmsTeam,
-                        blockCorrespondingEntity.get(b).getStringUUID(), ClientboundSetPlayerTeamPacket.Action.ADD));
-        }
-    }
-
-    private List<Block> filterBlocks(List<Block> blocks) {
-        List<Block> newBlocks = new ArrayList<>();
-        for (Block b : blocks)
-            for (Sorter sort : Sorter.values())
-                if (b.getType() == sort.getBlock()) {
-                    if (!colorsUsed.contains(Sorter.getColorFrom(b)))
-                        colorsUsed.add(Sorter.getColorFrom(b));
-                    newBlocks.add(b);
-                }
-        return newBlocks;
     }
 
     public static Enchantment getInstance() {
         return instance;
+    }
+
+    private class ShulkerBlockData {
+
+        private final Map<Block, Shulker> blockMap;
+        private final Set<ChatColor> colorsUsed;
+
+        private ShulkerBlockData() {
+            this.blockMap = new HashMap<>();
+            this.colorsUsed = new HashSet<>();
+        }
+
+        private List<Block> getBlocks(Player player, int level) {
+            int radius = ((level * 2) + 5) / 2;
+            List<Block> blocks = new ArrayList<>();
+            Location loc = LocationUtils.center(player.getLocation());
+            for (double x = loc.getX() - radius; x <= loc.getX() + radius; x++)
+                for (double y = loc.getY() - radius; y <= loc.getY() + radius; y++)
+                    for (double z = loc.getZ() - radius; z <= loc.getZ() + radius; z++)
+                        blocks.add(new Location(loc.getWorld(), x, y, z).getBlock());
+            return this.filterBlocks(blocks);
+        }
+
+        private List<Block> filterBlocks(List<Block> blocks) {
+            List<Block> newBlocks = new ArrayList<>();
+            for (Block block : blocks) {
+                ChatColor color = Sorter.getColorFrom(block);
+                if (color != null) {
+                    colorsUsed.add(Sorter.getColorFrom(block));
+                    newBlocks.add(block);
+                }
+            }
+            return newBlocks;
+        }
+
+        private void outline(Player player, List<Block> blocks) {
+            Shulker shulk;
+            SynchedEntityData synchedData;
+            for (Block b : blocks) {
+                shulk = new Shulker(EntityType.SHULKER, ((CraftWorld) b.getWorld()).getHandle());
+                shulk.setInvisible(true);
+                shulk.setXRot(0f);
+                shulk.setYRot(0f);
+                shulk.setPos(b.getLocation().getX() + 0.5, b.getLocation().getY(), b.getLocation().getZ() + 0.5);
+                shulk.setInvulnerable(true);
+                shulk.setNoAi(true);
+                shulk.setSilent(true);
+                synchedData = shulk.getEntityData();
+                synchedData.set(new EntityDataAccessor<>(0, EntityDataSerializers.BYTE), (byte) 96);
+                ((CraftPlayer) player).getHandle().connection.send(new ClientboundAddEntityPacket(shulk));
+                ((CraftPlayer) player).getHandle().connection.send(new ClientboundSetEntityDataPacket(shulk.getId(), synchedData, false));
+                blockMap.put(b, shulk);
+            }
+            for (ChatColor color : this.colorsUsed) {
+                this.setTeams(player, color);
+            }
+        }
+
+        private void setTeams(Player p, ChatColor color) {
+            Scoreboard board = new Scoreboard();
+            String s = "MINESIGHT@@" + color.getChar();
+            PlayerTeam nmsTeam = board.addPlayerTeam(s);
+            nmsTeam.setCollisionRule(Team.CollisionRule.NEVER);
+            nmsTeam.setDisplayName(MutableComponent.create(new LiteralContents("minesight" + color.getChar())));
+            nmsTeam.setColor(ChatFormatting.getByCode(color.getChar()));
+            ((CraftPlayer) p).getHandle().connection.send(ClientboundSetPlayerTeamPacket.createAddOrModifyPacket(nmsTeam, true));
+            for (Block b : blockMap.keySet()) {
+                if (Sorter.getColorFrom(b) == color)
+                    ((CraftPlayer) p).getHandle().connection.send(ClientboundSetPlayerTeamPacket.createPlayerPacket(nmsTeam,
+                            blockMap.get(b).getStringUUID(), ClientboundSetPlayerTeamPacket.Action.ADD));
+            }
+        }
+
+        private void removeShulker(Player player, Block block) {
+            ((CraftPlayer) player).getHandle().connection.send(new ClientboundRemoveEntitiesPacket(blockMap.get(block).getId()));
+            blockMap.remove(block);
+        }
+
+        private void removeAll(Player player) {
+            ClientboundRemoveEntitiesPacket packet;
+            for (Shulker shulker : blockMap.values()) {
+                packet = new ClientboundRemoveEntitiesPacket(shulker.getId());
+                ((CraftPlayer) player).getHandle().connection.send(packet);
+            }
+        }
+
     }
 
 }
