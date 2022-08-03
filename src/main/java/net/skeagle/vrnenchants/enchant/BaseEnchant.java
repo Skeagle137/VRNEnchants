@@ -221,7 +221,6 @@ public class BaseEnchant extends Enchantment {
         List<String> lore = new ArrayList<>();
         int line = 0;
         for (Map.Entry<BaseEnchant, Integer> e : getEnchants(i).entrySet()) {
-            System.out.println("run " + e.getKey());
             String entry = e.getKey().getFormattedEntry(e.getValue());
             lore.add(line, entry);
             line++;
