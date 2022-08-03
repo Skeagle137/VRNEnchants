@@ -207,10 +207,9 @@ public class BaseEnchant extends Enchantment {
         else
             vanilla = meta.getEnchants();
         for (Map.Entry<Enchantment, Integer> e : vanilla.entrySet()) {
-            Enchantment ench = e.getKey();
             int level = e.getValue();
-            if (ench instanceof BaseEnchant)
-                map.put((BaseEnchant) ench, level);
+            if (e.getKey() instanceof BaseEnchant en)
+                map.put(en, level);
         }
         return map;
     }
@@ -219,25 +218,16 @@ public class BaseEnchant extends Enchantment {
         ItemMeta meta = i.getItemMeta();
         if (meta == null)
             return;
-        Map<Enchantment, Integer> enchants;
-        if (meta instanceof EnchantmentStorageMeta m) {
-            enchants = m.getStoredEnchants();
-        }
-        else
-            enchants = meta.getEnchants();
         List<String> lore = new ArrayList<>();
-        meta.setLore(lore);
-        i.setItemMeta(meta);
         int line = 0;
-        for (Map.Entry<Enchantment, Integer> e : enchants.entrySet()) {
-            if (!(e.getKey() instanceof BaseEnchant ench))
-                continue;
-            String entry = ench.getFormattedEntry(e.getValue());
+        for (Map.Entry<BaseEnchant, Integer> e : getEnchants(i).entrySet()) {
+            System.out.println("run " + e.getKey());
+            String entry = e.getKey().getFormattedEntry(e.getValue());
             lore.add(line, entry);
             line++;
             if (i.getType() == Material.ENCHANTED_BOOK) {
                 int wrap = 1;
-                String desc = ench.getDescription();
+                String desc = e.getKey().getDescription();
                 if (desc != null) {
                     List<String> descLines = FormatUtils.lineWrap(desc, 60);
                     descLines.forEach(l -> lore.add(color("&7&o" + l)));
@@ -248,11 +238,11 @@ public class BaseEnchant extends Enchantment {
                 }
                 line += wrap;
                 List<String> names = new ArrayList<>();
-                Arrays.stream(ench.getTargets()).toList().forEach(t -> names.add(t.getName()));
+                Arrays.stream(e.getKey().getTargets()).toList().forEach(t -> names.add(t.getName()));
                 lore.add(color("&eApplies to: &c" + String.join(", ", names)));
                 line++;
-                if (ench instanceof ICooldown) {
-                    lore.add(color("&eCooldown: &c" + ((ICooldown) ench).cooldown(e.getValue())) + " seconds");
+                if (e.getKey() instanceof ICooldown cooldownEnch) {
+                    lore.add(color("&eCooldown: &c" + cooldownEnch.cooldown(e.getValue())) + " seconds");
                     line++;
                 }
             }
@@ -261,11 +251,10 @@ public class BaseEnchant extends Enchantment {
         i.setItemMeta(meta);
     }
 
-    public static boolean applyEnchant(ItemStack item, Enchantment ench, int level) {
+    public static void applyEnchant(ItemStack item, Enchantment ench, int level) {
         removeEnchant(item, ench, level);
         ItemMeta meta = item.getItemMeta();
-        if (meta == null)
-            return false;
+        if (meta == null) return;
         List<String> lore = meta.getLore();
         if (lore == null)
             lore = new ArrayList<>();
@@ -279,7 +268,6 @@ public class BaseEnchant extends Enchantment {
             meta.addEnchant(ench, level, true);
         meta.setLore(lore);
         item.setItemMeta(meta);
-        return true;
     }
 
     public static ItemStack generateEnchantBook(ItemStack item, Enchantment ench, int level) {

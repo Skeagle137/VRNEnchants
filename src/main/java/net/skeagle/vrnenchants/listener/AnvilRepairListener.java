@@ -47,7 +47,6 @@ public class AnvilRepairListener implements Listener {
         }
 
         Map<BaseEnchant, Integer> itemEnchants = new HashMap<>();
-        Map<BaseEnchant, Integer> applyingEnchants = new HashMap<>();
 
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
@@ -63,7 +62,7 @@ public class AnvilRepairListener implements Listener {
         if (applying != null) {
             ItemMeta applyingMeta = applying.getItemMeta();
             if (applyingMeta == null) return;
-            applyingEnchants = BaseEnchant.getEnchants(applying);
+            Map<BaseEnchant, Integer> applyingEnchants = BaseEnchant.getEnchants(applying);
             if (applyingEnchants.isEmpty()) return;
 
             for (Map.Entry<BaseEnchant, Integer> en : applyingEnchants.entrySet()) {
@@ -83,9 +82,8 @@ public class AnvilRepairListener implements Listener {
             int cost = inv.getRepairCost();
             for (Map.Entry<BaseEnchant, Integer> en : itemEnchants.entrySet()) {
                 int lvl = Math.min(en.getKey().getMaxLevel(), en.getValue());
-                if (BaseEnchant.applyEnchant(result, en.getKey(), lvl)) {
-                    cost += lvl;
-                }
+                BaseEnchant.applyEnchant(result, en.getKey(), lvl);
+                cost += lvl;
             }
             updateLore(result);
             e.setResult(result);
