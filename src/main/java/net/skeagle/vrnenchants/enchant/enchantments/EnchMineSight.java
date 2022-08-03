@@ -63,8 +63,8 @@ public class EnchMineSight extends BaseEnchant implements ICooldown {
         });
 
         Task.syncDelayed(() -> {
-            shulkerData.get(player.getUniqueId()).removeAll(player);
             blockEvent.unregister();
+            shulkerData.get(player.getUniqueId()).removeAll(player);
             shulkerData.remove(player.getUniqueId());
         }, (long) ((level + 1) * 1.5) * 20);
         this.setCooldown(player);
@@ -178,16 +178,21 @@ public class EnchMineSight extends BaseEnchant implements ICooldown {
         }
 
         private void removeShulker(Player player, Block block) {
-            ((CraftPlayer) player).getHandle().connection.send(new ClientboundRemoveEntitiesPacket(blockMap.get(block).getId()));
+            Shulker shulker = blockMap.get(block);
+            if (shulker != null) {
+                ((CraftPlayer) player).getHandle().connection.send(new ClientboundRemoveEntitiesPacket(shulker.getId()));
+            }
             blockMap.remove(block);
         }
 
         private void removeAll(Player player) {
             ClientboundRemoveEntitiesPacket packet;
             for (Shulker shulker : blockMap.values()) {
+                if (shulker == null) continue;
                 packet = new ClientboundRemoveEntitiesPacket(shulker.getId());
                 ((CraftPlayer) player).getHandle().connection.send(packet);
             }
+            blockMap.clear();
         }
 
     }
