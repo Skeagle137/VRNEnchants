@@ -22,8 +22,8 @@ import net.skeagle.vrnlib.misc.Task;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.v1_19_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_19_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_19_R3.CraftWorld;
+import org.bukkit.craftbukkit.v1_19_R3.entity.CraftPlayer;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
@@ -106,7 +106,7 @@ public class EnchMineSight extends BaseEnchant implements ICooldown {
         return instance;
     }
 
-    private class ShulkerBlockData {
+    private static class ShulkerBlockData {
 
         private final Map<Block, Shulker> blockMap;
         private final Set<ChatColor> colorsUsed;
@@ -154,7 +154,7 @@ public class EnchMineSight extends BaseEnchant implements ICooldown {
                 synchedData = shulk.getEntityData();
                 synchedData.set(new EntityDataAccessor<>(0, EntityDataSerializers.BYTE), (byte) 96);
                 ((CraftPlayer) player).getHandle().connection.send(new ClientboundAddEntityPacket(shulk));
-                ((CraftPlayer) player).getHandle().connection.send(new ClientboundSetEntityDataPacket(shulk.getId(), synchedData, false));
+                ((CraftPlayer) player).getHandle().connection.send(new ClientboundSetEntityDataPacket(shulk.getId(), synchedData.getNonDefaultValues()));
                 blockMap.put(b, shulk);
             }
             for (ChatColor color : this.colorsUsed) {
