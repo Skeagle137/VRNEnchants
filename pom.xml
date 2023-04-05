@@ -6,21 +6,21 @@
     <groupId>net.skeagle</groupId>
     <artifactId>vrnenchants</artifactId>
     <name>VRNEnchants</name>
-    <version>1.6c-beta</version>
+    <version>1.6d-beta</version>
 
-    <description>Adds new enchants to the server. Can be used with VRNcore.</description>
+    <description>Adds new enchants to the server. Can be used with VRNCore.</description>
 
     <properties>
         <java.version>17</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <mc.version>1.19</mc.version>
-        <vrnlib>2.1.2</vrnlib>
+        <mc.version>1.19.4</mc.version>
+        <vrnlib>2.1.3</vrnlib>
     </properties>
 
     <repositories>
         <repository>
-            <id>spigotmc-repo</id>
-            <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
+            <id>codemc-repo</id>
+            <url>https://repo.codemc.io/repository/nms/</url>
         </repository>
     </repositories>
 
