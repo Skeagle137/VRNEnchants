@@ -11,9 +11,9 @@ import net.skeagle.vrnenchants.enchant.Target;
 import net.skeagle.vrnlib.misc.Task;
 import org.bukkit.Sound;
 import org.bukkit.World;
-import org.bukkit.craftbukkit.v1_19_R3.CraftWorld;
-import org.bukkit.craftbukkit.v1_19_R3.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_19_R3.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_20_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_20_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_20_R1.inventory.CraftItemStack;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
@@ -72,7 +72,7 @@ public class EnchVoidless extends BaseEnchant {
         }
 
         private void addtoWorld() {
-            this.level.addFreshEntity(this);
+            this.level().addFreshEntity(this);
             setPos(trident.getLocation().getX(), trident.getLocation().getY(), trident.getLocation().getZ());
             setOwner(((CraftPlayer) trident.getShooter()).getHandle());
             setNoPhysics(true);
@@ -85,17 +85,18 @@ public class EnchVoidless extends BaseEnchant {
             Entity entity = this.getOwner();
             if (this.isNoPhysics() && entity != null) {
                 if (!this.isAcceptibleReturnOwner()) {
-                    if (!this.level.isClientSide && this.pickup == Pickup.ALLOWED)
+                    if (!this.level().isClientSide && this.pickup == Pickup.ALLOWED)
                         this.spawnAtLocation(this.getPickupItem(), 0.1F);
                     this.discard();
                 } else {
+                    double loyaltyLevel = Math.max(this.loyalty, 0.5);
                     setNoPhysics(true);
                     Vec3 vec3d = entity.getEyePosition().subtract(this.position());
-                    this.setPosRaw(this.getX(), this.getY() + vec3d.y * 0.015D * Math.max(this.loyalty, 0.5), this.getZ());
-                    if (this.level.isClientSide)
+                    this.setPosRaw(this.getX(), this.getY() + vec3d.y * 0.015D * loyaltyLevel, this.getZ());
+                    if (this.level().isClientSide)
                         this.yOld = this.getY();
 
-                    this.setDeltaMovement(this.getDeltaMovement().scale(0.95D).add(vec3d.normalize().scale(Math.max(this.loyalty, 0.5))));
+                    this.setDeltaMovement(this.getDeltaMovement().scale(0.95D).add(vec3d.normalize().scale(loyaltyLevel)));
                     if (this.clientSideReturnTridentTickCount == 0)
                         trident.getWorld().playSound(trident.getLocation(), Sound.ITEM_TRIDENT_RETURN, 10.0F, 1.0F);
                     ++this.clientSideReturnTridentTickCount;
